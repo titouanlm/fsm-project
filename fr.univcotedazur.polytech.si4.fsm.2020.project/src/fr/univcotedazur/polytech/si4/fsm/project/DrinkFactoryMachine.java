@@ -36,11 +36,13 @@ public class DrinkFactoryMachine extends JFrame {
 	/**
 	 * @wbp.nonvisual location=311,475
 	 */
-	private final ImageIcon imageIcon = new ImageIcon();
+	// private final ImageIcon imageIcon = new ImageIcon();
 
 	protected DefaultSMStatemachine theDFM;
 	protected double solde = 0.0;
 	protected JLabel messagesToUser;
+	protected boolean machineSurEcoute = true; // (quand on prépare un café, on ne peut donner aucune commande --> point 13)
+	protected JLabel labelForPictures;
 	/**
 	 * Launch the application.
 	 */
@@ -95,7 +97,7 @@ public class DrinkFactoryMachine extends JFrame {
 		lblCoins.setBounds(538, 12, 44, 15);
 		contentPane.add(lblCoins);
 
-		JButton coffeeButton = new JButton("Coffee (0.60€)");
+		JButton coffeeButton = new JButton("Coffee");
 		coffeeButton.setForeground(Color.BLACK);
 		coffeeButton.setBackground(Color.DARK_GRAY);
 		coffeeButton.setBounds(12, 34, 96, 25);
@@ -254,7 +256,7 @@ public class DrinkFactoryMachine extends JFrame {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		JLabel labelForPictures = new JLabel(new ImageIcon(myPicture));
+		labelForPictures = new JLabel(new ImageIcon(myPicture));
 		labelForPictures.setBounds(175, 319, 286, 260);
 		contentPane.add(labelForPictures);
 
@@ -307,5 +309,11 @@ public class DrinkFactoryMachine extends JFrame {
 			}
 		});
 		
+		coffeeButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e){
+				theDFM.raiseCoffeeButton();
+				}
+			});
 	}
 }

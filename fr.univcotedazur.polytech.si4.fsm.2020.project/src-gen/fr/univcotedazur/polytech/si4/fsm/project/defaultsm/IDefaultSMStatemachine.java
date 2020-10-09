@@ -18,17 +18,31 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		
 		public void raiseMoney10centsButton();
 		
+		public void raiseCoffeeButton();
+		
+		public boolean isRaisedMakeCoffee();
+		
 		public boolean isRaisedUpdateSolde();
 		
 		public boolean isRaisedResetSolde();
+		
+		public boolean isRaisedTakeCoffee();
+		
+		public boolean isRaisedCleaningMachine();
+		
+		public boolean isRaisedMachineReady();
 		
 	public List<SCInterfaceListener> getListeners();
 	}
 	
 	public interface SCInterfaceListener {
 	
+		public void onMakeCoffeeRaised();
 		public void onUpdateSoldeRaised();
 		public void onResetSoldeRaised();
+		public void onTakeCoffeeRaised();
+		public void onCleaningMachineRaised();
+		public void onMachineReadyRaised();
 		}
 	
 	public SCInterface getSCInterface();

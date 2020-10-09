@@ -70,6 +70,42 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 			}
 		}
 		
+		private boolean coffeeButton;
+		
+		
+		public void raiseCoffeeButton() {
+			synchronized(DefaultSMStatemachine.this) {
+				inEventQueue.add(
+					new Runnable() {
+						@Override
+						public void run() {
+							coffeeButton = true;
+							singleCycle();
+						}
+					}
+				);
+				runCycle();
+			}
+		}
+		
+		private boolean makeCoffee;
+		
+		
+		public boolean isRaisedMakeCoffee() {
+			synchronized(DefaultSMStatemachine.this) {
+				return makeCoffee;
+			}
+		}
+		
+		protected void raiseMakeCoffee() {
+			synchronized(DefaultSMStatemachine.this) {
+				makeCoffee = true;
+				for (SCInterfaceListener listener : listeners) {
+					listener.onMakeCoffeeRaised();
+				}
+			}
+		}
+		
 		private boolean updateSolde;
 		
 		
@@ -106,15 +142,74 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 			}
 		}
 		
+		private boolean takeCoffee;
+		
+		
+		public boolean isRaisedTakeCoffee() {
+			synchronized(DefaultSMStatemachine.this) {
+				return takeCoffee;
+			}
+		}
+		
+		protected void raiseTakeCoffee() {
+			synchronized(DefaultSMStatemachine.this) {
+				takeCoffee = true;
+				for (SCInterfaceListener listener : listeners) {
+					listener.onTakeCoffeeRaised();
+				}
+			}
+		}
+		
+		private boolean cleaningMachine;
+		
+		
+		public boolean isRaisedCleaningMachine() {
+			synchronized(DefaultSMStatemachine.this) {
+				return cleaningMachine;
+			}
+		}
+		
+		protected void raiseCleaningMachine() {
+			synchronized(DefaultSMStatemachine.this) {
+				cleaningMachine = true;
+				for (SCInterfaceListener listener : listeners) {
+					listener.onCleaningMachineRaised();
+				}
+			}
+		}
+		
+		private boolean machineReady;
+		
+		
+		public boolean isRaisedMachineReady() {
+			synchronized(DefaultSMStatemachine.this) {
+				return machineReady;
+			}
+		}
+		
+		protected void raiseMachineReady() {
+			synchronized(DefaultSMStatemachine.this) {
+				machineReady = true;
+				for (SCInterfaceListener listener : listeners) {
+					listener.onMachineReadyRaised();
+				}
+			}
+		}
+		
 		protected void clearEvents() {
 			money50centsButton = false;
 			money25centsButton = false;
 			money10centsButton = false;
+			coffeeButton = false;
 		}
 		protected void clearOutEvents() {
 		
+		makeCoffee = false;
 		updateSolde = false;
 		resetSolde = false;
+		takeCoffee = false;
+		cleaningMachine = false;
+		machineReady = false;
 		}
 		
 	}
@@ -127,6 +222,9 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	public enum State {
 		main_region_Waiting,
 		main_region_Payment,
+		main_region_Coffee_Making,
+		main_region_Take_beverage,
+		main_region_Cleaning,
 		$NullState$
 	};
 	
@@ -136,7 +234,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	
 	private ITimer timer;
 	
-	private final boolean[] timeEvents = new boolean[1];
+	private final boolean[] timeEvents = new boolean[4];
 	
 	private BlockingQueue<Runnable> inEventQueue = new LinkedBlockingQueue<Runnable>();
 	private boolean isRunningCycle = false;
@@ -202,6 +300,15 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 					break;
 				case main_region_Payment:
 					main_region_Payment_react(true);
+					break;
+				case main_region_Coffee_Making:
+					main_region_Coffee_Making_react(true);
+					break;
+				case main_region_Take_beverage:
+					main_region_Take_beverage_react(true);
+					break;
+				case main_region_Cleaning:
+					main_region_Cleaning_react(true);
 					break;
 			default:
 				// $NullState$
@@ -271,6 +378,12 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 			return stateVector[0] == State.main_region_Waiting;
 		case main_region_Payment:
 			return stateVector[0] == State.main_region_Payment;
+		case main_region_Coffee_Making:
+			return stateVector[0] == State.main_region_Coffee_Making;
+		case main_region_Take_beverage:
+			return stateVector[0] == State.main_region_Take_beverage;
+		case main_region_Cleaning:
+			return stateVector[0] == State.main_region_Cleaning;
 		default:
 			return false;
 		}
@@ -323,6 +436,14 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		sCInterface.raiseMoney10centsButton();
 	}
 	
+	public synchronized void raiseCoffeeButton() {
+		sCInterface.raiseCoffeeButton();
+	}
+	
+	public synchronized boolean isRaisedMakeCoffee() {
+		return sCInterface.isRaisedMakeCoffee();
+	}
+	
 	public synchronized boolean isRaisedUpdateSolde() {
 		return sCInterface.isRaisedUpdateSolde();
 	}
@@ -331,14 +452,56 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		return sCInterface.isRaisedResetSolde();
 	}
 	
+	public synchronized boolean isRaisedTakeCoffee() {
+		return sCInterface.isRaisedTakeCoffee();
+	}
+	
+	public synchronized boolean isRaisedCleaningMachine() {
+		return sCInterface.isRaisedCleaningMachine();
+	}
+	
+	public synchronized boolean isRaisedMachineReady() {
+		return sCInterface.isRaisedMachineReady();
+	}
+	
 	/* Entry action for state 'Payment'. */
 	private void entryAction_main_region_Payment() {
 		timer.setTimer(this, 0, 5000, false);
 	}
 	
+	/* Entry action for state 'Coffee Making'. */
+	private void entryAction_main_region_Coffee_Making() {
+		timer.setTimer(this, 1, 5000, false);
+	}
+	
+	/* Entry action for state 'Take beverage'. */
+	private void entryAction_main_region_Take_beverage() {
+		timer.setTimer(this, 2, 5000, false);
+	}
+	
+	/* Entry action for state 'Cleaning'. */
+	private void entryAction_main_region_Cleaning() {
+		timer.setTimer(this, 3, 5000, false);
+	}
+	
 	/* Exit action for state 'Payment'. */
 	private void exitAction_main_region_Payment() {
 		timer.unsetTimer(this, 0);
+	}
+	
+	/* Exit action for state 'Coffee Making'. */
+	private void exitAction_main_region_Coffee_Making() {
+		timer.unsetTimer(this, 1);
+	}
+	
+	/* Exit action for state 'Take beverage'. */
+	private void exitAction_main_region_Take_beverage() {
+		timer.unsetTimer(this, 2);
+	}
+	
+	/* Exit action for state 'Cleaning'. */
+	private void exitAction_main_region_Cleaning() {
+		timer.unsetTimer(this, 3);
 	}
 	
 	/* 'default' enter sequence for state Waiting */
@@ -352,6 +515,27 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		entryAction_main_region_Payment();
 		nextStateIndex = 0;
 		stateVector[0] = State.main_region_Payment;
+	}
+	
+	/* 'default' enter sequence for state Coffee Making */
+	private void enterSequence_main_region_Coffee_Making_default() {
+		entryAction_main_region_Coffee_Making();
+		nextStateIndex = 0;
+		stateVector[0] = State.main_region_Coffee_Making;
+	}
+	
+	/* 'default' enter sequence for state Take beverage */
+	private void enterSequence_main_region_Take_beverage_default() {
+		entryAction_main_region_Take_beverage();
+		nextStateIndex = 0;
+		stateVector[0] = State.main_region_Take_beverage;
+	}
+	
+	/* 'default' enter sequence for state Cleaning */
+	private void enterSequence_main_region_Cleaning_default() {
+		entryAction_main_region_Cleaning();
+		nextStateIndex = 0;
+		stateVector[0] = State.main_region_Cleaning;
 	}
 	
 	/* 'default' enter sequence for region main region */
@@ -373,6 +557,30 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		exitAction_main_region_Payment();
 	}
 	
+	/* Default exit sequence for state Coffee Making */
+	private void exitSequence_main_region_Coffee_Making() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+		
+		exitAction_main_region_Coffee_Making();
+	}
+	
+	/* Default exit sequence for state Take beverage */
+	private void exitSequence_main_region_Take_beverage() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+		
+		exitAction_main_region_Take_beverage();
+	}
+	
+	/* Default exit sequence for state Cleaning */
+	private void exitSequence_main_region_Cleaning() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+		
+		exitAction_main_region_Cleaning();
+	}
+	
 	/* Default exit sequence for region main region */
 	private void exitSequence_main_region() {
 		switch (stateVector[0]) {
@@ -381,6 +589,15 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 			break;
 		case main_region_Payment:
 			exitSequence_main_region_Payment();
+			break;
+		case main_region_Coffee_Making:
+			exitSequence_main_region_Coffee_Making();
+			break;
+		case main_region_Take_beverage:
+			exitSequence_main_region_Take_beverage();
+			break;
+		case main_region_Cleaning:
+			exitSequence_main_region_Cleaning();
 			break;
 		default:
 			break;
@@ -434,8 +651,76 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 					enterSequence_main_region_Waiting_default();
 					react();
 				} else {
-					did_transition = false;
+					if (sCInterface.coffeeButton) {
+						exitSequence_main_region_Payment();
+						sCInterface.raiseMakeCoffee();
+						
+						enterSequence_main_region_Coffee_Making_default();
+						react();
+					} else {
+						did_transition = false;
+					}
 				}
+			}
+		}
+		if (did_transition==false) {
+			did_transition = react();
+		}
+		return did_transition;
+	}
+	
+	private boolean main_region_Coffee_Making_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (timeEvents[1]) {
+				exitSequence_main_region_Coffee_Making();
+				sCInterface.raiseTakeCoffee();
+				
+				enterSequence_main_region_Take_beverage_default();
+				react();
+			} else {
+				did_transition = false;
+			}
+		}
+		if (did_transition==false) {
+			did_transition = react();
+		}
+		return did_transition;
+	}
+	
+	private boolean main_region_Take_beverage_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (timeEvents[2]) {
+				exitSequence_main_region_Take_beverage();
+				sCInterface.raiseCleaningMachine();
+				
+				enterSequence_main_region_Cleaning_default();
+				react();
+			} else {
+				did_transition = false;
+			}
+		}
+		if (did_transition==false) {
+			did_transition = react();
+		}
+		return did_transition;
+	}
+	
+	private boolean main_region_Cleaning_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (timeEvents[3]) {
+				exitSequence_main_region_Cleaning();
+				sCInterface.raiseMachineReady();
+				
+				enterSequence_main_region_Waiting_default();
+				react();
+			} else {
+				did_transition = false;
 			}
 		}
 		if (did_transition==false) {
