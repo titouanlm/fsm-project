@@ -42,6 +42,9 @@ public class DrinkFactoryMachine extends JFrame {
 	protected JLabel messagesToUser;
 	protected boolean machineSurEcoute = true; // (quand on prépare un café, on ne peut donner aucune commande --> point 13)
 	protected JLabel labelForPictures;
+	protected JSlider sugarSlider;
+	protected JSlider sizeSlider;
+	protected JSlider temperatureSlider;
 	/**
 	 * Launch the application.
 	 */
@@ -128,7 +131,7 @@ public class DrinkFactoryMachine extends JFrame {
 		progressBar.setBounds(12, 254, 622, 26);
 		contentPane.add(progressBar);
 
-		JSlider sugarSlider = new JSlider();
+		sugarSlider = new JSlider();
 		sugarSlider.setValue(1);
 		sugarSlider.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		sugarSlider.setBackground(Color.DARK_GRAY);
@@ -140,7 +143,7 @@ public class DrinkFactoryMachine extends JFrame {
 		sugarSlider.setBounds(301, 51, 200, 36);
 		contentPane.add(sugarSlider);
 
-		JSlider sizeSlider = new JSlider();
+		sizeSlider = new JSlider();
 		sizeSlider.setPaintTicks(true);
 		sizeSlider.setValue(1);
 		sizeSlider.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -152,7 +155,7 @@ public class DrinkFactoryMachine extends JFrame {
 		sizeSlider.setBounds(301, 125, 200, 36);
 		contentPane.add(sizeSlider);
 
-		JSlider temperatureSlider = new JSlider();
+		temperatureSlider = new JSlider();
 		temperatureSlider.setPaintLabels(true);
 		temperatureSlider.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		temperatureSlider.setValue(2);
@@ -283,6 +286,14 @@ public class DrinkFactoryMachine extends JFrame {
 			}
 		});
 		
+		nfcBiiiipButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				theDFM.setPaymentCard(true);
+				messagesToUser.setText("<html> Veuillez choisir votre <br> boisosn");
+			}
+		});
+		
 		cancelButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -344,5 +355,11 @@ public class DrinkFactoryMachine extends JFrame {
 				theDFM.raiseIcedTeaButton();
 				}
 			});
+	}
+	
+	public void resetSliders() {
+		sugarSlider.setValue(1);
+		temperatureSlider.setValue(2);
+		sizeSlider.setValue(1);
 	}
 }

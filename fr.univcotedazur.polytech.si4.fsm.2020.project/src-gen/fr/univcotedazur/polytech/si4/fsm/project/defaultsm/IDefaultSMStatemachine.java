@@ -30,8 +30,6 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		
 		public void raiseIcedTeaButton();
 		
-		public boolean isRaisedMakeCoffee();
-		
 		public boolean isRaisedUpdateSolde();
 		
 		public boolean isRaisedResetSolde();
@@ -41,6 +39,8 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		public boolean isRaisedCleaningMachine();
 		
 		public boolean isRaisedMachineReady();
+		
+		public boolean isRaisedMakeCoffee();
 		
 		public boolean isRaisedMakeTea();
 		
@@ -52,26 +52,48 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		
 		public boolean isRaisedCancelPreparation();
 		
+		public boolean isRaisedTimePreparation();
+		
+		public boolean isRaisedAskCoffee();
+		
+		public boolean isRaisedAskTea();
+		
+		public boolean isRaisedAskExpresso();
+		
+		public boolean isRaisedAskSoup();
+		
+		public boolean isRaisedAskIcedTea();
+		
 		public double getSolde();
 		
 		public void setSolde(double value);
+		
+		public boolean getPaymentCard();
+		
+		public void setPaymentCard(boolean value);
 		
 	public List<SCInterfaceListener> getListeners();
 	}
 	
 	public interface SCInterfaceListener {
 	
-		public void onMakeCoffeeRaised();
 		public void onUpdateSoldeRaised();
 		public void onResetSoldeRaised();
 		public void onTakeBeverageRaised();
 		public void onCleaningMachineRaised();
 		public void onMachineReadyRaised();
+		public void onMakeCoffeeRaised();
 		public void onMakeTeaRaised();
 		public void onMakeExpressoRaised();
 		public void onMakeSoupRaised();
 		public void onMakeIcedTeaRaised();
 		public void onCancelPreparationRaised();
+		public void onTimePreparationRaised();
+		public void onAskCoffeeRaised();
+		public void onAskTeaRaised();
+		public void onAskExpressoRaised();
+		public void onAskSoupRaised();
+		public void onAskIcedTeaRaised();
 		}
 	
 	public SCInterface getSCInterface();
