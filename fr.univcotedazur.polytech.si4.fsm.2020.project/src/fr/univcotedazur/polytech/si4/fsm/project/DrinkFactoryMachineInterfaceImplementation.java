@@ -20,34 +20,31 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	@Override
 	public void onUpdateSoldeRaised() {
 		if (this.dfm.machineSurEcoute) {
-			this.dfm.messagesToUser.setText("Solde : " + this.dfm.solde + "€" );
+			this.dfm.messagesToUser.setText("Solde : " + this.dfm.theDFM.getSolde() + "€" );
 		}
 	}
 
 	@Override
 	public void onResetSoldeRaised() {
-		if (this.dfm.machineSurEcoute) {
-		this.dfm.solde = 0.0;		
-		this.dfm.messagesToUser.setText("<html> Vous n'avez rien choisi. <br> Récupérez votre monnaie. <br>  Solde : " + this.dfm.solde + "€" );
-		}
+		this.dfm.messagesToUser.setText("<html> Vous n'avez rien choisi. <br> Récupérez votre monnaie. <br>  Solde : " + this.dfm.theDFM.getSolde() + "€" );
+		this.dfm.theDFM.setSolde(0.0);
 	}
 
 	@Override
 	public void onMakeCoffeeRaised() {
 		if (this.dfm.machineSurEcoute) {
-		this.dfm.solde -= 0.35;
-		this.dfm.machineSurEcoute = false;
-		this.dfm.messagesToUser.setText("<html> Votre café est en cours de préparation ... <br> Solde restant : " + this.dfm.solde);
+			this.dfm.machineSurEcoute = false;
+			this.dfm.messagesToUser.setText("<html> Votre café est en cours de préparation ... ");
 		}
 		
 	}
 
 	@Override
 	public void onTakeCoffeeRaised() {
-		if (this.dfm.solde == 0.0) this.dfm.messagesToUser.setText("<html> Veuillez prendre votre café svp.");
+		if (this.dfm.theDFM.getSolde() == 0.0) this.dfm.messagesToUser.setText("<html> Veuillez prendre votre café svp.");
 		else {
 			this.dfm.messagesToUser.setText("<html> Veuillez prendre votre café svp. <br> N'oubliez pas de récupérer votre argent.");
-			this.dfm.solde = 0.0;		}
+			this.dfm.theDFM.setSolde(0.0);		}
 		try {
 			this.dfm.labelForPictures.setIcon(new ImageIcon(ImageIO.read(new File("./picts/ownCup.jpg"))));
 		} catch (IOException ee) {
@@ -63,13 +60,47 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		} catch (IOException ee) {
 			ee.printStackTrace();
 		}
-		this.dfm.messagesToUser.setText("<html> Attendez, votre machine est en cours de nettoyage.");		
-	}
+		this.dfm.messagesToUser.setText("<html> Attendez, votre machine est en cours de nettoyage.");	
+		}
 
 	@Override
 	public void onMachineReadyRaised() {
-		this.dfm.messagesToUser.setText("<html> Veuillez insérer de l'argent <br> Solde : " + this.dfm.solde + "€");
+		this.dfm.messagesToUser.setText("<html> Veuillez insérer de l'argent <br> Solde : " + this.dfm.theDFM.getSolde() + "€");
 		this.dfm.machineSurEcoute = true;
+	}
+
+	@Override
+	public void onMakeTeaRaised() {
+		if (this.dfm.machineSurEcoute) {
+			this.dfm.machineSurEcoute = false;
+			this.dfm.messagesToUser.setText("<html> Votre thé est en cours de préparation ... ");
+			}
+	}
+
+	@Override
+	public void onMakeExpressoRaised() {
+		if (this.dfm.machineSurEcoute) {
+			this.dfm.machineSurEcoute = false;
+			this.dfm.messagesToUser.setText("<html> Votre expresso est en cours de préparation ... ");
+			}
+	}
+
+	@Override
+	public void onMakeSoupRaised() {
+		if (this.dfm.machineSurEcoute) {
+			this.dfm.machineSurEcoute = false;
+			this.dfm.messagesToUser.setText("<html> Votre soupe est en cours de préparation ... ");
+			}
+		
+	}
+
+	@Override
+	public void onMakeIcedTeaRaised() {
+		if (this.dfm.machineSurEcoute) {
+			this.dfm.machineSurEcoute = false;
+			this.dfm.messagesToUser.setText("<html> Votre thé glacé est en cours de préparation ... ");
+			}
+		
 	}
 
 }

@@ -39,7 +39,6 @@ public class DrinkFactoryMachine extends JFrame {
 	// private final ImageIcon imageIcon = new ImageIcon();
 
 	protected DefaultSMStatemachine theDFM;
-	protected double solde = 0.0;
 	protected JLabel messagesToUser;
 	protected boolean machineSurEcoute = true; // (quand on prépare un café, on ne peut donner aucune commande --> point 13)
 	protected JLabel labelForPictures;
@@ -82,7 +81,7 @@ public class DrinkFactoryMachine extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		messagesToUser = new JLabel("<html> Veuillez insérer de l'argent <br> Solde : " + this.solde + "€");
+		messagesToUser = new JLabel("<html> Veuillez insérer de l'argent <br> Solde : " + this.theDFM.getSolde() + "€");
 		messagesToUser.setForeground(Color.WHITE);
 		messagesToUser.setHorizontalAlignment(SwingConstants.LEFT);
 		messagesToUser.setVerticalAlignment(SwingConstants.TOP);
@@ -288,7 +287,7 @@ public class DrinkFactoryMachine extends JFrame {
 		money50centsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				solde += 0.5;
+				theDFM.setSolde(theDFM.getSolde()+0.5);
 				theDFM.raiseMoney50centsButton();
 			}
 		});
@@ -296,7 +295,7 @@ public class DrinkFactoryMachine extends JFrame {
 		money25centsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				solde += 0.25;
+				theDFM.setSolde(theDFM.getSolde()+0.25);
 				theDFM.raiseMoney25centsButton();
 			}
 		});
@@ -304,7 +303,7 @@ public class DrinkFactoryMachine extends JFrame {
 		money10centsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				solde += 0.1;
+				theDFM.setSolde(theDFM.getSolde()+0.1);
 				theDFM.raiseMoney10centsButton();
 			}
 		});
@@ -313,6 +312,30 @@ public class DrinkFactoryMachine extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e){
 				theDFM.raiseCoffeeButton();
+				}
+			});
+		expressoButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e){
+				theDFM.raiseExpressoButton();
+				}
+			});
+		teaButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e){
+				theDFM.raiseTeaButton();
+				}
+			});
+		soupButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e){
+				theDFM.raiseSoupButton();
+				}
+			});
+		icedTeaButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e){
+				theDFM.raiseIcedTeaButton();
 				}
 			});
 	}

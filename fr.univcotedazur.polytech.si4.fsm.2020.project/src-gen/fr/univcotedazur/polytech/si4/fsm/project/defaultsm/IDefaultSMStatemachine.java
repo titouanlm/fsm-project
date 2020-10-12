@@ -20,6 +20,14 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		
 		public void raiseCoffeeButton();
 		
+		public void raiseTeaButton();
+		
+		public void raiseExpressoButton();
+		
+		public void raiseSoupButton();
+		
+		public void raiseIcedTeaButton();
+		
 		public boolean isRaisedMakeCoffee();
 		
 		public boolean isRaisedUpdateSolde();
@@ -32,6 +40,18 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		
 		public boolean isRaisedMachineReady();
 		
+		public boolean isRaisedMakeTea();
+		
+		public boolean isRaisedMakeExpresso();
+		
+		public boolean isRaisedMakeSoup();
+		
+		public boolean isRaisedMakeIcedTea();
+		
+		public double getSolde();
+		
+		public void setSolde(double value);
+		
 	public List<SCInterfaceListener> getListeners();
 	}
 	
@@ -43,6 +63,10 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		public void onTakeCoffeeRaised();
 		public void onCleaningMachineRaised();
 		public void onMachineReadyRaised();
+		public void onMakeTeaRaised();
+		public void onMakeExpressoRaised();
+		public void onMakeSoupRaised();
+		public void onMakeIcedTeaRaised();
 		}
 	
 	public SCInterface getSCInterface();
