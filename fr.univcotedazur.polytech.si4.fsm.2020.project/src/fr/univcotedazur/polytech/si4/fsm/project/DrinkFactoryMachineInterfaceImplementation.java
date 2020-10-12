@@ -31,15 +31,6 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	}
 
 	@Override
-	public void onMakeCoffeeRaised() {
-		if (this.dfm.machineSurEcoute) {
-			this.dfm.machineSurEcoute = false;
-			this.dfm.messagesToUser.setText("<html> Votre café est en cours de préparation ... ");
-		}
-		
-	}
-
-	@Override
 	public void onTakeCoffeeRaised() {
 		if (this.dfm.theDFM.getSolde() == 0.0) this.dfm.messagesToUser.setText("<html> Veuillez prendre votre café svp.");
 		else {
@@ -68,28 +59,41 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		this.dfm.messagesToUser.setText("<html> Veuillez insérer de l'argent <br> Solde : " + this.dfm.theDFM.getSolde() + "€");
 		this.dfm.machineSurEcoute = true;
 	}
+	
+	@Override
+	public void onMakeCoffeeRaised() {
+		if (this.dfm.machineSurEcoute) {
+			this.dfm.machineSurEcoute = false;
+			if (this.dfm.theDFM.getSolde() != 0.0) this.dfm.messagesToUser.setText("<html> Votre café est en cours de préparation ... ");
+			else this.dfm.messagesToUser.setText("<html> Veuillez insérer 0.35 euro pour la préparation de votre café");
+		}
+		
+	}
 
 	@Override
 	public void onMakeTeaRaised() {
 		if (this.dfm.machineSurEcoute) {
 			this.dfm.machineSurEcoute = false;
-			this.dfm.messagesToUser.setText("<html> Votre thé est en cours de préparation ... ");
-			}
+			if (this.dfm.theDFM.getSolde() != 0.0) this.dfm.messagesToUser.setText("<html> Votre thé est en cours de préparation ... ");
+			else this.dfm.messagesToUser.setText("<html> Veuillez insérer 0.4 euro pour la préparation de votre thé");
+		}
 	}
 
 	@Override
 	public void onMakeExpressoRaised() {
 		if (this.dfm.machineSurEcoute) {
 			this.dfm.machineSurEcoute = false;
-			this.dfm.messagesToUser.setText("<html> Votre expresso est en cours de préparation ... ");
-			}
+			if (this.dfm.theDFM.getSolde() != 0.0) this.dfm.messagesToUser.setText("<html> Votre expresso est en cours de préparation ... ");
+			else this.dfm.messagesToUser.setText("<html> Veuillez insérer 0.5 euro pour la préparation de votre expresso");
+		}
 	}
 
 	@Override
 	public void onMakeSoupRaised() {
 		if (this.dfm.machineSurEcoute) {
 			this.dfm.machineSurEcoute = false;
-			this.dfm.messagesToUser.setText("<html> Votre soupe est en cours de préparation ... ");
+			if (this.dfm.theDFM.getSolde() != 0.0) this.dfm.messagesToUser.setText("<html> Votre soupe est en cours de préparation ... ");
+			else this.dfm.messagesToUser.setText("<html> Veuillez insérer 1 euro pour la préparation de votre soupe");
 			}
 		
 	}
@@ -98,8 +102,9 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	public void onMakeIcedTeaRaised() {
 		if (this.dfm.machineSurEcoute) {
 			this.dfm.machineSurEcoute = false;
-			this.dfm.messagesToUser.setText("<html> Votre thé glacé est en cours de préparation ... ");
-			}
+			if (this.dfm.theDFM.getSolde() != 0.0) this.dfm.messagesToUser.setText("<html> Votre thé glacé est en cours de préparation ... ");
+			else this.dfm.messagesToUser.setText("<html> Veuillez insérer 1.30 euro pour la préparation de votre thé glacé");
+		}
 		
 	}
 
