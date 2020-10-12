@@ -139,7 +139,7 @@ public class DrinkFactoryMachine extends JFrame {
 		sugarSlider.setPaintTicks(true);
 		sugarSlider.setMinorTickSpacing(1);
 		sugarSlider.setMajorTickSpacing(1);
-		sugarSlider.setMaximum(4);
+		sugarSlider.setMaximum(5);
 		sugarSlider.setBounds(301, 51, 200, 36);
 		contentPane.add(sugarSlider);
 
@@ -290,7 +290,7 @@ public class DrinkFactoryMachine extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				theDFM.setPaymentCard(true);
-				messagesToUser.setText("<html> Veuillez choisir votre <br> boisosn");
+				messagesToUser.setText("<html> Veuillez choisir votre <br> boisson");
 			}
 		});
 		

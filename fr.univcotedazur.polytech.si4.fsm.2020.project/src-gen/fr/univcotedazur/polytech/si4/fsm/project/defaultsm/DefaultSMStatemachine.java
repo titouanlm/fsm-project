@@ -563,8 +563,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		main_region_Delay_Coffee_Payment_r1_IcedTea_Order,
 		main_region_Payment_Done,
 		main_region_Beverage_Preparation,
-		payment_No_Money_Inside,
-		payment_Money_Inside,
+		payment_Money,
 		$NullState$
 	};
 	
@@ -669,11 +668,8 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 				case main_region_Beverage_Preparation:
 					main_region_Beverage_Preparation_react(true);
 					break;
-				case payment_No_Money_Inside:
-					payment_No_Money_Inside_react(true);
-					break;
-				case payment_Money_Inside:
-					payment_Money_Inside_react(true);
+				case payment_Money:
+					payment_Money_react(true);
 					break;
 			default:
 				// $NullState$
@@ -763,10 +759,8 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 			return stateVector[0] == State.main_region_Payment_Done;
 		case main_region_Beverage_Preparation:
 			return stateVector[0] == State.main_region_Beverage_Preparation;
-		case payment_No_Money_Inside:
-			return stateVector[1] == State.payment_No_Money_Inside;
-		case payment_Money_Inside:
-			return stateVector[1] == State.payment_Money_Inside;
+		case payment_Money:
+			return stateVector[1] == State.payment_Money;
 		default:
 			return false;
 		}
@@ -1102,16 +1096,10 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		stateVector[0] = State.main_region_Beverage_Preparation;
 	}
 	
-	/* 'default' enter sequence for state No Money Inside */
-	private void enterSequence_Payment_No_Money_Inside_default() {
+	/* 'default' enter sequence for state Money */
+	private void enterSequence_Payment_Money_default() {
 		nextStateIndex = 1;
-		stateVector[1] = State.payment_No_Money_Inside;
-	}
-	
-	/* 'default' enter sequence for state Money Inside */
-	private void enterSequence_Payment_Money_Inside_default() {
-		nextStateIndex = 1;
-		stateVector[1] = State.payment_Money_Inside;
+		stateVector[1] = State.payment_Money;
 	}
 	
 	/* 'default' enter sequence for region main region */
@@ -1208,14 +1196,8 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		exitAction_main_region_Beverage_Preparation();
 	}
 	
-	/* Default exit sequence for state No Money Inside */
-	private void exitSequence_Payment_No_Money_Inside() {
-		nextStateIndex = 1;
-		stateVector[1] = State.$NullState$;
-	}
-	
-	/* Default exit sequence for state Money Inside */
-	private void exitSequence_Payment_Money_Inside() {
+	/* Default exit sequence for state Money */
+	private void exitSequence_Payment_Money() {
 		nextStateIndex = 1;
 		stateVector[1] = State.$NullState$;
 	}
@@ -1289,11 +1271,8 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	/* Default exit sequence for region Payment */
 	private void exitSequence_Payment() {
 		switch (stateVector[1]) {
-		case payment_No_Money_Inside:
-			exitSequence_Payment_No_Money_Inside();
-			break;
-		case payment_Money_Inside:
-			exitSequence_Payment_Money_Inside();
+		case payment_Money:
+			exitSequence_Payment_Money();
 			break;
 		default:
 			break;
@@ -1307,7 +1286,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	
 	/* Default react sequence for initial entry  */
 	private void react_Payment__entry_Default() {
-		enterSequence_Payment_No_Money_Inside_default();
+		enterSequence_Payment_Money_default();
 	}
 	
 	private boolean react() {
@@ -1545,46 +1524,18 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		return did_transition;
 	}
 	
-	private boolean payment_No_Money_Inside_react(boolean try_transition) {
+	private boolean payment_Money_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if ((sCInterface.money50centsButton || (sCInterface.money25centsButton || sCInterface.money10centsButton))) {
-				exitSequence_Payment_No_Money_Inside();
+				exitSequence_Payment_Money();
 				sCInterface.raiseUpdateSolde();
 				
-				enterSequence_Payment_Money_Inside_default();
+				enterSequence_Payment_Money_default();
 				react();
 			} else {
 				did_transition = false;
-			}
-		}
-		if (did_transition==false) {
-			did_transition = react();
-		}
-		return did_transition;
-	}
-	
-	private boolean payment_Money_Inside_react(boolean try_transition) {
-		boolean did_transition = try_transition;
-		
-		if (try_transition) {
-			if ((sCInterface.money50centsButton || (sCInterface.money25centsButton || sCInterface.money10centsButton))) {
-				exitSequence_Payment_Money_Inside();
-				sCInterface.raiseUpdateSolde();
-				
-				enterSequence_Payment_Money_Inside_default();
-				react();
-			} else {
-				if (sCInterface.cancelButton) {
-					exitSequence_Payment_Money_Inside();
-					sCInterface.raiseCancelPreparation();
-					
-					enterSequence_Payment_No_Money_Inside_default();
-					react();
-				} else {
-					did_transition = false;
-				}
 			}
 		}
 		if (did_transition==false) {
