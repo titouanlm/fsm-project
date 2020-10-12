@@ -283,6 +283,12 @@ public class DrinkFactoryMachine extends JFrame {
 			}
 		});
 		
+		cancelButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				theDFM.setSolde(0.0);
+			}
+		});
 		
 		money50centsButton.addActionListener(new ActionListener() {
 			@Override

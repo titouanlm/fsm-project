@@ -142,6 +142,24 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 			}
 		}
 		
+		private boolean cancelButton;
+		
+		
+		public void raiseCancelButton() {
+			synchronized(DefaultSMStatemachine.this) {
+				inEventQueue.add(
+					new Runnable() {
+						@Override
+						public void run() {
+							cancelButton = true;
+							singleCycle();
+						}
+					}
+				);
+				runCycle();
+			}
+		}
+		
 		private boolean icedTeaButton;
 		
 		
@@ -214,20 +232,20 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 			}
 		}
 		
-		private boolean takeCoffee;
+		private boolean takeBeverage;
 		
 		
-		public boolean isRaisedTakeCoffee() {
+		public boolean isRaisedTakeBeverage() {
 			synchronized(DefaultSMStatemachine.this) {
-				return takeCoffee;
+				return takeBeverage;
 			}
 		}
 		
-		protected void raiseTakeCoffee() {
+		protected void raiseTakeBeverage() {
 			synchronized(DefaultSMStatemachine.this) {
-				takeCoffee = true;
+				takeBeverage = true;
 				for (SCInterfaceListener listener : listeners) {
-					listener.onTakeCoffeeRaised();
+					listener.onTakeBeverageRaised();
 				}
 			}
 		}
@@ -340,6 +358,24 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 			}
 		}
 		
+		private boolean cancelPreparation;
+		
+		
+		public boolean isRaisedCancelPreparation() {
+			synchronized(DefaultSMStatemachine.this) {
+				return cancelPreparation;
+			}
+		}
+		
+		protected void raiseCancelPreparation() {
+			synchronized(DefaultSMStatemachine.this) {
+				cancelPreparation = true;
+				for (SCInterfaceListener listener : listeners) {
+					listener.onCancelPreparationRaised();
+				}
+			}
+		}
+		
 		private double solde;
 		
 		public synchronized double getSolde() {
@@ -362,6 +398,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 			teaButton = false;
 			expressoButton = false;
 			soupButton = false;
+			cancelButton = false;
 			icedTeaButton = false;
 		}
 		protected void clearOutEvents() {
@@ -369,13 +406,14 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		makeCoffee = false;
 		updateSolde = false;
 		resetSolde = false;
-		takeCoffee = false;
+		takeBeverage = false;
 		cleaningMachine = false;
 		machineReady = false;
 		makeTea = false;
 		makeExpresso = false;
 		makeSoup = false;
 		makeIcedTea = false;
+		cancelPreparation = false;
 		}
 		
 	}
@@ -661,6 +699,10 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		sCInterface.raiseSoupButton();
 	}
 	
+	public synchronized void raiseCancelButton() {
+		sCInterface.raiseCancelButton();
+	}
+	
 	public synchronized void raiseIcedTeaButton() {
 		sCInterface.raiseIcedTeaButton();
 	}
@@ -677,8 +719,8 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		return sCInterface.isRaisedResetSolde();
 	}
 	
-	public synchronized boolean isRaisedTakeCoffee() {
-		return sCInterface.isRaisedTakeCoffee();
+	public synchronized boolean isRaisedTakeBeverage() {
+		return sCInterface.isRaisedTakeBeverage();
 	}
 	
 	public synchronized boolean isRaisedCleaningMachine() {
@@ -705,12 +747,21 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		return sCInterface.isRaisedMakeIcedTea();
 	}
 	
+	public synchronized boolean isRaisedCancelPreparation() {
+		return sCInterface.isRaisedCancelPreparation();
+	}
+	
 	public synchronized double getSolde() {
 		return sCInterface.getSolde();
 	}
 	
 	public synchronized void setSolde(double value) {
 		sCInterface.setSolde(value);
+	}
+	
+	/* Entry action for state 'Waiting'. */
+	private void entryAction_main_region_Waiting() {
+		sCInterface.raiseMachineReady();
 	}
 	
 	/* Entry action for state 'Take beverage'. */
@@ -730,27 +781,27 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	
 	/* Entry action for state 'Coffee Preparation'. */
 	private void entryAction_main_region_Delay_Coffee_Payment_r1_Coffee_Preparation() {
-		timer.setTimer(this, 3, (1 * 1000), true);
+		timer.setTimer(this, 3, 1, true);
 	}
 	
 	/* Entry action for state 'Tea Preparation'. */
 	private void entryAction_main_region_Delay_Coffee_Payment_r1_Tea_Preparation() {
-		timer.setTimer(this, 4, (1 * 1000), true);
+		timer.setTimer(this, 4, 1, true);
 	}
 	
 	/* Entry action for state 'Expresso Preparation'. */
 	private void entryAction_main_region_Delay_Coffee_Payment_r1_Expresso_Preparation() {
-		timer.setTimer(this, 5, (1 * 1000), true);
+		timer.setTimer(this, 5, 1, true);
 	}
 	
 	/* Entry action for state 'Soup Preparation'. */
 	private void entryAction_main_region_Delay_Coffee_Payment_r1_Soup_Preparation() {
-		timer.setTimer(this, 6, (1 * 1000), true);
+		timer.setTimer(this, 6, 1, true);
 	}
 	
 	/* Entry action for state 'IcedTea Preparation'. */
 	private void entryAction_main_region_Delay_Coffee_Payment_r1_IcedTea_Preparation() {
-		timer.setTimer(this, 7, (1 * 1000), true);
+		timer.setTimer(this, 7, 1, true);
 	}
 	
 	/* Entry action for state 'Payment Done'. */
@@ -805,6 +856,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	
 	/* 'default' enter sequence for state Waiting */
 	private void enterSequence_main_region_Waiting_default() {
+		entryAction_main_region_Waiting();
 		nextStateIndex = 0;
 		stateVector[0] = State.main_region_Waiting;
 	}
@@ -1151,13 +1203,20 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if (timeEvents[2]) {
+			if (sCInterface.cancelButton) {
 				exitSequence_main_region_Delay_Coffee_Payment();
-				sCInterface.raiseResetSolde();
+				sCInterface.raiseCancelPreparation();
 				
 				enterSequence_main_region_Waiting_default();
 			} else {
-				did_transition = false;
+				if (timeEvents[2]) {
+					exitSequence_main_region_Delay_Coffee_Payment();
+					sCInterface.raiseResetSolde();
+					
+					enterSequence_main_region_Waiting_default();
+				} else {
+					did_transition = false;
+				}
 			}
 		}
 		return did_transition;
@@ -1264,7 +1323,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		if (try_transition) {
 			if (timeEvents[8]) {
 				exitSequence_main_region_Payment_Done();
-				sCInterface.raiseTakeCoffee();
+				sCInterface.raiseTakeBeverage();
 				
 				enterSequence_main_region_Take_beverage_default();
 			} else {
@@ -1305,7 +1364,15 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 				enterSequence_Payment_Money_Inside_default();
 				react();
 			} else {
-				did_transition = false;
+				if (sCInterface.cancelButton) {
+					exitSequence_Payment_Money_Inside();
+					sCInterface.raiseCancelPreparation();
+					
+					enterSequence_Payment_No_Money_Inside_default();
+					react();
+				} else {
+					did_transition = false;
+				}
 			}
 		}
 		if (did_transition==false) {

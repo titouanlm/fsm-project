@@ -31,10 +31,10 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	}
 
 	@Override
-	public void onTakeCoffeeRaised() {
-		if (this.dfm.theDFM.getSolde() == 0.0) this.dfm.messagesToUser.setText("<html> Veuillez prendre votre café svp.");
+	public void onTakeBeverageRaised() {
+		if (this.dfm.theDFM.getSolde() == 0.0) this.dfm.messagesToUser.setText("<html> Veuillez prendre votre boisson svp.");
 		else {
-			this.dfm.messagesToUser.setText("<html> Veuillez prendre votre café svp. <br> N'oubliez pas de récupérer votre argent.");
+			this.dfm.messagesToUser.setText("<html> Veuillez prendre votre boisson svp. <br> N'oubliez pas de récupérer votre argent.");
 			this.dfm.theDFM.setSolde(0.0);		}
 		try {
 			this.dfm.labelForPictures.setIcon(new ImageIcon(ImageIO.read(new File("./picts/ownCup.jpg"))));
@@ -64,8 +64,8 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	public void onMakeCoffeeRaised() {
 		if (this.dfm.machineSurEcoute) {
 			this.dfm.machineSurEcoute = false;
-			if (this.dfm.theDFM.getSolde() != 0.0) this.dfm.messagesToUser.setText("<html> Votre café est en cours de préparation ... ");
-			else this.dfm.messagesToUser.setText("<html> Veuillez insérer 0.35 euro pour la préparation de votre café");
+			if (this.dfm.theDFM.getSolde() >= 0.35) this.dfm.messagesToUser.setText("<html> Votre café est en cours de préparation ... ");
+			else this.dfm.messagesToUser.setText("<html> Veuillez insérer l'argent nécéssaire pour la préparation de votre café");
 		}
 		
 	}
@@ -74,8 +74,8 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	public void onMakeTeaRaised() {
 		if (this.dfm.machineSurEcoute) {
 			this.dfm.machineSurEcoute = false;
-			if (this.dfm.theDFM.getSolde() != 0.0) this.dfm.messagesToUser.setText("<html> Votre thé est en cours de préparation ... ");
-			else this.dfm.messagesToUser.setText("<html> Veuillez insérer 0.4 euro pour la préparation de votre thé");
+			if (this.dfm.theDFM.getSolde() >= 0.4) this.dfm.messagesToUser.setText("<html> Votre thé est en cours de préparation ... ");
+			else this.dfm.messagesToUser.setText("<html> Veuillez insérer l'argent nécéssaire pour la préparation de votre thé");
 		}
 	}
 
@@ -83,8 +83,8 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	public void onMakeExpressoRaised() {
 		if (this.dfm.machineSurEcoute) {
 			this.dfm.machineSurEcoute = false;
-			if (this.dfm.theDFM.getSolde() != 0.0) this.dfm.messagesToUser.setText("<html> Votre expresso est en cours de préparation ... ");
-			else this.dfm.messagesToUser.setText("<html> Veuillez insérer 0.5 euro pour la préparation de votre expresso");
+			if (this.dfm.theDFM.getSolde() >= 0.5) this.dfm.messagesToUser.setText("<html> Votre expresso est en cours de préparation ... ");
+			else this.dfm.messagesToUser.setText("<html> Veuillez insérer l'argent nécéssaire pour la préparation de votre expresso");
 		}
 	}
 
@@ -92,8 +92,8 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	public void onMakeSoupRaised() {
 		if (this.dfm.machineSurEcoute) {
 			this.dfm.machineSurEcoute = false;
-			if (this.dfm.theDFM.getSolde() != 0.0) this.dfm.messagesToUser.setText("<html> Votre soupe est en cours de préparation ... ");
-			else this.dfm.messagesToUser.setText("<html> Veuillez insérer 1 euro pour la préparation de votre soupe");
+			if (this.dfm.theDFM.getSolde() >= 1.0) this.dfm.messagesToUser.setText("<html> Votre soupe est en cours de préparation ... ");
+			else this.dfm.messagesToUser.setText("<html> Veuillez insérer l'argent nécéssaire pour la préparation de votre soupe");
 			}
 		
 	}
@@ -102,10 +102,17 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	public void onMakeIcedTeaRaised() {
 		if (this.dfm.machineSurEcoute) {
 			this.dfm.machineSurEcoute = false;
-			if (this.dfm.theDFM.getSolde() != 0.0) this.dfm.messagesToUser.setText("<html> Votre thé glacé est en cours de préparation ... ");
-			else this.dfm.messagesToUser.setText("<html> Veuillez insérer 1.30 euro pour la préparation de votre thé glacé");
+			if (this.dfm.theDFM.getSolde() >= 1.3) this.dfm.messagesToUser.setText("<html> Votre thé glacé est en cours de préparation ... ");
+			else this.dfm.messagesToUser.setText("<html> Veuillez insérer l'argent nécéssaire pour la préparation de votre thé glacé");
 		}
 		
+	}
+
+	@Override
+	public void onCancelPreparationRaised() {
+		this.dfm.machineSurEcoute = true;
+		this.dfm.messagesToUser.setText("<html> Vous n'avez rien choisi, n'oubliez pas de reprendre votre argent. <br> Au revoir.");		
+		this.dfm.theDFM.setSolde(0.0);
 	}
 
 }
