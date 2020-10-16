@@ -45,6 +45,7 @@ public class DrinkFactoryMachine extends JFrame {
 	protected JSlider sugarSlider;
 	protected JSlider sizeSlider;
 	protected JSlider temperatureSlider;
+	protected double beveragePrice = -1.0;
 	/**
 	 * Launch the application.
 	 */
@@ -59,6 +60,15 @@ public class DrinkFactoryMachine extends JFrame {
 				}
 			}
 		});
+	}
+	
+	public boolean enoughMoney(double money) {
+		if (theDFM != null) {
+			if (this.beveragePrice <= money) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -304,6 +314,7 @@ public class DrinkFactoryMachine extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				theDFM.setSolde(theDFM.getSolde()+0.5);
+				if (beveragePrice != -1) if (beveragePrice <= theDFM.getSolde()) theDFM.setEnoughMoney(true);
 				theDFM.raiseMoney50centsButton();
 			}
 		});
@@ -312,6 +323,7 @@ public class DrinkFactoryMachine extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				theDFM.setSolde(theDFM.getSolde()+0.25);
+				if (beveragePrice != -1) if (beveragePrice <= theDFM.getSolde()) theDFM.setEnoughMoney(true);
 				theDFM.raiseMoney25centsButton();
 			}
 		});
@@ -320,6 +332,7 @@ public class DrinkFactoryMachine extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				theDFM.setSolde(theDFM.getSolde()+0.1);
+				if (beveragePrice != -1) if (beveragePrice <= theDFM.getSolde()) theDFM.setEnoughMoney(true);
 				theDFM.raiseMoney10centsButton();
 			}
 		});
@@ -327,30 +340,48 @@ public class DrinkFactoryMachine extends JFrame {
 		coffeeButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e){
-				theDFM.raiseCoffeeButton();
+				if (machineSurEcoute) {
+					beveragePrice = 0.35;
+					messagesToUser.setText("<html> Vous avez choisi un café.");
+					theDFM.raiseCoffeeButton();
+					}
 				}
 			});
 		expressoButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e){
-				theDFM.raiseExpressoButton();
+				if (machineSurEcoute) {
+					beveragePrice = 0.5;
+					messagesToUser.setText("<html> Vous avez choisi un expresso.");
+					theDFM.raiseExpressoButton();
+					}
 				}
 			});
 		teaButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e){
-				theDFM.raiseTeaButton();
+				if (machineSurEcoute) {
+					beveragePrice = 0.4;
+					messagesToUser.setText("<html> Vous avez choisi un thé.");
+					theDFM.raiseTeaButton();
+					}
 				}
 			});
 		soupButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e){
-				theDFM.raiseSoupButton();
+				if (machineSurEcoute) {
+					beveragePrice = 1.0;
+					messagesToUser.setText("<html> Vous avez choisi une soupe.");
+					theDFM.raiseSoupButton();
+					}
 				}
 			});
 		icedTeaButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e){
+				beveragePrice = 1.3;
+				messagesToUser.setText("<html> Vous avez choisi un thé glacé.");
 				theDFM.raiseIcedTeaButton();
 				}
 			});
