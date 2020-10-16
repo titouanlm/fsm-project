@@ -289,15 +289,14 @@ public class DrinkFactoryMachine extends JFrame {
 		nfcBiiiipButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				theDFM.setPaymentCard(true);
-				messagesToUser.setText("<html> Veuillez choisir votre <br> boisson");
+				theDFM.raiseBipButton();
 			}
 		});
 		
 		cancelButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				theDFM.setSolde(0.0);
+				theDFM.raiseCancelButton();
 			}
 		});
 		
@@ -357,9 +356,4 @@ public class DrinkFactoryMachine extends JFrame {
 			});
 	}
 	
-	public void resetSliders() {
-		sugarSlider.setValue(1);
-		temperatureSlider.setValue(2);
-		sizeSlider.setValue(1);
-	}
 }

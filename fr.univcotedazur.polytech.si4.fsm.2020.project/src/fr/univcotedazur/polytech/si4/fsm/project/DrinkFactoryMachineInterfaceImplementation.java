@@ -25,13 +25,6 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	}
 
 	@Override
-	public void onResetSoldeRaised() {
-		this.dfm.messagesToUser.setText("<html> Vous n'avez rien choisi. <br> Récupérez votre monnaie. <br>  Solde : " + this.dfm.theDFM.getSolde() + "€" );
-		this.dfm.theDFM.setSolde(0.0);
-		this.dfm.resetSliders();
-	}
-
-	@Override
 	public void onTakeBeverageRaised() {
 		if (this.dfm.theDFM.getSolde() == 0.0) this.dfm.messagesToUser.setText("<html> Veuillez prendre votre boisson svp.");
 		else {
@@ -55,14 +48,14 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 			ee.printStackTrace();
 		}
 		this.dfm.messagesToUser.setText("<html> Attendez, votre machine est en cours de nettoyage.");	
-		this.dfm.resetSliders();
+		onResetSlidersRaised();
 	}
 
 	@Override
 	public void onMachineReadyRaised() {
 		this.dfm.messagesToUser.setText("<html> Veuillez insérer de l'argent <br> Solde : " + this.dfm.theDFM.getSolde() + "€");
 		this.dfm.machineSurEcoute = true;
-		this.dfm.theDFM.setPaymentCard(false);
+		this.dfm.theDFM.setPaymentDone(false);
 	}
 	
 	@Override
@@ -148,13 +141,38 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	@Override
 	public void onCancelPreparationRaised() {
 		this.dfm.machineSurEcoute = true;
-		this.dfm.messagesToUser.setText("<html> Vous n'avez rien choisi, n'oubliez pas de reprendre votre argent. <br> Au revoir.");		
+		this.dfm.messagesToUser.setText("<html> Vous n'avez rien choisi, n'oubliez pas de récupérer vos "  + this.dfm.theDFM.getSolde() + "€. <br> Au revoir.");		
 		this.dfm.theDFM.setSolde(0.0);
+		onResetSlidersRaised();
 	}
 
 	@Override
 	public void onTimePreparationRaised() {
 		this.dfm.machineSurEcoute = false;
+	}
+
+	@Override
+	public void onPayByNFCRaised() {
+		this.dfm.theDFM.setPaymentCard(true);
+		this.dfm.messagesToUser.setText("<html> Veuillez choisir votre <br> boisson.");
+	}
+
+	@Override
+	public void onCancelTransactionRaised() {
+		this.dfm.messagesToUser.setText("<html> Vous n'avez rien choisi, Transaction annulée. <br> Vous n'avez pas été débité. <br> Au revoir.");
+		this.dfm.theDFM.setPaymentCard(false);
+	}
+
+	@Override
+	public void onResetSlidersRaised() {
+		this.dfm.sugarSlider.setValue(1);
+		this.dfm.temperatureSlider.setValue(2);
+		this.dfm.sizeSlider.setValue(1);
+	}
+
+	@Override
+	public void onValidatePaymentRaised() {
+		this.dfm.theDFM.setPaymentDone(true);
 	}
 
 }

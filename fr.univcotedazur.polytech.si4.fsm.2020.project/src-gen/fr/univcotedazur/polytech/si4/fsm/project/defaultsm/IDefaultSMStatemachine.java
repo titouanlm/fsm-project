@@ -26,13 +26,13 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		
 		public void raiseSoupButton();
 		
+		public void raiseBipButton();
+		
 		public void raiseCancelButton();
 		
 		public void raiseIcedTeaButton();
 		
 		public boolean isRaisedUpdateSolde();
-		
-		public boolean isRaisedResetSolde();
 		
 		public boolean isRaisedTakeBeverage();
 		
@@ -64,6 +64,14 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		
 		public boolean isRaisedAskIcedTea();
 		
+		public boolean isRaisedPayByNFC();
+		
+		public boolean isRaisedCancelTransaction();
+		
+		public boolean isRaisedResetSliders();
+		
+		public boolean isRaisedValidatePayment();
+		
 		public double getSolde();
 		
 		public void setSolde(double value);
@@ -72,13 +80,16 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		
 		public void setPaymentCard(boolean value);
 		
+		public boolean getPaymentDone();
+		
+		public void setPaymentDone(boolean value);
+		
 	public List<SCInterfaceListener> getListeners();
 	}
 	
 	public interface SCInterfaceListener {
 	
 		public void onUpdateSoldeRaised();
-		public void onResetSoldeRaised();
 		public void onTakeBeverageRaised();
 		public void onCleaningMachineRaised();
 		public void onMachineReadyRaised();
@@ -94,6 +105,10 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		public void onAskExpressoRaised();
 		public void onAskSoupRaised();
 		public void onAskIcedTeaRaised();
+		public void onPayByNFCRaised();
+		public void onCancelTransactionRaised();
+		public void onResetSlidersRaised();
+		public void onValidatePaymentRaised();
 		}
 	
 	public SCInterface getSCInterface();
