@@ -20,19 +20,27 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	@Override
 	public void onUpdateSoldeRaised() {
 		if (this.dfm.machineSurEcoute) {
-			this.dfm.messagesToUser.setText("Solde : " + this.dfm.theDFM.getSolde() + " €" );
+			if(this.dfm.beverageChoice == null) {
+				this.dfm.messagesToUser.setText("Solde : " + this.dfm.theDFM.getSolde() + " €" );
+				this.dfm.enoughMoney();
+			}else {
+				onBeverageChoiceRaised();
+			}
+			
 		}
 	}
 
 	@Override
 	public void onTakeBeverageRaised() {
-		if (this.dfm.theDFM.getSolde() == 0.0) this.dfm.messagesToUser.setText("<html> Veuillez prendre votre boisson svp.");
-		else {
+		if (this.dfm.theDFM.getSolde() == 0.0) {
+			this.dfm.messagesToUser.setText("<html> Veuillez prendre votre boisson svp.");
+		} else {
 			this.dfm.messagesToUser.setText("<html> Veuillez prendre votre boisson svp. <br>");
 			if (!this.dfm.theDFM.getPaymentCard()) {
 				this.dfm.messagesToUser.setText("<html>Argent à récuperer : <br>" + Math.round(this.dfm.theDFM.getSolde()*100) + " centimes");
 			}
-			this.dfm.theDFM.setSolde(0.0);		}
+			this.dfm.theDFM.setSolde(0.0);		
+			}
 		try {
 			this.dfm.labelForPictures.setIcon(new ImageIcon(ImageIO.read(new File("./picts/ownCup.jpg"))));
 		} catch (IOException ee) {
@@ -49,7 +57,6 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		}
 		this.dfm.messagesToUser.setText("<html> Attendez, votre machine est en cours de nettoyage.");	
 		onResetSlidersRaised();
-		this.dfm.theDFM.setEnoughMoney(false);
 	}
 
 	@Override
@@ -57,32 +64,14 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		this.dfm.messagesToUser.setText("<html> Veuillez insérer de l'argent <br> Solde : " + this.dfm.theDFM.getSolde() + "€");
 		this.dfm.machineSurEcoute = true;
 		this.dfm.theDFM.setPaymentDone(false);
-		this.dfm.beveragePrice = -1.0;
+		this.dfm.theDFM.setEnoughMoney(false);
+		this.dfm.beverageChoice =null;
 	}
 	
 	@Override
 	public void onBeveragePreparationRaised() {
-		if (this.dfm.beveragePrice == 0.35) {
-			this.dfm.messagesToUser.setText("<html> Votre café est en cours de préparation ... ");
-			this.dfm.theDFM.setSolde(this.dfm.theDFM.getSolde()-0.35);
-		}
-		if (this.dfm.beveragePrice == 0.4) {
-			this.dfm.messagesToUser.setText("<html> Votre thé est en cours de préparation ... ");
-			this.dfm.theDFM.setSolde(this.dfm.theDFM.getSolde()-0.4);
-		}
-		if (this.dfm.beveragePrice == 0.5) {
-			this.dfm.messagesToUser.setText("<html> Votre expresso est en cours de préparation ... ");
-			this.dfm.theDFM.setSolde(this.dfm.theDFM.getSolde()-0.50);
-		}
-		if (this.dfm.beveragePrice == 1.0) {
-			this.dfm.messagesToUser.setText("<html> Votre soupe est en cours de préparation ... ");
-			this.dfm.theDFM.setSolde(this.dfm.theDFM.getSolde()-1.0);
-		}
-		if (this.dfm.beveragePrice == 1.3) {
-			this.dfm.messagesToUser.setText("<html> Votre thé glacé est en cours de préparation ... ");
-			this.dfm.theDFM.setSolde(this.dfm.theDFM.getSolde()-1.3);
-		}
-		
+		this.dfm.messagesToUser.setText("<html> Votre " + this.dfm.beverageChoice.getName() + " est en cours de préparation ... ");
+		this.dfm.theDFM.setSolde(this.dfm.theDFM.getSolde()-this.dfm.beverageChoice.getPrice());
 	}
 
 	@Override
@@ -124,8 +113,10 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 
 	@Override
 	public void onBeverageChoiceRaised() {
-		this.dfm.messagesToUser.setText("<html> Veuillez insérer de l'argent");
-		this.dfm.theDFM.setEnoughMoney(this.dfm.enoughMoney(this.dfm.theDFM.getSolde()));
+		this.dfm.messagesToUser.setText("<html> Vous avez choisis "+ this.dfm.beverageChoice.getName() + 
+				"<br> Prix : " + this.dfm.beverageChoice.getPrice() + "€." +
+				"<br> Votre solde : " + this.dfm.theDFM.getSolde() + "€.");
+		this.dfm.enoughMoney();
 	}
 
 }

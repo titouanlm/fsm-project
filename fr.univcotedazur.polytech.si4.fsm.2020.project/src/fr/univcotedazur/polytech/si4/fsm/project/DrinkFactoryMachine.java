@@ -45,7 +45,7 @@ public class DrinkFactoryMachine extends JFrame {
 	protected JSlider sugarSlider;
 	protected JSlider sizeSlider;
 	protected JSlider temperatureSlider;
-	protected double beveragePrice = -1.0;
+	protected Beverage beverageChoice = null;
 	/**
 	 * Launch the application.
 	 */
@@ -62,13 +62,14 @@ public class DrinkFactoryMachine extends JFrame {
 		});
 	}
 	
-	public boolean enoughMoney(double money) {
-		if (theDFM != null) {
-			if (this.beveragePrice <= money) {
-				return true;
+	public void enoughMoney() {
+		if (theDFM != null && this.beverageChoice != null ) {
+			if (this.beverageChoice.getPrice() <= theDFM.getSolde()) {
+				theDFM.setEnoughMoney(true);
+			}else {
+				theDFM.setEnoughMoney(false);
 			}
 		}
-		return false;
 	}
 
 	/**
@@ -314,7 +315,6 @@ public class DrinkFactoryMachine extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				theDFM.setSolde(theDFM.getSolde()+0.5);
-				if (beveragePrice != -1) if (beveragePrice <= theDFM.getSolde()) theDFM.setEnoughMoney(true);
 				theDFM.raiseMoney50centsButton();
 			}
 		});
@@ -323,7 +323,6 @@ public class DrinkFactoryMachine extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				theDFM.setSolde(theDFM.getSolde()+0.25);
-				if (beveragePrice != -1) if (beveragePrice <= theDFM.getSolde()) theDFM.setEnoughMoney(true);
 				theDFM.raiseMoney25centsButton();
 			}
 		});
@@ -332,7 +331,6 @@ public class DrinkFactoryMachine extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				theDFM.setSolde(theDFM.getSolde()+0.1);
-				if (beveragePrice != -1) if (beveragePrice <= theDFM.getSolde()) theDFM.setEnoughMoney(true);
 				theDFM.raiseMoney10centsButton();
 			}
 		});
@@ -341,33 +339,33 @@ public class DrinkFactoryMachine extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e){
 				if (machineSurEcoute) {
-					beveragePrice = 0.35;
-					messagesToUser.setText("<html> Vous avez choisi un café.");
+					beverageChoice = new Coffee();
 					theDFM.raiseCoffeeButton();
 					}
 				}
-			});
+		});
+		
 		expressoButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e){
 				if (machineSurEcoute) {
-					beveragePrice = 0.5;
-					messagesToUser.setText("<html> Vous avez choisi un expresso.");
+					beverageChoice = new Expresso();
 					theDFM.raiseExpressoButton();
 					}
 				}
-			});
+		});
+		
 		teaButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e){
 				if (machineSurEcoute) {
-					beveragePrice = 0.4;
-					messagesToUser.setText("<html> Vous avez choisi un thé.");
+					beverageChoice = new Tea();
 					theDFM.raiseTeaButton();
 					}
 				}
-			});
-		soupButton.addActionListener(new ActionListener() {
+		});
+		
+		/*soupButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e){
 				if (machineSurEcoute) {
@@ -376,15 +374,15 @@ public class DrinkFactoryMachine extends JFrame {
 					theDFM.raiseSoupButton();
 					}
 				}
-			});
+		});
+		
 		icedTeaButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e){
 				beveragePrice = 1.3;
-				messagesToUser.setText("<html> Vous avez choisi un thé glacé.");
 				theDFM.raiseIcedTeaButton();
 				}
-			});
+		});*/
 	}
 	
 }
