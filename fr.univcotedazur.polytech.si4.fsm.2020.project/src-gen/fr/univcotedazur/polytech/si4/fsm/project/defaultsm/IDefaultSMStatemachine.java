@@ -46,8 +46,6 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		
 		public boolean isRaisedCancelPreparation();
 		
-		public boolean isRaisedTimePreparation();
-		
 		public boolean isRaisedPayByNFC();
 		
 		public boolean isRaisedCancelTransaction();
@@ -84,7 +82,6 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		public void onBeveragePreparationRaised();
 		public void onBeverageChoiceRaised();
 		public void onCancelPreparationRaised();
-		public void onTimePreparationRaised();
 		public void onPayByNFCRaised();
 		public void onCancelTransactionRaised();
 		public void onResetSlidersRaised();

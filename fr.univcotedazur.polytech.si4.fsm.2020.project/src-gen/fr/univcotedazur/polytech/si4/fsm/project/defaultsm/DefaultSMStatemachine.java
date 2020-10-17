@@ -322,24 +322,6 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 			}
 		}
 		
-		private boolean timePreparation;
-		
-		
-		public boolean isRaisedTimePreparation() {
-			synchronized(DefaultSMStatemachine.this) {
-				return timePreparation;
-			}
-		}
-		
-		protected void raiseTimePreparation() {
-			synchronized(DefaultSMStatemachine.this) {
-				timePreparation = true;
-				for (SCInterfaceListener listener : listeners) {
-					listener.onTimePreparationRaised();
-				}
-			}
-		}
-		
 		private boolean payByNFC;
 		
 		
@@ -489,7 +471,6 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		beveragePreparation = false;
 		beverageChoice = false;
 		cancelPreparation = false;
-		timePreparation = false;
 		payByNFC = false;
 		cancelTransaction = false;
 		resetSliders = false;
@@ -829,10 +810,6 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		return sCInterface.isRaisedCancelPreparation();
 	}
 	
-	public synchronized boolean isRaisedTimePreparation() {
-		return sCInterface.isRaisedTimePreparation();
-	}
-	
 	public synchronized boolean isRaisedPayByNFC() {
 		return sCInterface.isRaisedPayByNFC();
 	}
@@ -888,24 +865,22 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	
 	/* Entry action for state 'Take beverage'. */
 	private void entryAction_main_region_Take_beverage() {
-		timer.setTimer(this, 0, 5000, false);
+		timer.setTimer(this, 0, (5 * 1000), false);
 	}
 	
 	/* Entry action for state 'Cleaning'. */
 	private void entryAction_main_region_Cleaning() {
-		timer.setTimer(this, 1, 5000, false);
+		timer.setTimer(this, 1, (5 * 1000), false);
 	}
 	
 	/* Entry action for state 'Payment Done'. */
 	private void entryAction_main_region_Payment_Done() {
-		timer.setTimer(this, 2, 1, false);
-		
-		sCInterface.raiseValidatePayment();
+		timer.setTimer(this, 2, (1 * 1000), false);
 	}
 	
 	/* Entry action for state 'Beverage Preparation'. */
 	private void entryAction_main_region_Beverage_Preparation() {
-		timer.setTimer(this, 3, 1000, false);
+		timer.setTimer(this, 3, (1 * 1000), false);
 	}
 	
 	/* Entry action for state 'Beverage Choice'. */
@@ -917,7 +892,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	
 	/* Entry action for state 'PaymentByCoins'. */
 	private void entryAction_PaymentByCoins_PaymentByCoins() {
-		timer.setTimer(this, 6, (5 * 1000), false);
+		timer.setTimer(this, 6, (45 * 1000), false);
 		
 		timer.setTimer(this, 7, 1, true);
 	}
@@ -929,7 +904,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	
 	/* Entry action for state 'PaymentByNFC'. */
 	private void entryAction_PaymentByNFC_PaymentByNFC() {
-		timer.setTimer(this, 9, (5 * 1000), false);
+		timer.setTimer(this, 9, (45 * 1000), false);
 		
 		timer.setTimer(this, 10, 1, true);
 	}
@@ -1260,7 +1235,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if ((sCInterface.coffeeButton || (sCInterface.expressoButton || (sCInterface.soupButton || (sCInterface.icedTeaButton || sCInterface.teaButton))))) {
+			if ((sCInterface.coffeeButton || (sCInterface.expressoButton || sCInterface.teaButton))) {
 				exitSequence_main_region_Waiting();
 				sCInterface.raiseBeverageChoice();
 				
@@ -1308,7 +1283,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		if (try_transition) {
 			if (timeEvents[2]) {
 				exitSequence_main_region_Payment_Done();
-				sCInterface.raiseTimePreparation();
+				sCInterface.raiseBeveragePreparation();
 				
 				enterSequence_main_region_Beverage_Preparation_default();
 			} else {
@@ -1340,7 +1315,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		if (try_transition) {
 			if (((timeEvents[4]) && (((sCInterface.getPaymentCard() || sCInterface.getEnoughMoney()))==true))) {
 				exitSequence_main_region_Beverage_Choice();
-				sCInterface.raiseBeveragePreparation();
+				sCInterface.raiseValidatePayment();
 				
 				enterSequence_main_region_Payment_Done_default();
 			} else {
@@ -1354,7 +1329,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 						exitSequence_main_region_Beverage_Choice();
 						enterSequence_main_region_Waiting_default();
 					} else {
-						if ((sCInterface.coffeeButton || (sCInterface.expressoButton || (sCInterface.soupButton || (sCInterface.icedTeaButton || sCInterface.teaButton))))) {
+						if ((sCInterface.coffeeButton || (sCInterface.expressoButton || (sCInterface.teaButton || (sCInterface.money50centsButton || (sCInterface.money25centsButton || sCInterface.money10centsButton)))))) {
 							exitSequence_main_region_Beverage_Choice();
 							sCInterface.raiseBeverageChoice();
 							
@@ -1373,7 +1348,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if ((sCInterface.money50centsButton || (sCInterface.money25centsButton || sCInterface.money10centsButton))) {
+			if ((sCInterface.money50centsButton || (sCInterface.money25centsButton || (sCInterface.money10centsButton || (sCInterface.coffeeButton || (sCInterface.expressoButton || sCInterface.teaButton)))))) {
 				exitSequence_PaymentByCoins_PaymentByCoins();
 				sCInterface.raiseUpdateSolde();
 				

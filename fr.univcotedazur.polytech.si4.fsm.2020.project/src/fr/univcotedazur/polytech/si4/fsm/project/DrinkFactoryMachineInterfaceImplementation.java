@@ -32,15 +32,14 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 
 	@Override
 	public void onTakeBeverageRaised() {
-		if (this.dfm.theDFM.getSolde() == 0.0) {
-			this.dfm.messagesToUser.setText("<html> Veuillez prendre votre boisson svp.");
-		} else {
-			this.dfm.messagesToUser.setText("<html> Veuillez prendre votre boisson svp. <br>");
+		this.dfm.messagesToUser.setText("<html> Veuillez prendre votre boisson svp. <br>");
+		if (this.dfm.theDFM.getSolde() > 0.0) {
 			if (!this.dfm.theDFM.getPaymentCard()) {
-				this.dfm.messagesToUser.setText("<html>Argent à récuperer : <br>" + Math.round(this.dfm.theDFM.getSolde()*100) + " centimes");
+				this.dfm.messagesToUser.setText("<html>Argent à récuperer : <br>" + Math.round(this.dfm.theDFM.getSolde()) + " €");
+				this.dfm.theDFM.setSolde(0.0);	
 			}
-			this.dfm.theDFM.setSolde(0.0);		
-			}
+		}
+		
 		try {
 			this.dfm.labelForPictures.setIcon(new ImageIcon(ImageIO.read(new File("./picts/ownCup.jpg"))));
 		} catch (IOException ee) {
@@ -65,13 +64,14 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		this.dfm.machineSurEcoute = true;
 		this.dfm.theDFM.setPaymentDone(false);
 		this.dfm.theDFM.setEnoughMoney(false);
+		this.dfm.theDFM.setPaymentCard(false);
 		this.dfm.beverageChoice =null;
 	}
 	
 	@Override
 	public void onBeveragePreparationRaised() {
 		this.dfm.messagesToUser.setText("<html> Votre " + this.dfm.beverageChoice.getName() + " est en cours de préparation ... ");
-		this.dfm.theDFM.setSolde(this.dfm.theDFM.getSolde()-this.dfm.beverageChoice.getPrice());
+		this.dfm.machineSurEcoute = false;
 	}
 
 	@Override
@@ -80,11 +80,6 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		this.dfm.messagesToUser.setText("<html> Vous n'avez rien choisi, n'oubliez pas de récupérer vos "  + this.dfm.theDFM.getSolde() + "€. <br> Au revoir.");		
 		this.dfm.theDFM.setSolde(0.0);
 		onResetSlidersRaised();
-	}
-
-	@Override
-	public void onTimePreparationRaised() {
-		this.dfm.machineSurEcoute = false;
 	}
 
 	@Override
@@ -108,6 +103,10 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 
 	@Override
 	public void onValidatePaymentRaised() {
+		this.dfm.messagesToUser.setText("<html> Paiement autorisé.");
+		if(!this.dfm.theDFM.getPaymentCard()) {
+			this.dfm.theDFM.setSolde(this.dfm.theDFM.getSolde()-this.dfm.beverageChoice.getPrice());
+		}
 		this.dfm.theDFM.setPaymentDone(true);
 	}
 
