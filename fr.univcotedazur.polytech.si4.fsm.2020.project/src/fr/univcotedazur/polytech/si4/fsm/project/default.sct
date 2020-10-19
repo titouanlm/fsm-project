@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0">
-  <sgraph:Statechart xmi:id="_xFODUAn_EeuGxr3Rn5k_Tw" specification="@EventDriven&#xA;// Use the event driven execution model.&#xA;// Runs a run-to-completion step&#xA;// each time an event is raised.&#xA;// Switch to cycle based behavior&#xA;// by specifying '@CycleBased(200)'&#xA;// instead.&#xA;&#xA;@ChildFirstExecution&#xA;// In composite states, execute&#xA;// child states first.&#xA;// @ParentFirstExecution does the opposite.&#xA;&#xA;interface:&#xA;// Define events&#xA;// and variables here. &#xA;// Use CTRL + Space for content assist.&#xA;var solde : real&#xA;var paymentCard : boolean&#xA;var paymentDone : boolean&#xA;var enoughMoney : boolean&#xA;in event money50centsButton&#xA;in event money25centsButton&#xA;in event money10centsButton&#xA;in event coffeeButton&#xA;in event teaButton&#xA;in event expressoButton&#xA;in event soupButton&#xA;in event bipButton&#xA;in event cancelButton&#xA;in event icedTeaButton&#xA;out event updateSolde&#xA;out event takeBeverage&#xA;out event cleaningMachine&#xA;out event machineReady&#xA;out event beveragePreparation&#xA;out event beverageChoice&#xA;out event cancelPreparation&#xA;out event timePreparation&#xA;out event payByNFC&#xA;out event cancelTransaction&#xA;out event resetSliders&#xA;out event validatePayment&#xA;&#xA;" name="default">
+  <sgraph:Statechart xmi:id="_xFODUAn_EeuGxr3Rn5k_Tw" specification="@EventDriven&#xA;// Use the event driven execution model.&#xA;// Runs a run-to-completion step&#xA;// each time an event is raised.&#xA;// Switch to cycle based behavior&#xA;// by specifying '@CycleBased(200)'&#xA;// instead.&#xA;&#xA;@ChildFirstExecution&#xA;// In composite states, execute&#xA;// child states first.&#xA;// @ParentFirstExecution does the opposite.&#xA;&#xA;interface:&#xA;// Define events&#xA;// and variables here. &#xA;// Use CTRL + Space for content assist.&#xA;var solde : real&#xA;var paymentCard : boolean&#xA;var paymentDone : boolean&#xA;var enoughMoney : boolean&#xA;in event money50centsButton&#xA;in event money25centsButton&#xA;in event money10centsButton&#xA;in event coffeeButton&#xA;in event teaButton&#xA;in event expressoButton&#xA;in event soupButton&#xA;in event bipButton&#xA;in event cancelButton&#xA;in event icedTeaButton&#xA;out event updateSolde&#xA;out event takeBeverage&#xA;out event cleaningMachine&#xA;out event machineReady&#xA;out event beveragePreparation&#xA;out event beverageChoice&#xA;out event cancelPreparation&#xA;out event payByNFC&#xA;out event cancelTransaction&#xA;out event resetSliders&#xA;out event validatePayment&#xA;&#xA;" name="default">
     <regions xmi:id="_xF3jkAn_EeuGxr3Rn5k_Tw" name="main region">
       <vertices xsi:type="sgraph:Entry" xmi:id="_xGl8UAn_EeuGxr3Rn5k_Tw">
         <outgoingTransitions xmi:id="_xGw7cAn_EeuGxr3Rn5k_Tw" target="_xGo_oAn_EeuGxr3Rn5k_Tw"/>
       </vertices>
       <vertices xsi:type="sgraph:State" xmi:id="_xGo_oAn_EeuGxr3Rn5k_Tw" specification="entry / raise machineReady" name="Waiting" incomingTransitions="_xGw7cAn_EeuGxr3Rn5k_Tw _-naZMApQEeuwgo6ZipN5wA _9lZWYA-REeu6Z-Qhi16VhA _-hfLMA-REeu6Z-Qhi16VhA">
-        <outgoingTransitions xmi:id="_6BvpiA-REeu6Z-Qhi16VhA" specification="coffeeButton, expressoButton, &#xD;&#xA;soupButton, icedTeaButton, teaButton &#xD;&#xA;/ raise beverageChoice" target="_6Bvpug-REeu6Z-Qhi16VhA"/>
+        <outgoingTransitions xmi:id="_6BvpiA-REeu6Z-Qhi16VhA" specification="coffeeButton, expressoButton, teaButton &#xD;&#xA;/ raise beverageChoice" target="_6Bvpug-REeu6Z-Qhi16VhA"/>
       </vertices>
       <vertices xsi:type="sgraph:State" xmi:id="_GNEYcApQEeuwgo6ZipN5wA" name="Take beverage" incomingTransitions="_qVNEQAzBEeuPGONkpNPuJA">
-        <outgoingTransitions xmi:id="_W0Nw4ApQEeuwgo6ZipN5wA" specification="after 5000ms / raise cleaningMachine" target="_6V0oMApQEeuwgo6ZipN5wA"/>
+        <outgoingTransitions xmi:id="_W0Nw4ApQEeuwgo6ZipN5wA" specification="after 5s / raise cleaningMachine" target="_6V0oMApQEeuwgo6ZipN5wA"/>
       </vertices>
       <vertices xsi:type="sgraph:State" xmi:id="_6V0oMApQEeuwgo6ZipN5wA" name="Cleaning" incomingTransitions="_W0Nw4ApQEeuwgo6ZipN5wA">
-        <outgoingTransitions xmi:id="_-naZMApQEeuwgo6ZipN5wA" specification="after 5000ms " target="_xGo_oAn_EeuGxr3Rn5k_Tw"/>
+        <outgoingTransitions xmi:id="_-naZMApQEeuwgo6ZipN5wA" specification="after 5s " target="_xGo_oAn_EeuGxr3Rn5k_Tw"/>
       </vertices>
-      <vertices xsi:type="sgraph:State" xmi:id="_x5ZeUAsoEeubGKScPSKYRw" specification="entry / &#xA;raise validatePayment" name="Payment Done" incomingTransitions="_6Bvpxg-REeu6Z-Qhi16VhA">
-        <outgoingTransitions xmi:id="_xP0tAAzBEeuPGONkpNPuJA" specification="after 1ms / raise timePreparation" target="_hiYjwAzBEeuPGONkpNPuJA"/>
+      <vertices xsi:type="sgraph:State" xmi:id="_x5ZeUAsoEeubGKScPSKYRw" specification="" name="Payment Done" incomingTransitions="_6Bvpxg-REeu6Z-Qhi16VhA">
+        <outgoingTransitions xmi:id="_xP0tAAzBEeuPGONkpNPuJA" specification="after 1s / raise beveragePreparation" target="_hiYjwAzBEeuPGONkpNPuJA"/>
       </vertices>
       <vertices xsi:type="sgraph:State" xmi:id="_hiYjwAzBEeuPGONkpNPuJA" name="Beverage Preparation" incomingTransitions="_xP0tAAzBEeuPGONkpNPuJA">
-        <outgoingTransitions xmi:id="_qVNEQAzBEeuPGONkpNPuJA" specification="after 1000ms / raise takeBeverage" target="_GNEYcApQEeuwgo6ZipN5wA"/>
+        <outgoingTransitions xmi:id="_qVNEQAzBEeuPGONkpNPuJA" specification="after 1s / raise takeBeverage" target="_GNEYcApQEeuwgo6ZipN5wA"/>
       </vertices>
       <vertices xsi:type="sgraph:State" xmi:id="_6Bvpug-REeu6Z-Qhi16VhA" name="Beverage Choice" incomingTransitions="_6BvpiA-REeu6Z-Qhi16VhA _Df93YA-SEeu6Z-Qhi16VhA">
-        <outgoingTransitions xmi:id="_6Bvpxg-REeu6Z-Qhi16VhA" specification="every 1ms [(paymentCard || enoughMoney )== true] / raise beveragePreparation" target="_x5ZeUAsoEeubGKScPSKYRw"/>
+        <outgoingTransitions xmi:id="_6Bvpxg-REeu6Z-Qhi16VhA" specification="every 1ms [(paymentCard || enoughMoney )== true] / raise  validatePayment" target="_x5ZeUAsoEeubGKScPSKYRw"/>
         <outgoingTransitions xmi:id="_9lZWYA-REeu6Z-Qhi16VhA" specification="cancelButton / raise resetSliders" target="_xGo_oAn_EeuGxr3Rn5k_Tw"/>
         <outgoingTransitions xmi:id="_-hfLMA-REeu6Z-Qhi16VhA" specification="after 45s" target="_xGo_oAn_EeuGxr3Rn5k_Tw"/>
-        <outgoingTransitions xmi:id="_Df93YA-SEeu6Z-Qhi16VhA" specification="coffeeButton, expressoButton, &#xD;&#xA;soupButton, icedTeaButton, teaButton &#xD;&#xA;/ raise beverageChoice" target="_6Bvpug-REeu6Z-Qhi16VhA"/>
+        <outgoingTransitions xmi:id="_Df93YA-SEeu6Z-Qhi16VhA" specification="coffeeButton, &#xD;&#xA;expressoButton, &#xD;&#xA;teaButton, &#xD;&#xA;money50centsButton, &#xD;&#xA;money25centsButton,&#xD;&#xA;money10centsButton &#xD;&#xA;/ raise beverageChoice" target="_6Bvpug-REeu6Z-Qhi16VhA"/>
       </vertices>
     </regions>
     <regions xmi:id="_eUV-1AzfEeuI9eH5CU5aoQ" name="PaymentByCoins">
@@ -32,8 +32,8 @@
         <outgoingTransitions xmi:id="_eUfIwQzfEeuI9eH5CU5aoQ" specification="" target="_pcH6MA1QEeuGxr3Rn5k_Tw"/>
       </vertices>
       <vertices xsi:type="sgraph:State" xmi:id="_eUa3ZQzfEeuI9eH5CU5aoQ" name="PaymentByCoins" incomingTransitions="_ny_DgAzfEeuI9eH5CU5aoQ _uIlpUA1QEeuGxr3Rn5k_Tw">
-        <outgoingTransitions xmi:id="_ny_DgAzfEeuI9eH5CU5aoQ" specification="money50centsButton, &#xD;&#xA;money25centsButton,&#xD;&#xA;money10centsButton / raise updateSolde" target="_eUa3ZQzfEeuI9eH5CU5aoQ"/>
-        <outgoingTransitions xmi:id="_uk5x4A1QEeuGxr3Rn5k_Tw" specification="after 5s  / raise cancelPreparation " target="_a2nEIA-GEeuqpv-9TVMMBQ"/>
+        <outgoingTransitions xmi:id="_ny_DgAzfEeuI9eH5CU5aoQ" specification="money50centsButton, &#xD;&#xA;money25centsButton,&#xD;&#xA;money10centsButton,coffeeButton, expressoButton, teaButton  / raise updateSolde" target="_eUa3ZQzfEeuI9eH5CU5aoQ"/>
+        <outgoingTransitions xmi:id="_uk5x4A1QEeuGxr3Rn5k_Tw" specification="after 45s  / raise cancelPreparation " target="_a2nEIA-GEeuqpv-9TVMMBQ"/>
         <outgoingTransitions xmi:id="_6JOkwA-BEeuqpv-9TVMMBQ" specification="cancelButton / raise cancelPreparation" target="_a2nEIA-GEeuqpv-9TVMMBQ"/>
         <outgoingTransitions xmi:id="_P9wAAA-NEeuqpv-9TVMMBQ" specification="every 1ms [paymentDone == true]  " target="_pcH6MA1QEeuGxr3Rn5k_Tw"/>
       </vertices>
@@ -52,7 +52,7 @@
         <outgoingTransitions xmi:id="_UJlwsA1QEeuGxr3Rn5k_Tw" specification="bipButton / raise  payByNFC" target="_O3PtUA1QEeuGxr3Rn5k_Tw"/>
       </vertices>
       <vertices xsi:type="sgraph:State" xmi:id="_O3PtUA1QEeuGxr3Rn5k_Tw" name="PaymentByNFC" incomingTransitions="_UJlwsA1QEeuGxr3Rn5k_Tw">
-        <outgoingTransitions xmi:id="_Z4NgYA1QEeuGxr3Rn5k_Tw" specification="after 5s / raise cancelTransaction" target="_IChBEA-IEeuqpv-9TVMMBQ"/>
+        <outgoingTransitions xmi:id="_Z4NgYA1QEeuGxr3Rn5k_Tw" specification="after 45s / raise cancelTransaction" target="_IChBEA-IEeuqpv-9TVMMBQ"/>
         <outgoingTransitions xmi:id="_cr-YYA-IEeuqpv-9TVMMBQ" specification="cancelButton / raise cancelTransaction" target="_IChBEA-IEeuqpv-9TVMMBQ"/>
         <outgoingTransitions xmi:id="_QrkIQA-NEeuqpv-9TVMMBQ" specification="every 1ms [paymentDone == true]  " target="_H1oEsw1QEeuGxr3Rn5k_Tw"/>
       </vertices>
@@ -356,7 +356,7 @@
       </children>
       <styles xsi:type="notation:ConnectorStyle" xmi:id="_W0QNIQpQEeuwgo6ZipN5wA" routing="Rectilinear" lineColor="4210752"/>
       <styles xsi:type="notation:FontStyle" xmi:id="_W0QNIwpQEeuwgo6ZipN5wA" fontName="Verdana"/>
-      <bendpoints xsi:type="notation:RelativeBendpoints" xmi:id="_W0QNIgpQEeuwgo6ZipN5wA" points="[0, 0, 590, 240]$[0, -242, 590, -2]$[-585, -242, 5, -2]"/>
+      <bendpoints xsi:type="notation:RelativeBendpoints" xmi:id="_W0QNIgpQEeuwgo6ZipN5wA" points="[-52, 0, 538, 240]$[-52, -242, 538, -2]$[-585, -242, 5, -2]"/>
       <sourceAnchor xsi:type="notation:IdentityAnchor" xmi:id="_W0QNJwpQEeuwgo6ZipN5wA" id="(0.8482758620689655,0.01818181818181818)"/>
       <targetAnchor xsi:type="notation:IdentityAnchor" xmi:id="_W0QNKApQEeuwgo6ZipN5wA" id="(0.9342105263157895,0.5094339622641509)"/>
     </edges>
@@ -406,7 +406,7 @@
     <edges xmi:id="_ny_qkAzfEeuI9eH5CU5aoQ" type="Transition" element="_ny_DgAzfEeuI9eH5CU5aoQ" source="_eUa3UAzfEeuI9eH5CU5aoQ" target="_eUa3UAzfEeuI9eH5CU5aoQ">
       <children xsi:type="notation:DecorationNode" xmi:id="_nzARoQzfEeuI9eH5CU5aoQ" type="TransitionExpression">
         <styles xsi:type="notation:ShapeStyle" xmi:id="_nzARogzfEeuI9eH5CU5aoQ"/>
-        <layoutConstraint xsi:type="notation:Location" xmi:id="_nzARowzfEeuI9eH5CU5aoQ" x="49" y="-9"/>
+        <layoutConstraint xsi:type="notation:Location" xmi:id="_nzARowzfEeuI9eH5CU5aoQ" x="-33" y="-9"/>
       </children>
       <styles xsi:type="notation:ConnectorStyle" xmi:id="_ny_qkQzfEeuI9eH5CU5aoQ" routing="Rectilinear" lineColor="4210752"/>
       <styles xsi:type="notation:FontStyle" xmi:id="_nzARoAzfEeuI9eH5CU5aoQ" fontName="Verdana"/>
@@ -569,7 +569,7 @@
     <edges xmi:id="_-hfLMQ-REeu6Z-Qhi16VhA" type="Transition" element="_-hfLMA-REeu6Z-Qhi16VhA" source="_6BvppQ-REeu6Z-Qhi16VhA" target="_xGsC8An_EeuGxr3Rn5k_Tw">
       <children xsi:type="notation:DecorationNode" xmi:id="_-hfLNQ-REeu6Z-Qhi16VhA" type="TransitionExpression">
         <styles xsi:type="notation:ShapeStyle" xmi:id="_-hfLNg-REeu6Z-Qhi16VhA"/>
-        <layoutConstraint xsi:type="notation:Location" xmi:id="_-hfLNw-REeu6Z-Qhi16VhA" y="10"/>
+        <layoutConstraint xsi:type="notation:Location" xmi:id="_-hfLNw-REeu6Z-Qhi16VhA" x="-19" y="31"/>
       </children>
       <styles xsi:type="notation:ConnectorStyle" xmi:id="_-hfLMg-REeu6Z-Qhi16VhA" routing="Rectilinear" lineColor="4210752"/>
       <styles xsi:type="notation:FontStyle" xmi:id="_-hfLNA-REeu6Z-Qhi16VhA" fontName="Verdana"/>
@@ -580,7 +580,7 @@
     <edges xmi:id="_Df93YQ-SEeu6Z-Qhi16VhA" type="Transition" element="_Df93YA-SEeu6Z-Qhi16VhA" source="_6BvppQ-REeu6Z-Qhi16VhA" target="_6BvppQ-REeu6Z-Qhi16VhA">
       <children xsi:type="notation:DecorationNode" xmi:id="_Df93ZQ-SEeu6Z-Qhi16VhA" type="TransitionExpression">
         <styles xsi:type="notation:ShapeStyle" xmi:id="_Df93Zg-SEeu6Z-Qhi16VhA"/>
-        <layoutConstraint xsi:type="notation:Location" xmi:id="_Df93Zw-SEeu6Z-Qhi16VhA" x="46" y="-27"/>
+        <layoutConstraint xsi:type="notation:Location" xmi:id="_Df93Zw-SEeu6Z-Qhi16VhA" x="80" y="-50"/>
       </children>
       <styles xsi:type="notation:ConnectorStyle" xmi:id="_Df93Yg-SEeu6Z-Qhi16VhA" routing="Rectilinear" lineColor="4210752"/>
       <styles xsi:type="notation:FontStyle" xmi:id="_Df93ZA-SEeu6Z-Qhi16VhA" fontName="Verdana"/>
