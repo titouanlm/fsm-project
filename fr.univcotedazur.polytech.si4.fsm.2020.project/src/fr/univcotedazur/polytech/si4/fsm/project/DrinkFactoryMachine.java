@@ -40,6 +40,8 @@ public class DrinkFactoryMachine extends JFrame {
 
 	protected DefaultSMStatemachine theDFM;
 	protected JLabel messagesToUser;
+	protected JLabel messagesToUser2;
+	protected JLabel messagesToUser3;
 	protected boolean machineSurEcoute = true; // (quand on prépare un café, on ne peut donner aucune commande --> point 13)
 	protected JLabel labelForPictures;
 	protected JSlider sugarSlider;
@@ -104,6 +106,26 @@ public class DrinkFactoryMachine extends JFrame {
 		messagesToUser.setBounds(126, 34, 165, 175);
 		contentPane.add(messagesToUser);
 
+		messagesToUser2 = new JLabel("");
+		messagesToUser2.setForeground(Color.WHITE);
+		messagesToUser2.setHorizontalAlignment(SwingConstants.LEFT);
+		messagesToUser2.setVerticalAlignment(SwingConstants.TOP);
+		messagesToUser2.setToolTipText("message to the user 2");
+		messagesToUser2.setBackground(Color.WHITE);
+		messagesToUser2.setBounds(126, 108, 165, 175);
+		contentPane.add(messagesToUser2);
+		
+		
+		messagesToUser3 = new JLabel("");
+		messagesToUser3.setForeground(Color.WHITE);
+		messagesToUser3.setHorizontalAlignment(SwingConstants.LEFT);
+		messagesToUser3.setVerticalAlignment(SwingConstants.TOP);
+		messagesToUser3.setToolTipText("message to the user 3");
+		messagesToUser3.setBackground(Color.WHITE);
+		messagesToUser3.setBounds(126, 145, 165, 175);
+		contentPane.add(messagesToUser3);
+		
+		
 		JLabel lblCoins = new JLabel("Coins");
 		lblCoins.setForeground(Color.WHITE);
 		lblCoins.setHorizontalAlignment(SwingConstants.CENTER);

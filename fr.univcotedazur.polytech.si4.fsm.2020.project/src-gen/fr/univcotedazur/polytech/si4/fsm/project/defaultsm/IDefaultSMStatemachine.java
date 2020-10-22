@@ -54,6 +54,20 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		
 		public boolean isRaisedValidatePayment();
 		
+		public boolean isRaisedTurnOnWaterHeating();
+		
+		public boolean isRaisedPlacePod();
+		
+		public boolean isRaisedPlaceTeaBag();
+		
+		public boolean isRaisedGrindGrains();
+		
+		public boolean isRaisedPlaceCup();
+		
+		public boolean isRaisedPackGrains();
+		
+		public boolean isRaisedWaitTemperature();
+		
 		public double getSolde();
 		
 		public void setSolde(double value);
@@ -69,6 +83,10 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		public boolean getEnoughMoney();
 		
 		public void setEnoughMoney(boolean value);
+		
+		public String getBeverageSelected();
+		
+		public void setBeverageSelected(String value);
 		
 	public List<SCInterfaceListener> getListeners();
 	}
@@ -86,6 +104,13 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		public void onCancelTransactionRaised();
 		public void onResetSlidersRaised();
 		public void onValidatePaymentRaised();
+		public void onTurnOnWaterHeatingRaised();
+		public void onPlacePodRaised();
+		public void onPlaceTeaBagRaised();
+		public void onGrindGrainsRaised();
+		public void onPlaceCupRaised();
+		public void onPackGrainsRaised();
+		public void onWaitTemperatureRaised();
 		}
 	
 	public SCInterface getSCInterface();
