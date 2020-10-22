@@ -590,7 +590,11 @@
         <layoutConstraint xsi:type="notation:Bounds" xmi:id="_xGjgEAn_EeuGxr3Rn5k_Tw"/>
       </children>
       <styles xsi:type="notation:ShapeStyle" xmi:id="_xGB7oQn_EeuGxr3Rn5k_Tw" fontName="Verdana" fillColor="15790320" lineColor="12632256"/>
+<<<<<<< HEAD
       <layoutConstraint xsi:type="notation:Bounds" xmi:id="_xGkHIAn_EeuGxr3Rn5k_Tw" x="-80" y="-36" width="1228" height="2252"/>
+=======
+      <layoutConstraint xsi:type="notation:Bounds" xmi:id="_xGkHIAn_EeuGxr3Rn5k_Tw" x="-80" y="-36" width="1148" height="817"/>
+>>>>>>> cad2065c2f1800eb433a34675a4ef01492d294c9
     </children>
     <children xsi:type="notation:Shape" xmi:id="_xG5eUAn_EeuGxr3Rn5k_Tw" type="StatechartText" fontName="Verdana" lineColor="4210752">
       <children xsi:type="notation:DecorationNode" xmi:id="_xG6FYAn_EeuGxr3Rn5k_Tw" type="StatechartName">
@@ -672,7 +676,11 @@
         <layoutConstraint xsi:type="notation:Bounds" xmi:id="_eUV-0AzfEeuI9eH5CU5aoQ"/>
       </children>
       <styles xsi:type="notation:ShapeStyle" xmi:id="_eUVXwQzfEeuI9eH5CU5aoQ" fontName="Verdana" fillColor="15790320" lineColor="12632256"/>
+<<<<<<< HEAD
       <layoutConstraint xsi:type="notation:Bounds" xmi:id="_eUVXwAzfEeuI9eH5CU5aoQ" x="1190" y="-12" width="459" height="428"/>
+=======
+      <layoutConstraint xsi:type="notation:Bounds" xmi:id="_eUVXwAzfEeuI9eH5CU5aoQ" x="1317" y="-20" width="460" height="428"/>
+>>>>>>> cad2065c2f1800eb433a34675a4ef01492d294c9
     </children>
     <children xmi:id="_H1mPgA1QEeuGxr3Rn5k_Tw" type="Region" element="_H1oEsA1QEeuGxr3Rn5k_Tw">
       <children xsi:type="notation:DecorationNode" xmi:id="_H1mPgQ1QEeuGxr3Rn5k_Tw" type="RegionName">
@@ -744,7 +752,11 @@
         <layoutConstraint xsi:type="notation:Bounds" xmi:id="_H1mPmw1QEeuGxr3Rn5k_Tw"/>
       </children>
       <styles xsi:type="notation:ShapeStyle" xmi:id="_H1mPnA1QEeuGxr3Rn5k_Tw" fontName="Verdana" fillColor="15790320" lineColor="12632256"/>
+<<<<<<< HEAD
       <layoutConstraint xsi:type="notation:Bounds" xmi:id="_H1mPnQ1QEeuGxr3Rn5k_Tw" x="1176" y="428" width="480" height="468"/>
+=======
+      <layoutConstraint xsi:type="notation:Bounds" xmi:id="_H1mPnQ1QEeuGxr3Rn5k_Tw" x="1317" y="436" width="481" height="468"/>
+>>>>>>> cad2065c2f1800eb433a34675a4ef01492d294c9
     </children>
     <styles xsi:type="notation:BooleanValueStyle" xmi:id="_xF2VcQn_EeuGxr3Rn5k_Tw" name="inlineDefinitionSection"/>
     <styles xsi:type="notation:DiagramStyle" xmi:id="_xF2Vcgn_EeuGxr3Rn5k_Tw"/>

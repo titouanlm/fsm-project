@@ -35,7 +35,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		this.dfm.messagesToUser.setText("<html> Veuillez prendre votre boisson svp. <br>");
 		if (this.dfm.theDFM.getSolde() > 0.0) {
 			if (!this.dfm.theDFM.getPaymentCard()) {
-				this.dfm.messagesToUser.setText("<html>Argent à récuperer : <br>" + Math.round(this.dfm.theDFM.getSolde()) + " €");
+				this.dfm.messagesToUser.setText("<html>Argent à récuperer : <br>" + this.dfm.theDFM.getSolde() + " €");
 				this.dfm.theDFM.setSolde(0.0);	
 			}
 		}
@@ -107,7 +107,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	public void onValidatePaymentRaised() {
 		this.dfm.messagesToUser.setText("<html> Paiement autorisé.");
 		if(!this.dfm.theDFM.getPaymentCard()) {
-			this.dfm.theDFM.setSolde(this.dfm.theDFM.getSolde()-this.dfm.beverageChoice.getPrice());
+			this.dfm.theDFM.setSolde(this.dfm.roundValue(this.dfm.theDFM.getSolde()-this.dfm.beverageChoice.getPrice()));
 		}
 		this.dfm.theDFM.setBeverageSelected(this.dfm.beverageChoice.getName());
 		this.dfm.theDFM.setPaymentDone(true);

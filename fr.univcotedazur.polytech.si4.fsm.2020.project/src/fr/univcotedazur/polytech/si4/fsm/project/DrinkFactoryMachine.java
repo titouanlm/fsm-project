@@ -73,6 +73,12 @@ public class DrinkFactoryMachine extends JFrame {
 			}
 		}
 	}
+	
+	public double roundValue(double initialValue) {
+		double valueCorrection1 = Math.round((initialValue)*100);
+		double valueCorrection2 = valueCorrection1/100;
+		return valueCorrection2;
+	}
 
 	/**
 	 * Create the frame.
@@ -336,7 +342,7 @@ public class DrinkFactoryMachine extends JFrame {
 		money50centsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				theDFM.setSolde(theDFM.getSolde()+0.5);
+				theDFM.setSolde(roundValue(theDFM.getSolde()+0.5));
 				theDFM.raiseMoney50centsButton();
 			}
 		});
@@ -344,7 +350,7 @@ public class DrinkFactoryMachine extends JFrame {
 		money25centsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				theDFM.setSolde(theDFM.getSolde()+0.25);
+				theDFM.setSolde(roundValue(theDFM.getSolde()+0.25));
 				theDFM.raiseMoney25centsButton();
 			}
 		});
@@ -352,7 +358,7 @@ public class DrinkFactoryMachine extends JFrame {
 		money10centsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				theDFM.setSolde(theDFM.getSolde()+0.1);
+				theDFM.setSolde(roundValue(theDFM.getSolde()+0.1));
 				theDFM.raiseMoney10centsButton();
 			}
 		});
@@ -386,14 +392,13 @@ public class DrinkFactoryMachine extends JFrame {
 					}
 				}
 		});
-		
-		/*soupButton.addActionListener(new ActionListener() {
+		/*
+		soupButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e){
 				if (machineSurEcoute) {
-					beveragePrice = 1.0;
-					messagesToUser.setText("<html> Vous avez choisi une soupe.");
-					theDFM.raiseSoupButton();
+					beverageChoice = new Soup();
+					theDFM.raiseTeaButton();
 					}
 				}
 		});
@@ -401,8 +406,10 @@ public class DrinkFactoryMachine extends JFrame {
 		icedTeaButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e){
-				beveragePrice = 1.3;
-				theDFM.raiseIcedTeaButton();
+				if (machineSurEcoute) {
+					beverageChoice = new IcedTea();
+					theDFM.raiseTeaButton();
+					}
 				}
 		});*/
 	}
