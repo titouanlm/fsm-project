@@ -48,6 +48,7 @@ public class DrinkFactoryMachine extends JFrame {
 	protected JSlider sizeSlider;
 	protected JSlider temperatureSlider;
 	protected Beverage beverageChoice = null;
+	private Thread t;
 	/**
 	 * Launch the application.
 	 */
@@ -90,6 +91,28 @@ public class DrinkFactoryMachine extends JFrame {
 		theDFM.init();
 		theDFM.enter();
 		theDFM.getSCInterface().getListeners().add(new DrinkFactoryMachineInterfaceImplementation(this));		
+		
+		
+		Runnable r = new Runnable() {
+			
+			@Override
+			public void run() {
+				while(true) {
+					theDFM.runCycle();
+					try {
+						Thread.sleep(200);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+			}
+		};
+		t = new Thread(r);
+		t.start();
+		
+		
 		
 		setForeground(Color.WHITE);
 		setFont(new Font("Cantarell", Font.BOLD, 22));
@@ -412,6 +435,13 @@ public class DrinkFactoryMachine extends JFrame {
 					}
 				}
 		});*/
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		// TODO Auto-generated method stub
+		super.finalize();
+		t.stop();
 	}
 	
 }

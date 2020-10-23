@@ -4,9 +4,6 @@ package fr.univcotedazur.polytech.si4.fsm.project.defaultsm;
 import fr.univcotedazur.polytech.si4.fsm.project.ITimer;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	protected class SCInterfaceImpl implements SCInterface {
@@ -21,16 +18,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		
 		public void raiseMoney50centsButton() {
 			synchronized(DefaultSMStatemachine.this) {
-				inEventQueue.add(
-					new Runnable() {
-						@Override
-						public void run() {
-							money50centsButton = true;
-							singleCycle();
-						}
-					}
-				);
-				runCycle();
+				money50centsButton = true;
 			}
 		}
 		
@@ -39,16 +27,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		
 		public void raiseMoney25centsButton() {
 			synchronized(DefaultSMStatemachine.this) {
-				inEventQueue.add(
-					new Runnable() {
-						@Override
-						public void run() {
-							money25centsButton = true;
-							singleCycle();
-						}
-					}
-				);
-				runCycle();
+				money25centsButton = true;
 			}
 		}
 		
@@ -57,16 +36,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		
 		public void raiseMoney10centsButton() {
 			synchronized(DefaultSMStatemachine.this) {
-				inEventQueue.add(
-					new Runnable() {
-						@Override
-						public void run() {
-							money10centsButton = true;
-							singleCycle();
-						}
-					}
-				);
-				runCycle();
+				money10centsButton = true;
 			}
 		}
 		
@@ -75,16 +45,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		
 		public void raiseCoffeeButton() {
 			synchronized(DefaultSMStatemachine.this) {
-				inEventQueue.add(
-					new Runnable() {
-						@Override
-						public void run() {
-							coffeeButton = true;
-							singleCycle();
-						}
-					}
-				);
-				runCycle();
+				coffeeButton = true;
 			}
 		}
 		
@@ -93,16 +54,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		
 		public void raiseTeaButton() {
 			synchronized(DefaultSMStatemachine.this) {
-				inEventQueue.add(
-					new Runnable() {
-						@Override
-						public void run() {
-							teaButton = true;
-							singleCycle();
-						}
-					}
-				);
-				runCycle();
+				teaButton = true;
 			}
 		}
 		
@@ -111,16 +63,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		
 		public void raiseExpressoButton() {
 			synchronized(DefaultSMStatemachine.this) {
-				inEventQueue.add(
-					new Runnable() {
-						@Override
-						public void run() {
-							expressoButton = true;
-							singleCycle();
-						}
-					}
-				);
-				runCycle();
+				expressoButton = true;
 			}
 		}
 		
@@ -129,16 +72,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		
 		public void raiseSoupButton() {
 			synchronized(DefaultSMStatemachine.this) {
-				inEventQueue.add(
-					new Runnable() {
-						@Override
-						public void run() {
-							soupButton = true;
-							singleCycle();
-						}
-					}
-				);
-				runCycle();
+				soupButton = true;
 			}
 		}
 		
@@ -147,16 +81,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		
 		public void raiseBipButton() {
 			synchronized(DefaultSMStatemachine.this) {
-				inEventQueue.add(
-					new Runnable() {
-						@Override
-						public void run() {
-							bipButton = true;
-							singleCycle();
-						}
-					}
-				);
-				runCycle();
+				bipButton = true;
 			}
 		}
 		
@@ -165,16 +90,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		
 		public void raiseCancelButton() {
 			synchronized(DefaultSMStatemachine.this) {
-				inEventQueue.add(
-					new Runnable() {
-						@Override
-						public void run() {
-							cancelButton = true;
-							singleCycle();
-						}
-					}
-				);
-				runCycle();
+				cancelButton = true;
 			}
 		}
 		
@@ -183,16 +99,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		
 		public void raiseIcedTeaButton() {
 			synchronized(DefaultSMStatemachine.this) {
-				inEventQueue.add(
-					new Runnable() {
-						@Override
-						public void run() {
-							icedTeaButton = true;
-							singleCycle();
-						}
-					}
-				);
-				runCycle();
+				icedTeaButton = true;
 			}
 		}
 		
@@ -672,8 +579,6 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	
 	private final boolean[] timeEvents = new boolean[18];
 	
-	private BlockingQueue<Runnable> inEventQueue = new LinkedBlockingQueue<Runnable>();
-	private boolean isRunningCycle = false;
 	public DefaultSMStatemachine() {
 		sCInterface = new SCInterfaceImpl();
 	}
@@ -717,134 +622,96 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		if (!initialized)
 			throw new IllegalStateException(
 					"The state machine needs to be initialized first by calling the init() function.");
-		
-		if (isRunningCycle) {
-			return;
-		}
-		isRunningCycle = true;
-		
 		clearOutEvents();
-	
-		Runnable task = getNextEvent();
-		if (task == null) {
-			task = getDefaultEvent();
-		}
-		
-		while (task != null) {
-			task.run();
-			clearEvents();
-			task = getNextEvent();
-		}
-		
-		isRunningCycle = false;
-	}
-	
-	protected synchronized void singleCycle() {
 		for (nextStateIndex = 0; nextStateIndex < stateVector.length; nextStateIndex++) {
 			switch (stateVector[nextStateIndex]) {
-				case _region0_Waiting:
-					_region0_Waiting_react(true);
-					break;
-				case _region0_Take_beverage:
-					_region0_Take_beverage_react(true);
-					break;
-				case _region0_Cleaning:
-					_region0_Cleaning_react(true);
-					break;
-				case _region0_Payment_Done:
-					_region0_Payment_Done_react(true);
-					break;
-				case _region0_Beverage_Choice:
-					_region0_Beverage_Choice_react(true);
-					break;
-				case _region0_Beverage_Preparation_First_Step_r1_Start_Water_Heating:
-					_region0_Beverage_Preparation_First_Step_r1_Start_Water_Heating_react(true);
-					break;
-				case _region0_Beverage_Preparation_First_Step_r1_Water_Heating_ON:
-					_region0_Beverage_Preparation_First_Step_r1_Water_Heating_ON_react(true);
-					break;
-				case _region0_Beverage_Preparation_First_Step_r2_CoffeeSelected:
-					_region0_Beverage_Preparation_First_Step_r2_CoffeeSelected_react(true);
-					break;
-				case _region0_Beverage_Preparation_First_Step_r2_Ready:
-					_region0_Beverage_Preparation_First_Step_r2_Ready_react(true);
-					break;
-				case _region0_Beverage_Preparation_First_Step_r2_TeaSelected:
-					_region0_Beverage_Preparation_First_Step_r2_TeaSelected_react(true);
-					break;
-				case _region0_Beverage_Preparation_First_Step_r2_ExpressoSelected:
-					_region0_Beverage_Preparation_First_Step_r2_ExpressoSelected_react(true);
-					break;
-				case _region0_Beverage_Preparation_First_Step_r2_Pod_In_Place:
-					_region0_Beverage_Preparation_First_Step_r2_Pod_In_Place_react(true);
-					break;
-				case _region0_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place:
-					_region0_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place_react(true);
-					break;
-				case _region0_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK:
-					_region0_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK_react(true);
-					break;
-				case _region0_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature:
-					_region0_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature_react(true);
-					break;
-				case _region0_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK:
-					_region0_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK_react(true);
-					break;
-				case _region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup_:
-					_region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup__react(true);
-					break;
-				case _region0_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack:
-					_region0_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack_react(true);
-					break;
-				case _region0_Beverage_Preparation_Second_Step_r2_Cup_In_Place:
-					_region0_Beverage_Preparation_Second_Step_r2_Cup_In_Place_react(true);
-					break;
-				case _region0_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK:
-					_region0_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK_react(true);
-					break;
-				case _region0_Beverage_Preparation_Second_Step_r2_Ready2:
-					_region0_Beverage_Preparation_Second_Step_r2_Ready2_react(true);
-					break;
-				case paymentByCoins_PaymentByCoins:
-					paymentByCoins_PaymentByCoins_react(true);
-					break;
-				case paymentByCoins_WaitingCoins:
-					paymentByCoins_WaitingCoins_react(true);
-					break;
-				case paymentByCoins_ReturnCoins:
-					paymentByCoins_ReturnCoins_react(true);
-					break;
-				case paymentByNFC_WaitingNFC:
-					paymentByNFC_WaitingNFC_react(true);
-					break;
-				case paymentByNFC_PaymentByNFC:
-					paymentByNFC_PaymentByNFC_react(true);
-					break;
-				case paymentByNFC_CancelTransaction:
-					paymentByNFC_CancelTransaction_react(true);
-					break;
+			case _region0_Waiting:
+				_region0_Waiting_react(true);
+				break;
+			case _region0_Take_beverage:
+				_region0_Take_beverage_react(true);
+				break;
+			case _region0_Cleaning:
+				_region0_Cleaning_react(true);
+				break;
+			case _region0_Payment_Done:
+				_region0_Payment_Done_react(true);
+				break;
+			case _region0_Beverage_Choice:
+				_region0_Beverage_Choice_react(true);
+				break;
+			case _region0_Beverage_Preparation_First_Step_r1_Start_Water_Heating:
+				_region0_Beverage_Preparation_First_Step_r1_Start_Water_Heating_react(true);
+				break;
+			case _region0_Beverage_Preparation_First_Step_r1_Water_Heating_ON:
+				_region0_Beverage_Preparation_First_Step_r1_Water_Heating_ON_react(true);
+				break;
+			case _region0_Beverage_Preparation_First_Step_r2_CoffeeSelected:
+				_region0_Beverage_Preparation_First_Step_r2_CoffeeSelected_react(true);
+				break;
+			case _region0_Beverage_Preparation_First_Step_r2_Ready:
+				_region0_Beverage_Preparation_First_Step_r2_Ready_react(true);
+				break;
+			case _region0_Beverage_Preparation_First_Step_r2_TeaSelected:
+				_region0_Beverage_Preparation_First_Step_r2_TeaSelected_react(true);
+				break;
+			case _region0_Beverage_Preparation_First_Step_r2_ExpressoSelected:
+				_region0_Beverage_Preparation_First_Step_r2_ExpressoSelected_react(true);
+				break;
+			case _region0_Beverage_Preparation_First_Step_r2_Pod_In_Place:
+				_region0_Beverage_Preparation_First_Step_r2_Pod_In_Place_react(true);
+				break;
+			case _region0_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place:
+				_region0_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place_react(true);
+				break;
+			case _region0_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK:
+				_region0_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK_react(true);
+				break;
+			case _region0_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature:
+				_region0_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature_react(true);
+				break;
+			case _region0_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK:
+				_region0_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK_react(true);
+				break;
+			case _region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup_:
+				_region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup__react(true);
+				break;
+			case _region0_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack:
+				_region0_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack_react(true);
+				break;
+			case _region0_Beverage_Preparation_Second_Step_r2_Cup_In_Place:
+				_region0_Beverage_Preparation_Second_Step_r2_Cup_In_Place_react(true);
+				break;
+			case _region0_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK:
+				_region0_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK_react(true);
+				break;
+			case _region0_Beverage_Preparation_Second_Step_r2_Ready2:
+				_region0_Beverage_Preparation_Second_Step_r2_Ready2_react(true);
+				break;
+			case paymentByCoins_PaymentByCoins:
+				paymentByCoins_PaymentByCoins_react(true);
+				break;
+			case paymentByCoins_WaitingCoins:
+				paymentByCoins_WaitingCoins_react(true);
+				break;
+			case paymentByCoins_ReturnCoins:
+				paymentByCoins_ReturnCoins_react(true);
+				break;
+			case paymentByNFC_WaitingNFC:
+				paymentByNFC_WaitingNFC_react(true);
+				break;
+			case paymentByNFC_PaymentByNFC:
+				paymentByNFC_PaymentByNFC_react(true);
+				break;
+			case paymentByNFC_CancelTransaction:
+				paymentByNFC_CancelTransaction_react(true);
+				break;
 			default:
 				// $NullState$
 			}
 		}
+		clearEvents();
 	}
-	
-	protected Runnable getNextEvent() {
-		if(!inEventQueue.isEmpty()) {
-			return inEventQueue.poll();
-		}
-		return null;
-	}
-	
-	protected Runnable getDefaultEvent() {
-		return new Runnable() {
-			@Override
-			public void run() {
-				singleCycle();
-			}
-		};
-	}
-	
 	public synchronized void exit() {
 		exitSequence__region0();
 		exitSequence_PaymentByCoins();
@@ -975,14 +842,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	}
 	
 	public synchronized void timeElapsed(int eventID) {
-		inEventQueue.add(new Runnable() {
-			@Override
-			public void run() {
-				timeEvents[eventID] = true;
-				singleCycle();
-			}
-		});
-		runCycle();
+		timeEvents[eventID] = true;
 	}
 	
 	public SCInterface getSCInterface() {
@@ -1188,11 +1048,15 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	/* Entry action for state 'Cleaning'. */
 	private void entryAction__region0_Cleaning() {
 		timer.setTimer(this, 1, (5 * 1000), false);
+		
+		sCInterface.setPaymentDone(false);
 	}
 	
 	/* Entry action for state 'Payment Done'. */
 	private void entryAction__region0_Payment_Done() {
 		timer.setTimer(this, 2, (1 * 1000), false);
+		
+		sCInterface.setPaymentDone(true);
 	}
 	
 	/* Entry action for state 'Beverage Choice'. */
@@ -2125,7 +1989,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if (isStateActive(State._region0_Beverage_Preparation_First_Step_r2_Ready)) {
+			if (((true && isStateActive(State._region0_Beverage_Preparation_First_Step_r2_Ready)) && true)) {
 				exitSequence__region0_Beverage_Preparation_First_Step();
 				react__region0__sync2();
 			} else {
@@ -2157,7 +2021,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if (isStateActive(State._region0_Beverage_Preparation_First_Step_r1_Water_Heating_ON)) {
+			if (((true && isStateActive(State._region0_Beverage_Preparation_First_Step_r1_Water_Heating_ON)) && true)) {
 				exitSequence__region0_Beverage_Preparation_First_Step();
 				react__region0__sync2();
 			} else {
