@@ -105,7 +105,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 
 	@Override
 	public void onValidatePaymentRaised() {
-		this.dfm.messagesToUser.setText("<html> Paiement autorisé.");
+		this.dfm.messagesToUser.setText(this.dfm.messagesToUser.getText()+"<html> <br> Paiement autorisé.");
 		if(!this.dfm.theDFM.getPaymentCard()) {
 			this.dfm.theDFM.setSolde(this.dfm.roundValue(this.dfm.theDFM.getSolde()-this.dfm.beverageChoice.getPrice()));
 		}

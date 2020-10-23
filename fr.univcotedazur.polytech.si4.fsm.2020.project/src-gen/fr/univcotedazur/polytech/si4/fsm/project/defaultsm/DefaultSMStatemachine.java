@@ -577,7 +577,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	
 	private ITimer timer;
 	
-	private final boolean[] timeEvents = new boolean[18];
+	private final boolean[] timeEvents = new boolean[16];
 	
 	public DefaultSMStatemachine() {
 		sCInterface = new SCInterfaceImpl();
@@ -1054,89 +1054,85 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	
 	/* Entry action for state 'Payment Done'. */
 	private void entryAction__region0_Payment_Done() {
-		timer.setTimer(this, 2, (1 * 1000), false);
+		timer.setTimer(this, 2, (3 * 1000), false);
 		
 		sCInterface.setPaymentDone(true);
 	}
 	
 	/* Entry action for state 'Beverage Choice'. */
 	private void entryAction__region0_Beverage_Choice() {
-		timer.setTimer(this, 3, 1, true);
-		
-		timer.setTimer(this, 4, (45 * 1000), false);
+		timer.setTimer(this, 3, (45 * 1000), false);
 	}
 	
 	/* Entry action for state 'Start Water Heating'. */
 	private void entryAction__region0_Beverage_Preparation_First_Step_r1_Start_Water_Heating() {
-		timer.setTimer(this, 5, (1 * 1000), false);
+		timer.setTimer(this, 4, (1 * 1000), false);
 		
 		sCInterface.raiseTurnOnWaterHeating();
 	}
 	
 	/* Entry action for state 'CoffeeSelected'. */
 	private void entryAction__region0_Beverage_Preparation_First_Step_r2_CoffeeSelected() {
-		timer.setTimer(this, 6, (1 * 1000), false);
+		timer.setTimer(this, 5, (1 * 1000), false);
 		
 		sCInterface.raisePlacePod();
 	}
 	
 	/* Entry action for state 'TeaSelected'. */
 	private void entryAction__region0_Beverage_Preparation_First_Step_r2_TeaSelected() {
-		timer.setTimer(this, 7, (1 * 1000), false);
+		timer.setTimer(this, 6, (1 * 1000), false);
 		
 		sCInterface.raisePlaceTeaBag();
 	}
 	
 	/* Entry action for state 'ExpressoSelected'. */
 	private void entryAction__region0_Beverage_Preparation_First_Step_r2_ExpressoSelected() {
-		timer.setTimer(this, 8, (3 * 1000), false);
+		timer.setTimer(this, 7, (3 * 1000), false);
 		
 		sCInterface.raiseGrindGrains();
 	}
 	
 	/* Entry action for state 'Waiting Water Temperature'. */
 	private void entryAction__region0_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature() {
-		timer.setTimer(this, 9, (2 * 1000), false);
+		timer.setTimer(this, 8, (2 * 1000), false);
 		
 		sCInterface.raiseWaitTemperature();
 	}
 	
 	/* Entry action for state 'Waiting Cup '. */
 	private void entryAction__region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup_() {
-		timer.setTimer(this, 10, (2 * 1000), false);
+		timer.setTimer(this, 9, (2 * 1000), false);
 		
 		sCInterface.raisePlaceCup();
 	}
 	
 	/* Entry action for state 'Waiting Grain Pack'. */
 	private void entryAction__region0_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack() {
-		timer.setTimer(this, 11, (3 * 1000), false);
+		timer.setTimer(this, 10, (3 * 1000), false);
 		
 		sCInterface.raisePackGrains();
 	}
 	
 	/* Entry action for state 'PaymentByCoins'. */
 	private void entryAction_PaymentByCoins_PaymentByCoins() {
-		timer.setTimer(this, 12, (45 * 1000), false);
-		
-		timer.setTimer(this, 13, 1, true);
+		timer.setTimer(this, 11, (45 * 1000), false);
 	}
 	
 	/* Entry action for state 'ReturnCoins'. */
 	private void entryAction_PaymentByCoins_ReturnCoins() {
-		timer.setTimer(this, 14, (5 * 1000), false);
+		timer.setTimer(this, 12, (5 * 1000), false);
 	}
 	
 	/* Entry action for state 'PaymentByNFC'. */
 	private void entryAction_PaymentByNFC_PaymentByNFC() {
-		timer.setTimer(this, 15, (45 * 1000), false);
+		timer.setTimer(this, 13, (45 * 1000), false);
 		
-		timer.setTimer(this, 16, 1, true);
+		timer.setTimer(this, 14, 1, true);
 	}
 	
 	/* Entry action for state 'CancelTransaction'. */
 	private void entryAction_PaymentByNFC_CancelTransaction() {
-		timer.setTimer(this, 17, (5 * 1000), false);
+		timer.setTimer(this, 15, (5 * 1000), false);
 	}
 	
 	/* Exit action for state 'Take beverage'. */
@@ -1157,67 +1153,63 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	/* Exit action for state 'Beverage Choice'. */
 	private void exitAction__region0_Beverage_Choice() {
 		timer.unsetTimer(this, 3);
-		
-		timer.unsetTimer(this, 4);
 	}
 	
 	/* Exit action for state 'Start Water Heating'. */
 	private void exitAction__region0_Beverage_Preparation_First_Step_r1_Start_Water_Heating() {
-		timer.unsetTimer(this, 5);
+		timer.unsetTimer(this, 4);
 	}
 	
 	/* Exit action for state 'CoffeeSelected'. */
 	private void exitAction__region0_Beverage_Preparation_First_Step_r2_CoffeeSelected() {
-		timer.unsetTimer(this, 6);
+		timer.unsetTimer(this, 5);
 	}
 	
 	/* Exit action for state 'TeaSelected'. */
 	private void exitAction__region0_Beverage_Preparation_First_Step_r2_TeaSelected() {
-		timer.unsetTimer(this, 7);
+		timer.unsetTimer(this, 6);
 	}
 	
 	/* Exit action for state 'ExpressoSelected'. */
 	private void exitAction__region0_Beverage_Preparation_First_Step_r2_ExpressoSelected() {
-		timer.unsetTimer(this, 8);
+		timer.unsetTimer(this, 7);
 	}
 	
 	/* Exit action for state 'Waiting Water Temperature'. */
 	private void exitAction__region0_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature() {
-		timer.unsetTimer(this, 9);
+		timer.unsetTimer(this, 8);
 	}
 	
 	/* Exit action for state 'Waiting Cup '. */
 	private void exitAction__region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup_() {
-		timer.unsetTimer(this, 10);
+		timer.unsetTimer(this, 9);
 	}
 	
 	/* Exit action for state 'Waiting Grain Pack'. */
 	private void exitAction__region0_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack() {
-		timer.unsetTimer(this, 11);
+		timer.unsetTimer(this, 10);
 	}
 	
 	/* Exit action for state 'PaymentByCoins'. */
 	private void exitAction_PaymentByCoins_PaymentByCoins() {
-		timer.unsetTimer(this, 12);
-		
-		timer.unsetTimer(this, 13);
+		timer.unsetTimer(this, 11);
 	}
 	
 	/* Exit action for state 'ReturnCoins'. */
 	private void exitAction_PaymentByCoins_ReturnCoins() {
-		timer.unsetTimer(this, 14);
+		timer.unsetTimer(this, 12);
 	}
 	
 	/* Exit action for state 'PaymentByNFC'. */
 	private void exitAction_PaymentByNFC_PaymentByNFC() {
-		timer.unsetTimer(this, 15);
+		timer.unsetTimer(this, 13);
 		
-		timer.unsetTimer(this, 16);
+		timer.unsetTimer(this, 14);
 	}
 	
 	/* Exit action for state 'CancelTransaction'. */
 	private void exitAction_PaymentByNFC_CancelTransaction() {
-		timer.unsetTimer(this, 17);
+		timer.unsetTimer(this, 15);
 	}
 	
 	/* 'default' enter sequence for state Waiting */
@@ -1931,7 +1923,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if (((timeEvents[3]) && (((sCInterface.getPaymentCard() || sCInterface.getEnoughMoney()))==true))) {
+			if (((sCInterface.getPaymentCard() || sCInterface.getEnoughMoney()))==true) {
 				exitSequence__region0_Beverage_Choice();
 				sCInterface.raiseValidatePayment();
 				
@@ -1943,7 +1935,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 					
 					enterSequence__region0_Waiting_default();
 				} else {
-					if (timeEvents[4]) {
+					if (timeEvents[3]) {
 						exitSequence__region0_Beverage_Choice();
 						enterSequence__region0_Waiting_default();
 					} else {
@@ -1975,7 +1967,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if (timeEvents[5]) {
+			if (timeEvents[4]) {
 				exitSequence__region0_Beverage_Preparation_First_Step_r1_Start_Water_Heating();
 				enterSequence__region0_Beverage_Preparation_First_Step_r1_Water_Heating_ON_default();
 			} else {
@@ -2003,7 +1995,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if (timeEvents[6]) {
+			if (timeEvents[5]) {
 				exitSequence__region0_Beverage_Preparation_First_Step_r2_CoffeeSelected();
 				enterSequence__region0_Beverage_Preparation_First_Step_r2_Pod_In_Place_default();
 				_region0_Beverage_Preparation_First_Step_react(false);
@@ -2038,7 +2030,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if (timeEvents[7]) {
+			if (timeEvents[6]) {
 				exitSequence__region0_Beverage_Preparation_First_Step_r2_TeaSelected();
 				enterSequence__region0_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place_default();
 				_region0_Beverage_Preparation_First_Step_react(false);
@@ -2056,7 +2048,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if (timeEvents[8]) {
+			if (timeEvents[7]) {
 				exitSequence__region0_Beverage_Preparation_First_Step_r2_ExpressoSelected();
 				enterSequence__region0_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK_default();
 				_region0_Beverage_Preparation_First_Step_react(false);
@@ -2125,7 +2117,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if (timeEvents[9]) {
+			if (timeEvents[8]) {
 				exitSequence__region0_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature();
 				enterSequence__region0_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK_default();
 			} else {
@@ -2153,7 +2145,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if (timeEvents[10]) {
+			if (timeEvents[9]) {
 				exitSequence__region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup_();
 				enterSequence__region0_Beverage_Preparation_Second_Step_r2_Cup_In_Place_default();
 				_region0_Beverage_Preparation_Second_Step_react(false);
@@ -2171,7 +2163,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if (timeEvents[11]) {
+			if (timeEvents[10]) {
 				exitSequence__region0_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack();
 				enterSequence__region0_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK_default();
 				_region0_Beverage_Preparation_Second_Step_react(false);
@@ -2239,7 +2231,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 				
 				enterSequence_PaymentByCoins_PaymentByCoins_default();
 			} else {
-				if (timeEvents[12]) {
+				if (timeEvents[11]) {
 					exitSequence_PaymentByCoins_PaymentByCoins();
 					sCInterface.raiseCancelPreparation();
 					
@@ -2251,7 +2243,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 						
 						enterSequence_PaymentByCoins_ReturnCoins_default();
 					} else {
-						if (((timeEvents[13]) && (sCInterface.getPaymentDone()==true))) {
+						if (sCInterface.getPaymentDone()==true) {
 							exitSequence_PaymentByCoins_PaymentByCoins();
 							enterSequence_PaymentByCoins_WaitingCoins_default();
 						} else {
@@ -2284,7 +2276,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if (timeEvents[14]) {
+			if (timeEvents[12]) {
 				exitSequence_PaymentByCoins_ReturnCoins();
 				sCInterface.raiseMachineReady();
 				
@@ -2320,7 +2312,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if (timeEvents[15]) {
+			if (timeEvents[13]) {
 				exitSequence_PaymentByNFC_PaymentByNFC();
 				sCInterface.raiseCancelTransaction();
 				
@@ -2334,7 +2326,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 					enterSequence_PaymentByNFC_CancelTransaction_default();
 					react();
 				} else {
-					if (((timeEvents[16]) && (sCInterface.getPaymentDone()==true))) {
+					if (((timeEvents[14]) && (sCInterface.getPaymentDone()==true))) {
 						exitSequence_PaymentByNFC_PaymentByNFC();
 						enterSequence_PaymentByNFC_WaitingNFC_default();
 						react();
@@ -2354,7 +2346,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if (timeEvents[17]) {
+			if (timeEvents[15]) {
 				exitSequence_PaymentByNFC_CancelTransaction();
 				sCInterface.raiseMachineReady();
 				
