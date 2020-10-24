@@ -32,14 +32,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 
 	@Override
 	public void onTakeBeverageRaised() {
-		this.dfm.messagesToUser.setText("<html> Veuillez prendre votre boisson svp. <br>");
-		if (this.dfm.theDFM.getSolde() > 0.0) {
-			if (!this.dfm.theDFM.getPaymentCard()) {
-				this.dfm.messagesToUser.setText("<html>Argent à récuperer : <br>" + this.dfm.theDFM.getSolde() + " €");
-				this.dfm.theDFM.setSolde(0.0);	
-			}
-		}
-		
+		this.dfm.messagesToUser.setText("<html> Veuillez récupérer votre boisson svp. <br>");
 		try {
 			this.dfm.labelForPictures.setIcon(new ImageIcon(ImageIO.read(new File("./picts/ownCup.jpg"))));
 		} catch (IOException ee) {
@@ -47,6 +40,16 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		}	
 		this.dfm.messagesToUser2.setText("");
 		this.dfm.messagesToUser3.setText("");
+	}
+	
+	@Override
+	public void onTakeChangeRaised() {
+		if (this.dfm.theDFM.getSolde() > 0.0) {
+			if (!this.dfm.theDFM.getPaymentCard()) {
+				this.dfm.messagesToUser.setText("<html>Argent à récuperer : <br>" + this.dfm.theDFM.getSolde() + " €");
+				this.dfm.theDFM.setSolde(0.0);	
+			}
+		}
 	}
 
 	@Override
@@ -73,6 +76,25 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	@Override
 	public void onBeveragePreparationRaised() {
 		this.dfm.messagesToUser.setText("<html> Votre " + this.dfm.beverageChoice.getName() + " est en cours de préparation ... ");
+		this.dfm.theDFM.setBeverageSelected(this.dfm.beverageChoice.getName());
+		
+		int temperatureSelected = 0;
+		switch(this.dfm.temperatureSlider.getValue()) {
+		case 0:
+			temperatureSelected = 20;
+			break;
+		case 1:
+			temperatureSelected = 35;
+			break;
+		case 2:
+			temperatureSelected = 60;
+			break;
+		default:
+			temperatureSelected = 85;
+		}
+		
+		this.dfm.theDFM.setTemperatureSelected(temperatureSelected);
+		this.dfm.theDFM.setSizeSelected(this.dfm.sizeSlider.getValue()+1);
 		this.dfm.machineSurEcoute = false;
 	}
 
@@ -109,7 +131,6 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		if(!this.dfm.theDFM.getPaymentCard()) {
 			this.dfm.theDFM.setSolde(this.dfm.roundValue(this.dfm.theDFM.getSolde()-this.dfm.beverageChoice.getPrice()));
 		}
-		this.dfm.theDFM.setBeverageSelected(this.dfm.beverageChoice.getName());
 		this.dfm.theDFM.setPaymentDone(true);
 	}
 
@@ -156,7 +177,81 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 
 	@Override
 	public void onWaitTemperatureRaised() {
-		this.dfm.messagesToUser2.setText("<html> Attente de la température adéquate...");
+		this.dfm.messagesToUser2.setText("<html> Attente de la température de l'eau adéquate... ");
+		
+	}
+
+	@Override
+	public void onFlowWaterRaised() {
+		this.dfm.messagesToUser2.setText("<html> Ecoulement de l'eau...");
+	}
+
+	@Override
+	public void onAddSugarRaised() {
+		this.dfm.messagesToUser3.setText("<html> Ajout du sucre (" +  this.dfm.sugarSlider.getValue() +" doses)...");
+	}
+
+	@Override
+	public void onFlowWaterOKRaised() {
+		this.dfm.messagesToUser2.setText("<html> Ecoulement de l'eau... ✓");
+		
+	}
+
+	@Override
+	public void onSugarOKRaised() {
+		this.dfm.messagesToUser3.setText("<html> Ajout du sucre (" +  this.dfm.sugarSlider.getValue() +" doses)... ✓");
+		
+	}
+
+	@Override
+	public void onGrainPackingOKRaised() {
+		this.dfm.messagesToUser3.setText("<html> Tassage des grains... ✓");	
+		
+	}
+
+	@Override
+	public void onWaterTempOKRaised() {
+		this.dfm.messagesToUser2.setText("<html> Attente de la température de l'eau adéquate... ✓");
+		
+	}
+
+	@Override
+	public void onWaterHeatingOKRaised() {
+		this.dfm.messagesToUser2.setText("<html> Démarrage du chauffage de l'eau... ✓");
+		
+	}
+
+	@Override
+	public void onTeaBagOKRaised() {
+		this.dfm.messagesToUser3.setText("<html> Récupération et positionnement d’un sachet... ✓");			
+	}
+
+	@Override
+	public void onPodOKRaised() {
+		this.dfm.messagesToUser3.setText("<html> Récupération et positionnement d’une dosette... ✓");
+		
+	}
+
+	@Override
+	public void onGrainCrushingOKRaised() {
+		this.dfm.messagesToUser3.setText("<html> Broyage des grains... ✓");
+		
+	}
+
+	@Override
+	public void onCupOKRaised() {
+		this.dfm.messagesToUser3.setText("<html> Positionnement du gobelet... ✓");	
+		
+	}
+
+	@Override
+	public void onWaitingInfusionRaised() {
+		this.dfm.messagesToUser3.setText("<html> Attente de l'infusion... ");	
+	}
+
+	@Override
+	public void onRemoveTeaBagRaised() {
+		this.dfm.messagesToUser3.setText("<html> Retrait du sachet... ");
 		
 	}
 

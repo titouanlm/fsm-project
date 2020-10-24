@@ -4,6 +4,6 @@ public class Tea extends Beverage {
 	
 	public Tea() {
 		this.name = "thé";
-		this.price = 0.50;
+		this.price = 0.40;
 	}
 }

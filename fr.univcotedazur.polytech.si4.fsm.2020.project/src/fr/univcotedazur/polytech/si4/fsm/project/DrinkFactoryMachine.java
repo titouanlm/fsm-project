@@ -206,15 +206,25 @@ public class DrinkFactoryMachine extends JFrame {
 		contentPane.add(sugarSlider);
 
 		sizeSlider = new JSlider();
-		sizeSlider.setPaintTicks(true);
+		sizeSlider.setPaintLabels(true);
 		sizeSlider.setValue(1);
 		sizeSlider.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		sizeSlider.setBackground(Color.DARK_GRAY);
 		sizeSlider.setForeground(Color.BLACK);
+		sizeSlider.setPaintTicks(true);
 		sizeSlider.setMinorTickSpacing(1);
 		sizeSlider.setMaximum(2);
 		sizeSlider.setMajorTickSpacing(1);
-		sizeSlider.setBounds(301, 125, 200, 36);
+		sizeSlider.setBounds(301, 115, 200, 46);
+				
+		Hashtable<Integer, JLabel> sizeTable = new Hashtable<Integer, JLabel>();
+		sizeTable.put(0, new JLabel("Short"));
+		sizeTable.put(1, new JLabel("Normal"));
+		sizeTable.put(2, new JLabel("Long"));
+		for (JLabel l : sizeTable.values()) {
+			l.setForeground(Color.WHITE);
+		}
+		sizeSlider.setLabelTable(sizeTable);
 		contentPane.add(sizeSlider);
 
 		temperatureSlider = new JSlider();
@@ -257,14 +267,14 @@ public class DrinkFactoryMachine extends JFrame {
 		lblSize.setForeground(Color.WHITE);
 		lblSize.setBackground(Color.DARK_GRAY);
 		lblSize.setHorizontalAlignment(SwingConstants.CENTER);
-		lblSize.setBounds(380, 113, 44, 15);
+		lblSize.setBounds(380, 96, 44, 15);
 		contentPane.add(lblSize);
 
 		JLabel lblTemperature = new JLabel("Temperature");
 		lblTemperature.setForeground(Color.WHITE);
 		lblTemperature.setBackground(Color.DARK_GRAY);
 		lblTemperature.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTemperature.setBounds(363, 173, 96, 15);
+		lblTemperature.setBounds(380, 173, 96, 15);
 		contentPane.add(lblTemperature);
 
 		JPanel panel = new JPanel();

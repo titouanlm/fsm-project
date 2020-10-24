@@ -64,6 +64,34 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		
 		public boolean isRaisedWaitTemperature();
 		
+		public boolean isRaisedFlowWater();
+		
+		public boolean isRaisedAddSugar();
+		
+		public boolean isRaisedWaitingInfusion();
+		
+		public boolean isRaisedTakeChange();
+		
+		public boolean isRaisedRemoveTeaBag();
+		
+		public boolean isRaisedFlowWaterOK();
+		
+		public boolean isRaisedSugarOK();
+		
+		public boolean isRaisedGrainPackingOK();
+		
+		public boolean isRaisedWaterTempOK();
+		
+		public boolean isRaisedTeaBagOK();
+		
+		public boolean isRaisedPodOK();
+		
+		public boolean isRaisedGrainCrushingOK();
+		
+		public boolean isRaisedWaterHeatingOK();
+		
+		public boolean isRaisedCupOK();
+		
 		public double getSolde();
 		
 		public void setSolde(double value);
@@ -83,6 +111,14 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		public String getBeverageSelected();
 		
 		public void setBeverageSelected(String value);
+		
+		public long getTemperatureSelected();
+		
+		public void setTemperatureSelected(long value);
+		
+		public long getSizeSelected();
+		
+		public void setSizeSelected(long value);
 		
 	public List<SCInterfaceListener> getListeners();
 	}
@@ -107,6 +143,20 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		public void onPlaceCupRaised();
 		public void onPackGrainsRaised();
 		public void onWaitTemperatureRaised();
+		public void onFlowWaterRaised();
+		public void onAddSugarRaised();
+		public void onWaitingInfusionRaised();
+		public void onTakeChangeRaised();
+		public void onRemoveTeaBagRaised();
+		public void onFlowWaterOKRaised();
+		public void onSugarOKRaised();
+		public void onGrainPackingOKRaised();
+		public void onWaterTempOKRaised();
+		public void onTeaBagOKRaised();
+		public void onPodOKRaised();
+		public void onGrainCrushingOKRaised();
+		public void onWaterHeatingOKRaised();
+		public void onCupOKRaised();
 		}
 	
 	public SCInterface getSCInterface();
