@@ -1,6 +1,7 @@
 package fr.univcotedazur.polytech.si4.fsm.project;
 
 import java.awt.Color;
+
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -42,12 +43,14 @@ public class DrinkFactoryMachine extends JFrame {
 	protected JLabel messagesToUser;
 	protected JLabel messagesToUser2;
 	protected JLabel messagesToUser3;
-	protected boolean machineSurEcoute = true; // (quand on prépare un café, on ne peut donner aucune commande --> point 13)
 	protected JLabel labelForPictures;
 	protected JSlider sugarSlider;
 	protected JSlider sizeSlider;
 	protected JSlider temperatureSlider;
 	protected Beverage beverageChoice = null;
+	protected int totalNumberTask =0;
+	protected int numberTaskDone =0;
+	protected JProgressBar progressBar;
 	private Thread t;
 	/**
 	 * Launch the application.
@@ -112,7 +115,7 @@ public class DrinkFactoryMachine extends JFrame {
 		t = new Thread(r);
 		t.start();
 		
-		
+		theDFM.setOnWire(true);
 		
 		setForeground(Color.WHITE);
 		setFont(new Font("Cantarell", Font.BOLD, 22));
@@ -185,9 +188,9 @@ public class DrinkFactoryMachine extends JFrame {
 		soupButton.setBounds(12, 145, 96, 25);
 		contentPane.add(soupButton);
 
-		JProgressBar progressBar = new JProgressBar();
+	    progressBar = new JProgressBar();
 		progressBar.setStringPainted(true);
-		progressBar.setValue(10);
+		progressBar.setValue(0);
 		progressBar.setForeground(Color.LIGHT_GRAY);
 		progressBar.setBackground(Color.DARK_GRAY);
 		progressBar.setBounds(12, 254, 622, 26);
@@ -375,31 +378,37 @@ public class DrinkFactoryMachine extends JFrame {
 		money50centsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				theDFM.setSolde(roundValue(theDFM.getSolde()+0.5));
-				theDFM.raiseMoney50centsButton();
+				if (theDFM.getOnWire()) {
+					theDFM.setSolde(roundValue(theDFM.getSolde()+0.5));
+					theDFM.raiseMoney50centsButton();
+				}
 			}
 		});
 		
 		money25centsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				theDFM.setSolde(roundValue(theDFM.getSolde()+0.25));
-				theDFM.raiseMoney25centsButton();
+				if (theDFM.getOnWire()) {
+					theDFM.setSolde(roundValue(theDFM.getSolde()+0.25));
+					theDFM.raiseMoney25centsButton();
+				}
 			}
 		});
 		
 		money10centsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				theDFM.setSolde(roundValue(theDFM.getSolde()+0.1));
-				theDFM.raiseMoney10centsButton();
+				if (theDFM.getOnWire()) {
+					theDFM.setSolde(roundValue(theDFM.getSolde()+0.1));
+					theDFM.raiseMoney10centsButton();
+				}
 			}
 		});
 		
 		coffeeButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e){
-				if (machineSurEcoute) {
+				if (theDFM.getOnWire()) {
 					beverageChoice = new Coffee();
 					theDFM.raiseCoffeeButton();
 					}
@@ -409,7 +418,7 @@ public class DrinkFactoryMachine extends JFrame {
 		expressoButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e){
-				if (machineSurEcoute) {
+				if (theDFM.getOnWire()) {
 					beverageChoice = new Expresso();
 					theDFM.raiseExpressoButton();
 					}
@@ -419,7 +428,7 @@ public class DrinkFactoryMachine extends JFrame {
 		teaButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e){
-				if (machineSurEcoute) {
+				if (theDFM.getOnWire()) {
 					beverageChoice = new Tea();
 					theDFM.raiseTeaButton();
 					}
@@ -452,6 +461,20 @@ public class DrinkFactoryMachine extends JFrame {
 		// TODO Auto-generated method stub
 		super.finalize();
 		t.stop();
+	}
+
+	public void calculateTimePreparation() {
+		switch(beverageChoice.getName()) {
+		case "café":
+			totalNumberTask = 6;
+			break;
+		case "expresso":
+			totalNumberTask = 7;
+			break;
+		case "thé":
+			totalNumberTask = 8;
+			break;
+		}
 	}
 	
 }

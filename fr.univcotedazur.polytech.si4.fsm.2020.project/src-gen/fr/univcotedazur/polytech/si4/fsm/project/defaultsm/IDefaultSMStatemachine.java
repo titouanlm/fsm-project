@@ -60,6 +60,8 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		
 		public boolean isRaisedPlaceCup();
 		
+		public boolean isRaisedUpdateProgressBar();
+		
 		public boolean isRaisedPackGrains();
 		
 		public boolean isRaisedWaitTemperature();
@@ -92,9 +94,17 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		
 		public boolean isRaisedCupOK();
 		
+		public boolean isRaisedInfusionOK();
+		
+		public boolean isRaisedRemoveTeaBagOK();
+		
 		public double getSolde();
 		
 		public void setSolde(double value);
+		
+		public boolean getOnWire();
+		
+		public void setOnWire(boolean value);
 		
 		public boolean getPaymentCard();
 		
@@ -141,6 +151,7 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		public void onPlaceTeaBagRaised();
 		public void onGrindGrainsRaised();
 		public void onPlaceCupRaised();
+		public void onUpdateProgressBarRaised();
 		public void onPackGrainsRaised();
 		public void onWaitTemperatureRaised();
 		public void onFlowWaterRaised();
@@ -157,6 +168,8 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		public void onGrainCrushingOKRaised();
 		public void onWaterHeatingOKRaised();
 		public void onCupOKRaised();
+		public void onInfusionOKRaised();
+		public void onRemoveTeaBagOKRaised();
 		}
 	
 	public SCInterface getSCInterface();

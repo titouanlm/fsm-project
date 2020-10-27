@@ -391,6 +391,24 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 			}
 		}
 		
+		private boolean updateProgressBar;
+		
+		
+		public boolean isRaisedUpdateProgressBar() {
+			synchronized(DefaultSMStatemachine.this) {
+				return updateProgressBar;
+			}
+		}
+		
+		protected void raiseUpdateProgressBar() {
+			synchronized(DefaultSMStatemachine.this) {
+				updateProgressBar = true;
+				for (SCInterfaceListener listener : listeners) {
+					listener.onUpdateProgressBarRaised();
+				}
+			}
+		}
+		
 		private boolean packGrains;
 		
 		
@@ -679,6 +697,42 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 			}
 		}
 		
+		private boolean infusionOK;
+		
+		
+		public boolean isRaisedInfusionOK() {
+			synchronized(DefaultSMStatemachine.this) {
+				return infusionOK;
+			}
+		}
+		
+		protected void raiseInfusionOK() {
+			synchronized(DefaultSMStatemachine.this) {
+				infusionOK = true;
+				for (SCInterfaceListener listener : listeners) {
+					listener.onInfusionOKRaised();
+				}
+			}
+		}
+		
+		private boolean removeTeaBagOK;
+		
+		
+		public boolean isRaisedRemoveTeaBagOK() {
+			synchronized(DefaultSMStatemachine.this) {
+				return removeTeaBagOK;
+			}
+		}
+		
+		protected void raiseRemoveTeaBagOK() {
+			synchronized(DefaultSMStatemachine.this) {
+				removeTeaBagOK = true;
+				for (SCInterfaceListener listener : listeners) {
+					listener.onRemoveTeaBagOKRaised();
+				}
+			}
+		}
+		
 		private double solde;
 		
 		public synchronized double getSolde() {
@@ -690,6 +744,20 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		public void setSolde(double value) {
 			synchronized(DefaultSMStatemachine.this) {
 				this.solde = value;
+			}
+		}
+		
+		private boolean onWire;
+		
+		public synchronized boolean getOnWire() {
+			synchronized(DefaultSMStatemachine.this) {
+				return onWire;
+			}
+		}
+		
+		public void setOnWire(boolean value) {
+			synchronized(DefaultSMStatemachine.this) {
+				this.onWire = value;
 			}
 		}
 		
@@ -807,6 +875,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		placeTeaBag = false;
 		grindGrains = false;
 		placeCup = false;
+		updateProgressBar = false;
 		packGrains = false;
 		waitTemperature = false;
 		flowWater = false;
@@ -823,6 +892,8 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		grainCrushingOK = false;
 		waterHeatingOK = false;
 		cupOK = false;
+		infusionOK = false;
+		removeTeaBagOK = false;
 		}
 		
 	}
@@ -868,9 +939,11 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		paymentByCoins_PaymentByCoins,
 		paymentByCoins_WaitingCoins,
 		paymentByCoins_ReturnCoins,
+		paymentByCoins_Blocked,
 		paymentByNFC_WaitingNFC,
 		paymentByNFC_PaymentByNFC,
 		paymentByNFC_CancelTransaction,
+		paymentByNFC_Blocked,
 		$NullState$
 	};
 	
@@ -880,7 +953,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	
 	private ITimer timer;
 	
-	private final boolean[] timeEvents = new boolean[21];
+	private final boolean[] timeEvents = new boolean[25];
 	
 	public DefaultSMStatemachine() {
 		sCInterface = new SCInterfaceImpl();
@@ -897,6 +970,8 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		clearEvents();
 		clearOutEvents();
 		sCInterface.setSolde(0.0);
+		
+		sCInterface.setOnWire(false);
 		
 		sCInterface.setPaymentCard(false);
 		
@@ -1025,6 +1100,9 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 			case paymentByCoins_ReturnCoins:
 				paymentByCoins_ReturnCoins_react(true);
 				break;
+			case paymentByCoins_Blocked:
+				paymentByCoins_Blocked_react(true);
+				break;
 			case paymentByNFC_WaitingNFC:
 				paymentByNFC_WaitingNFC_react(true);
 				break;
@@ -1033,6 +1111,9 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 				break;
 			case paymentByNFC_CancelTransaction:
 				paymentByNFC_CancelTransaction_react(true);
+				break;
+			case paymentByNFC_Blocked:
+				paymentByNFC_Blocked_react(true);
 				break;
 			default:
 				// $NullState$
@@ -1158,12 +1239,16 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 			return stateVector[2] == State.paymentByCoins_WaitingCoins;
 		case paymentByCoins_ReturnCoins:
 			return stateVector[2] == State.paymentByCoins_ReturnCoins;
+		case paymentByCoins_Blocked:
+			return stateVector[2] == State.paymentByCoins_Blocked;
 		case paymentByNFC_WaitingNFC:
 			return stateVector[3] == State.paymentByNFC_WaitingNFC;
 		case paymentByNFC_PaymentByNFC:
 			return stateVector[3] == State.paymentByNFC_PaymentByNFC;
 		case paymentByNFC_CancelTransaction:
 			return stateVector[3] == State.paymentByNFC_CancelTransaction;
+		case paymentByNFC_Blocked:
+			return stateVector[3] == State.paymentByNFC_Blocked;
 		default:
 			return false;
 		}
@@ -1301,6 +1386,10 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		return sCInterface.isRaisedPlaceCup();
 	}
 	
+	public synchronized boolean isRaisedUpdateProgressBar() {
+		return sCInterface.isRaisedUpdateProgressBar();
+	}
+	
 	public synchronized boolean isRaisedPackGrains() {
 		return sCInterface.isRaisedPackGrains();
 	}
@@ -1365,12 +1454,28 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		return sCInterface.isRaisedCupOK();
 	}
 	
+	public synchronized boolean isRaisedInfusionOK() {
+		return sCInterface.isRaisedInfusionOK();
+	}
+	
+	public synchronized boolean isRaisedRemoveTeaBagOK() {
+		return sCInterface.isRaisedRemoveTeaBagOK();
+	}
+	
 	public synchronized double getSolde() {
 		return sCInterface.getSolde();
 	}
 	
 	public synchronized void setSolde(double value) {
 		sCInterface.setSolde(value);
+	}
+	
+	public synchronized boolean getOnWire() {
+		return sCInterface.getOnWire();
+	}
+	
+	public synchronized void setOnWire(boolean value) {
+		sCInterface.setOnWire(value);
 	}
 	
 	public synchronized boolean getPaymentCard() {
@@ -1472,7 +1577,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	
 	/* Entry action for state 'Cleaning'. */
 	private void entryAction__region0_Cleaning() {
-		timer.setTimer(this, 0, (5 * 1000), false);
+		timer.setTimer(this, 0, (3 * 1000), false);
 		
 		sCInterface.setPaymentDone(false);
 	}
@@ -1503,21 +1608,21 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	
 	/* Entry action for state 'CoffeeSelected'. */
 	private void entryAction__region0_Beverage_Preparation_First_Step_r2_CoffeeSelected() {
-		timer.setTimer(this, 4, (2 * 1000), false);
+		timer.setTimer(this, 4, 2500, false);
 		
 		sCInterface.raisePlacePod();
 	}
 	
 	/* Entry action for state 'TeaSelected'. */
 	private void entryAction__region0_Beverage_Preparation_First_Step_r2_TeaSelected() {
-		timer.setTimer(this, 5, (2 * 1000), false);
+		timer.setTimer(this, 5, 2500, false);
 		
 		sCInterface.raisePlaceTeaBag();
 	}
 	
 	/* Entry action for state 'ExpressoSelected'. */
 	private void entryAction__region0_Beverage_Preparation_First_Step_r2_ExpressoSelected() {
-		timer.setTimer(this, 6, (3 * 1000), false);
+		timer.setTimer(this, 6, (4 * 1000), false);
 		
 		sCInterface.raiseGrindGrains();
 	}
@@ -1551,7 +1656,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	
 	/* Entry action for state 'Waiting Cup '. */
 	private void entryAction__region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup_() {
-		timer.setTimer(this, 8, (2 * 1000), false);
+		timer.setTimer(this, 8, (3 * 1000), false);
 		
 		sCInterface.raisePlaceCup();
 	}
@@ -1587,7 +1692,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	
 	/* Entry action for state 'Add Sugar'. */
 	private void entryAction__region0_Beverage_Preparation_Third_Step_r2_Add_Sugar() {
-		timer.setTimer(this, 11, (1 * 1000), false);
+		timer.setTimer(this, 11, (2 * 1000), false);
 		
 		sCInterface.raiseAddSugar();
 	}
@@ -1613,7 +1718,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	
 	/* Entry action for state 'Remove TeaBag'. */
 	private void entryAction__region0_Beverage_Preparation_Last_Step_r1_Remove_TeaBag() {
-		timer.setTimer(this, 14, 1500, false);
+		timer.setTimer(this, 14, (2 * 1000), false);
 		
 		sCInterface.raiseRemoveTeaBag();
 	}
@@ -1630,21 +1735,41 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		timer.setTimer(this, 16, (45 * 1000), false);
 	}
 	
+	/* Entry action for state 'WaitingCoins'. */
+	private void entryAction_PaymentByCoins_WaitingCoins() {
+		timer.setTimer(this, 17, 100, true);
+	}
+	
 	/* Entry action for state 'ReturnCoins'. */
 	private void entryAction_PaymentByCoins_ReturnCoins() {
-		timer.setTimer(this, 17, (5 * 1000), false);
+		timer.setTimer(this, 18, (5 * 1000), false);
+	}
+	
+	/* Entry action for state 'Blocked'. */
+	private void entryAction_PaymentByCoins_Blocked() {
+		timer.setTimer(this, 19, 100, true);
+	}
+	
+	/* Entry action for state 'WaitingNFC'. */
+	private void entryAction_PaymentByNFC_WaitingNFC() {
+		timer.setTimer(this, 20, 100, true);
 	}
 	
 	/* Entry action for state 'PaymentByNFC'. */
 	private void entryAction_PaymentByNFC_PaymentByNFC() {
-		timer.setTimer(this, 18, (45 * 1000), false);
+		timer.setTimer(this, 21, (45 * 1000), false);
 		
-		timer.setTimer(this, 19, 1, true);
+		timer.setTimer(this, 22, 1, true);
 	}
 	
 	/* Entry action for state 'CancelTransaction'. */
 	private void entryAction_PaymentByNFC_CancelTransaction() {
-		timer.setTimer(this, 20, (5 * 1000), false);
+		timer.setTimer(this, 23, (5 * 1000), false);
+	}
+	
+	/* Entry action for state 'Blocked'. */
+	private void entryAction_PaymentByNFC_Blocked() {
+		timer.setTimer(this, 24, 100, true);
 	}
 	
 	/* Exit action for state 'Cleaning'. */
@@ -1732,21 +1857,41 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		timer.unsetTimer(this, 16);
 	}
 	
+	/* Exit action for state 'WaitingCoins'. */
+	private void exitAction_PaymentByCoins_WaitingCoins() {
+		timer.unsetTimer(this, 17);
+	}
+	
 	/* Exit action for state 'ReturnCoins'. */
 	private void exitAction_PaymentByCoins_ReturnCoins() {
-		timer.unsetTimer(this, 17);
+		timer.unsetTimer(this, 18);
+	}
+	
+	/* Exit action for state 'Blocked'. */
+	private void exitAction_PaymentByCoins_Blocked() {
+		timer.unsetTimer(this, 19);
+	}
+	
+	/* Exit action for state 'WaitingNFC'. */
+	private void exitAction_PaymentByNFC_WaitingNFC() {
+		timer.unsetTimer(this, 20);
 	}
 	
 	/* Exit action for state 'PaymentByNFC'. */
 	private void exitAction_PaymentByNFC_PaymentByNFC() {
-		timer.unsetTimer(this, 18);
+		timer.unsetTimer(this, 21);
 		
-		timer.unsetTimer(this, 19);
+		timer.unsetTimer(this, 22);
 	}
 	
 	/* Exit action for state 'CancelTransaction'. */
 	private void exitAction_PaymentByNFC_CancelTransaction() {
-		timer.unsetTimer(this, 20);
+		timer.unsetTimer(this, 23);
+	}
+	
+	/* Exit action for state 'Blocked'. */
+	private void exitAction_PaymentByNFC_Blocked() {
+		timer.unsetTimer(this, 24);
 	}
 	
 	/* 'default' enter sequence for state Waiting */
@@ -1952,6 +2097,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	
 	/* 'default' enter sequence for state WaitingCoins */
 	private void enterSequence_PaymentByCoins_WaitingCoins_default() {
+		entryAction_PaymentByCoins_WaitingCoins();
 		nextStateIndex = 2;
 		stateVector[2] = State.paymentByCoins_WaitingCoins;
 	}
@@ -1963,8 +2109,16 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		stateVector[2] = State.paymentByCoins_ReturnCoins;
 	}
 	
+	/* 'default' enter sequence for state Blocked */
+	private void enterSequence_PaymentByCoins_Blocked_default() {
+		entryAction_PaymentByCoins_Blocked();
+		nextStateIndex = 2;
+		stateVector[2] = State.paymentByCoins_Blocked;
+	}
+	
 	/* 'default' enter sequence for state WaitingNFC */
 	private void enterSequence_PaymentByNFC_WaitingNFC_default() {
+		entryAction_PaymentByNFC_WaitingNFC();
 		nextStateIndex = 3;
 		stateVector[3] = State.paymentByNFC_WaitingNFC;
 	}
@@ -1981,6 +2135,13 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		entryAction_PaymentByNFC_CancelTransaction();
 		nextStateIndex = 3;
 		stateVector[3] = State.paymentByNFC_CancelTransaction;
+	}
+	
+	/* 'default' enter sequence for state Blocked */
+	private void enterSequence_PaymentByNFC_Blocked_default() {
+		entryAction_PaymentByNFC_Blocked();
+		nextStateIndex = 3;
+		stateVector[3] = State.paymentByNFC_Blocked;
 	}
 	
 	/* 'default' enter sequence for region  */
@@ -2233,6 +2394,8 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	private void exitSequence_PaymentByCoins_WaitingCoins() {
 		nextStateIndex = 2;
 		stateVector[2] = State.$NullState$;
+		
+		exitAction_PaymentByCoins_WaitingCoins();
 	}
 	
 	/* Default exit sequence for state ReturnCoins */
@@ -2243,10 +2406,20 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		exitAction_PaymentByCoins_ReturnCoins();
 	}
 	
+	/* Default exit sequence for state Blocked */
+	private void exitSequence_PaymentByCoins_Blocked() {
+		nextStateIndex = 2;
+		stateVector[2] = State.$NullState$;
+		
+		exitAction_PaymentByCoins_Blocked();
+	}
+	
 	/* Default exit sequence for state WaitingNFC */
 	private void exitSequence_PaymentByNFC_WaitingNFC() {
 		nextStateIndex = 3;
 		stateVector[3] = State.$NullState$;
+		
+		exitAction_PaymentByNFC_WaitingNFC();
 	}
 	
 	/* Default exit sequence for state PaymentByNFC */
@@ -2263,6 +2436,14 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		stateVector[3] = State.$NullState$;
 		
 		exitAction_PaymentByNFC_CancelTransaction();
+	}
+	
+	/* Default exit sequence for state Blocked */
+	private void exitSequence_PaymentByNFC_Blocked() {
+		nextStateIndex = 3;
+		stateVector[3] = State.$NullState$;
+		
+		exitAction_PaymentByNFC_Blocked();
 	}
 	
 	/* Default exit sequence for region  */
@@ -2499,6 +2680,9 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		case paymentByCoins_ReturnCoins:
 			exitSequence_PaymentByCoins_ReturnCoins();
 			break;
+		case paymentByCoins_Blocked:
+			exitSequence_PaymentByCoins_Blocked();
+			break;
 		default:
 			break;
 		}
@@ -2515,6 +2699,9 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 			break;
 		case paymentByNFC_CancelTransaction:
 			exitSequence_PaymentByNFC_CancelTransaction();
+			break;
+		case paymentByNFC_Blocked:
+			exitSequence_PaymentByNFC_Blocked();
 			break;
 		default:
 			break;
@@ -2652,8 +2839,6 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 			} else {
 				if (sCInterface.cancelButton) {
 					exitSequence__region0_Beverage_Choice();
-					sCInterface.raiseResetSliders();
-					
 					enterSequence__region0_Waiting_default();
 				} else {
 					if (timeEvents[2]) {
@@ -3046,6 +3231,8 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		if (try_transition) {
 			if (timeEvents[13]) {
 				exitSequence__region0_Beverage_Preparation_Last_Step_r1_Waiting_Infusion();
+				sCInterface.raiseInfusionOK();
+				
 				enterSequence__region0_Beverage_Preparation_Last_Step_r1_Remove_TeaBag_default();
 				_region0_Beverage_Preparation_Last_Step_react(false);
 			} else {
@@ -3064,6 +3251,8 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		if (try_transition) {
 			if (timeEvents[14]) {
 				exitSequence__region0_Beverage_Preparation_Last_Step_r1_Remove_TeaBag();
+				sCInterface.raiseRemoveTeaBagOK();
+				
 				enterSequence__region0_Beverage_Preparation_Last_Step_r1_Take_beverage_default();
 				_region0_Beverage_Preparation_Last_Step_react(false);
 			} else {
@@ -3137,7 +3326,12 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 				
 				enterSequence_PaymentByCoins_PaymentByCoins_default();
 			} else {
-				did_transition = false;
+				if (((timeEvents[17]) && (sCInterface.getOnWire()==false))) {
+					exitSequence_PaymentByCoins_WaitingCoins();
+					enterSequence_PaymentByCoins_Blocked_default();
+				} else {
+					did_transition = false;
+				}
 			}
 		}
 		return did_transition;
@@ -3147,10 +3341,24 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if (timeEvents[17]) {
+			if (timeEvents[18]) {
 				exitSequence_PaymentByCoins_ReturnCoins();
 				sCInterface.raiseMachineReady();
 				
+				enterSequence_PaymentByCoins_WaitingCoins_default();
+			} else {
+				did_transition = false;
+			}
+		}
+		return did_transition;
+	}
+	
+	private boolean paymentByCoins_Blocked_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (((timeEvents[19]) && (sCInterface.getOnWire()==true))) {
+				exitSequence_PaymentByCoins_Blocked();
 				enterSequence_PaymentByCoins_WaitingCoins_default();
 			} else {
 				did_transition = false;
@@ -3170,7 +3378,13 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 				enterSequence_PaymentByNFC_PaymentByNFC_default();
 				react();
 			} else {
-				did_transition = false;
+				if (((timeEvents[20]) && (sCInterface.getOnWire()==false))) {
+					exitSequence_PaymentByNFC_WaitingNFC();
+					enterSequence_PaymentByNFC_Blocked_default();
+					react();
+				} else {
+					did_transition = false;
+				}
 			}
 		}
 		if (did_transition==false) {
@@ -3183,7 +3397,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if (timeEvents[18]) {
+			if (timeEvents[21]) {
 				exitSequence_PaymentByNFC_PaymentByNFC();
 				sCInterface.raiseCancelTransaction();
 				
@@ -3197,7 +3411,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 					enterSequence_PaymentByNFC_CancelTransaction_default();
 					react();
 				} else {
-					if (((timeEvents[19]) && (sCInterface.getPaymentDone()==true))) {
+					if (((timeEvents[22]) && (sCInterface.getPaymentDone()==true))) {
 						exitSequence_PaymentByNFC_PaymentByNFC();
 						enterSequence_PaymentByNFC_WaitingNFC_default();
 						react();
@@ -3217,10 +3431,28 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if (timeEvents[20]) {
+			if (timeEvents[23]) {
 				exitSequence_PaymentByNFC_CancelTransaction();
 				sCInterface.raiseMachineReady();
 				
+				enterSequence_PaymentByNFC_WaitingNFC_default();
+				react();
+			} else {
+				did_transition = false;
+			}
+		}
+		if (did_transition==false) {
+			did_transition = react();
+		}
+		return did_transition;
+	}
+	
+	private boolean paymentByNFC_Blocked_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (((timeEvents[24]) && (sCInterface.getOnWire()==true))) {
+				exitSequence_PaymentByNFC_Blocked();
 				enterSequence_PaymentByNFC_WaitingNFC_default();
 				react();
 			} else {
