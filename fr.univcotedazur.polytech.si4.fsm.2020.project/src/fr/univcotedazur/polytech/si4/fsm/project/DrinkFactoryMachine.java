@@ -48,7 +48,9 @@ public class DrinkFactoryMachine extends JFrame {
 	protected JSlider sizeSlider;
 	protected JSlider temperatureSlider;
 	protected Beverage beverageChoice = null;
+	protected JProgressBar progressBar;
 	private Thread t;
+	private Thread t1;
 	/**
 	 * Launch the application.
 	 */
@@ -80,6 +82,87 @@ public class DrinkFactoryMachine extends JFrame {
 		double valueCorrection2 = valueCorrection1/100;
 		return valueCorrection2;
 	}
+	
+	public int getTemperatureSelected() {
+		int temperatureSelected = 0;
+		switch(temperatureSlider.getValue()) {
+		case 0:
+			temperatureSelected = 20;
+			break;
+		case 1:
+			temperatureSelected = 35;
+			break;
+		case 2:
+			temperatureSelected = 60;
+			break;
+		default:
+			temperatureSelected = 85;
+		}
+		return temperatureSelected;
+	}
+	
+	public double timePreparation(Beverage beverage) { // le temps se calcul en fonction de la machine à état
+		double timePreparationGauche = 1.0 + 1.0; // Rajout de +1 seconde pour que tout se synchronise (normalement le +1.0 ne doit pas être la mais au moins c'est synchro)
+		//calcul du temps pour parcourir le chemin gauche sur la machine à état
+		double timePreparationDroite = 3.0 + 1.0; // Rajout de +1 seconde pour que tout se synchronise (normalement le +1.0 ne doit pas être la mais au moins c'est synchro)
+		//calcul du temps pour parcourir le chemin droit sur la machine à état
+		switch(beverage.getName()) {
+		case "café":
+			timePreparationDroite += 2.0;
+			break;
+		case "thé":
+			timePreparationDroite += 2.0; 
+			break;
+		default:
+			timePreparationDroite += 3.0 + (sizeSlider.getValue()+1) * 1.5;
+		}
+		switch(sizeSlider.getValue()+1) {
+		case 2:
+			timePreparationGauche += 2*3;
+			break;
+		case 3:
+			timePreparationGauche += 3*3;
+			break;
+		default:
+			timePreparationGauche += 1*3;
+		}
+		timePreparationGauche +=  (getTemperatureSelected() * 0.1); 
+		
+		
+		if (timePreparationGauche < timePreparationDroite && beverage.getName()=="thé") return timePreparationDroite + 4.5; 
+		else if (timePreparationGauche > timePreparationDroite && beverage.getName()=="thé") return timePreparationGauche + 4.5; 
+		if (timePreparationGauche < timePreparationDroite ) return timePreparationDroite ; 
+		return timePreparationGauche ;
+	}
+	
+	public void progressBarStart() {
+		
+		long temps = (long)(timePreparation(beverageChoice));
+		
+		Runnable r = new Runnable() {
+			
+			@Override
+			public void run() {
+				while(true) {
+					if (progressBar.getValue() != 100) {
+						progressBar.setValue(progressBar.getValue()+1);
+					}
+					else break;
+					try {
+						Thread.sleep(temps*1000/100);
+						//Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+			}
+		};
+		t1 = new Thread(r);
+		t1.start();
+		
+	}
 
 	/**
 	 * Create the frame.
@@ -100,7 +183,7 @@ public class DrinkFactoryMachine extends JFrame {
 				while(true) {
 					theDFM.runCycle();
 					try {
-						Thread.sleep(200);
+						Thread.sleep(20);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -185,9 +268,9 @@ public class DrinkFactoryMachine extends JFrame {
 		soupButton.setBounds(12, 145, 96, 25);
 		contentPane.add(soupButton);
 
-		JProgressBar progressBar = new JProgressBar();
+		progressBar = new JProgressBar();
 		progressBar.setStringPainted(true);
-		progressBar.setValue(10);
+		progressBar.setValue(0);
 		progressBar.setForeground(Color.LIGHT_GRAY);
 		progressBar.setBackground(Color.DARK_GRAY);
 		progressBar.setBounds(12, 254, 622, 26);
@@ -452,6 +535,7 @@ public class DrinkFactoryMachine extends JFrame {
 		// TODO Auto-generated method stub
 		super.finalize();
 		t.stop();
+		t1.stop();
 	}
 	
 }

@@ -78,24 +78,10 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		this.dfm.messagesToUser.setText("<html> Votre " + this.dfm.beverageChoice.getName() + " est en cours de préparation ... ");
 		this.dfm.theDFM.setBeverageSelected(this.dfm.beverageChoice.getName());
 		
-		int temperatureSelected = 0;
-		switch(this.dfm.temperatureSlider.getValue()) {
-		case 0:
-			temperatureSelected = 20;
-			break;
-		case 1:
-			temperatureSelected = 35;
-			break;
-		case 2:
-			temperatureSelected = 60;
-			break;
-		default:
-			temperatureSelected = 85;
-		}
-		
-		this.dfm.theDFM.setTemperatureSelected(temperatureSelected);
+		this.dfm.theDFM.setTemperatureSelected(this.dfm.getTemperatureSelected());
 		this.dfm.theDFM.setSizeSelected(this.dfm.sizeSlider.getValue()+1);
 		this.dfm.machineSurEcoute = false;
+		this.dfm.progressBarStart();
 	}
 
 	@Override
@@ -123,6 +109,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		this.dfm.sugarSlider.setValue(1);
 		this.dfm.temperatureSlider.setValue(2);
 		this.dfm.sizeSlider.setValue(1);
+		this.dfm.progressBar.setValue(0);
 	}
 
 	@Override
