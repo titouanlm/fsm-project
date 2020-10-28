@@ -102,9 +102,9 @@ public class DrinkFactoryMachine extends JFrame {
 	}
 	
 	public double timePreparation(Beverage beverage) { // le temps se calcul en fonction de la machine à état
-		double timePreparationGauche = 1.0 + 1.0; // Rajout de +1 seconde pour que tout se synchronise (normalement le +1.0 ne doit pas être la mais au moins c'est synchro)
+		double timePreparationGauche = 1.0; // Rajout de +1 seconde pour que tout se synchronise (normalement le +1.0 ne doit pas être la mais au moins c'est synchro)
 		//calcul du temps pour parcourir le chemin gauche sur la machine à état
-		double timePreparationDroite = 3.0 + 1.0; // Rajout de +1 seconde pour que tout se synchronise (normalement le +1.0 ne doit pas être la mais au moins c'est synchro)
+		double timePreparationDroite = 3.0; // Rajout de +1 seconde pour que tout se synchronise (normalement le +1.0 ne doit pas être la mais au moins c'est synchro)
 		//calcul du temps pour parcourir le chemin droit sur la machine à état
 		switch(beverage.getName()) {
 		case "café":
@@ -116,45 +116,37 @@ public class DrinkFactoryMachine extends JFrame {
 		default:
 			timePreparationDroite += 3.0 + (sizeSlider.getValue()+1) * 1.5;
 		}
-		switch(sizeSlider.getValue()+1) {
-		case 2:
-			timePreparationGauche += 2*3;
-			break;
-		case 3:
-			timePreparationGauche += 3*3;
-			break;
-		default:
-			timePreparationGauche += 1*3;
-		}
+		timePreparationGauche += (sizeSlider.getValue()+1)*3;
 		timePreparationGauche +=  (getTemperatureSelected() * 0.1); 
 		
 		
 		if (timePreparationGauche < timePreparationDroite && beverage.getName()=="thé") return timePreparationDroite + 4.5; 
 		else if (timePreparationGauche > timePreparationDroite && beverage.getName()=="thé") return timePreparationGauche + 4.5; 
-		if (timePreparationGauche < timePreparationDroite ) return timePreparationDroite ; 
+		else if (timePreparationGauche < timePreparationDroite ) return timePreparationDroite ; 
 		return timePreparationGauche ;
 	}
 	
 	public void progressBarStart() {
 		
-		long temps = (long)(timePreparation(beverageChoice));
+		long temps = (long)(timePreparation(beverageChoice)*1000);
+		messagesToUser.setText("temps : " + temps);
 		
 		Runnable r = new Runnable() {
 			
 			@Override
 			public void run() {
 				while(true) {
-					if (progressBar.getValue() != 100) {
-						progressBar.setValue(progressBar.getValue()+1);
-					}
-					else break;
 					try {
-						Thread.sleep(temps*1000/100);
+						Thread.sleep(temps/100);
 						//Thread.sleep(1000);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					if (progressBar.getValue() != 100) {
+						progressBar.setValue(progressBar.getValue()+1);
+					}
+					else break;
 				}
 				
 			}
