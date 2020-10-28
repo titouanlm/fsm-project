@@ -391,24 +391,6 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 			}
 		}
 		
-		private boolean updateProgressBar;
-		
-		
-		public boolean isRaisedUpdateProgressBar() {
-			synchronized(DefaultSMStatemachine.this) {
-				return updateProgressBar;
-			}
-		}
-		
-		protected void raiseUpdateProgressBar() {
-			synchronized(DefaultSMStatemachine.this) {
-				updateProgressBar = true;
-				for (SCInterfaceListener listener : listeners) {
-					listener.onUpdateProgressBarRaised();
-				}
-			}
-		}
-		
 		private boolean packGrains;
 		
 		
@@ -697,42 +679,6 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 			}
 		}
 		
-		private boolean infusionOK;
-		
-		
-		public boolean isRaisedInfusionOK() {
-			synchronized(DefaultSMStatemachine.this) {
-				return infusionOK;
-			}
-		}
-		
-		protected void raiseInfusionOK() {
-			synchronized(DefaultSMStatemachine.this) {
-				infusionOK = true;
-				for (SCInterfaceListener listener : listeners) {
-					listener.onInfusionOKRaised();
-				}
-			}
-		}
-		
-		private boolean removeTeaBagOK;
-		
-		
-		public boolean isRaisedRemoveTeaBagOK() {
-			synchronized(DefaultSMStatemachine.this) {
-				return removeTeaBagOK;
-			}
-		}
-		
-		protected void raiseRemoveTeaBagOK() {
-			synchronized(DefaultSMStatemachine.this) {
-				removeTeaBagOK = true;
-				for (SCInterfaceListener listener : listeners) {
-					listener.onRemoveTeaBagOKRaised();
-				}
-			}
-		}
-		
 		private double solde;
 		
 		public synchronized double getSolde() {
@@ -875,7 +821,6 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		placeTeaBag = false;
 		grindGrains = false;
 		placeCup = false;
-		updateProgressBar = false;
 		packGrains = false;
 		waitTemperature = false;
 		flowWater = false;
@@ -892,8 +837,6 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		grainCrushingOK = false;
 		waterHeatingOK = false;
 		cupOK = false;
-		infusionOK = false;
-		removeTeaBagOK = false;
 		}
 		
 	}
@@ -1386,10 +1329,6 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		return sCInterface.isRaisedPlaceCup();
 	}
 	
-	public synchronized boolean isRaisedUpdateProgressBar() {
-		return sCInterface.isRaisedUpdateProgressBar();
-	}
-	
 	public synchronized boolean isRaisedPackGrains() {
 		return sCInterface.isRaisedPackGrains();
 	}
@@ -1452,14 +1391,6 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	
 	public synchronized boolean isRaisedCupOK() {
 		return sCInterface.isRaisedCupOK();
-	}
-	
-	public synchronized boolean isRaisedInfusionOK() {
-		return sCInterface.isRaisedInfusionOK();
-	}
-	
-	public synchronized boolean isRaisedRemoveTeaBagOK() {
-		return sCInterface.isRaisedRemoveTeaBagOK();
 	}
 	
 	public synchronized double getSolde() {
@@ -1596,7 +1527,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	
 	/* Entry action for state 'Start Water Heating'. */
 	private void entryAction__region0_Beverage_Preparation_First_Step_r1_Start_Water_Heating() {
-		timer.setTimer(this, 3, (1 * 1000), false);
+		timer.setTimer(this, 3, 1500, false);
 		
 		sCInterface.raiseTurnOnWaterHeating();
 	}
@@ -3231,8 +3162,6 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		if (try_transition) {
 			if (timeEvents[13]) {
 				exitSequence__region0_Beverage_Preparation_Last_Step_r1_Waiting_Infusion();
-				sCInterface.raiseInfusionOK();
-				
 				enterSequence__region0_Beverage_Preparation_Last_Step_r1_Remove_TeaBag_default();
 				_region0_Beverage_Preparation_Last_Step_react(false);
 			} else {
@@ -3251,8 +3180,6 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		if (try_transition) {
 			if (timeEvents[14]) {
 				exitSequence__region0_Beverage_Preparation_Last_Step_r1_Remove_TeaBag();
-				sCInterface.raiseRemoveTeaBagOK();
-				
 				enterSequence__region0_Beverage_Preparation_Last_Step_r1_Take_beverage_default();
 				_region0_Beverage_Preparation_Last_Step_react(false);
 			} else {
