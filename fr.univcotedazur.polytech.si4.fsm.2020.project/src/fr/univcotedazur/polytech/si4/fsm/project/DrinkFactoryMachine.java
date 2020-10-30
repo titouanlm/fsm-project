@@ -37,7 +37,7 @@ public class DrinkFactoryMachine extends JFrame {
 	/**
 	 * @wbp.nonvisual location=311,475
 	 */
-	// private final ImageIcon imageIcon = new ImageIcon();
+	 //private final ImageIcon imageIcon = new ImageIcon();
 
 	protected DefaultSMStatemachine theDFM;
 	protected JLabel messagesToUser;
@@ -49,6 +49,7 @@ public class DrinkFactoryMachine extends JFrame {
 	protected JSlider temperatureSlider;
 	protected Beverage beverageChoice = null;
 	protected JProgressBar progressBar;
+	protected double beveragePriceAfterDiscount = 0.;
 	private Thread t;
 	private Thread t1;
 	/**
@@ -103,7 +104,7 @@ public class DrinkFactoryMachine extends JFrame {
 	
 	public double chooseRightOrLeft() {
 		double timeLeft = (getTemperatureSelected() * 0.1);
-		if(timeLeft > 3.0) {
+		if(timeLeft > 3.0 || this.theDFM.getOwnCup()) {
 			return  timeLeft;
 		}else {
 			return 3.0;
@@ -200,7 +201,7 @@ public class DrinkFactoryMachine extends JFrame {
 		t.start();
 		
 		theDFM.setOnWire(true);
-		
+		theDFM.setOwnCup(false);
 		setForeground(Color.WHITE);
 		setFont(new Font("Cantarell", Font.BOLD, 22));
 		setBackground(Color.DARK_GRAY);
@@ -435,13 +436,18 @@ public class DrinkFactoryMachine extends JFrame {
 		addCupButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				BufferedImage myPicture = null;
-				try {
-					myPicture = ImageIO.read(new File("./picts/ownCup.jpg"));
-				} catch (IOException ee) {
-					ee.printStackTrace();
+				if(theDFM.getOnWire()) {
+					BufferedImage myPicture = null;
+					try {
+						myPicture = ImageIO.read(new File("./picts/ownCup.jpg"));
+					} catch (IOException ee) {
+						ee.printStackTrace();
+					}
+					theDFM.setOwnCup(true);
+					labelForPictures.setIcon(new ImageIcon(myPicture));
+					theDFM.raiseAddCupButton();
 				}
-				labelForPictures.setIcon(new ImageIcon(myPicture));
+				
 			}
 		});
 		

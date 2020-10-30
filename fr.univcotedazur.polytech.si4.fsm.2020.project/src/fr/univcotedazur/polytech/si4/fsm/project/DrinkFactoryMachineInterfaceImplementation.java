@@ -1,5 +1,6 @@
 package fr.univcotedazur.polytech.si4.fsm.project;
 
+import java.awt.image.BufferedImage;
 //import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -33,33 +34,39 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	@Override
 	public void onTakeBeverageRaised() {
 		this.dfm.messagesToUser.setText("<html> Veuillez récupérer votre boisson svp. <br>");
-		try {
-			this.dfm.labelForPictures.setIcon(new ImageIcon(ImageIO.read(new File("./picts/ownCup.jpg"))));
-		} catch (IOException ee) {
-			ee.printStackTrace();
-		}	
+		if(!this.dfm.theDFM.getOwnCup()) {
+			BufferedImage myPicture = null;
+			try {
+				myPicture = ImageIO.read(new File("./picts/gobeletPolluant.jpg"));
+			} catch (IOException ee) {
+				ee.printStackTrace();
+			}
+			this.dfm.labelForPictures.setIcon(new ImageIcon(myPicture));
+		}
 		this.dfm.messagesToUser2.setText("");
 		this.dfm.messagesToUser3.setText("");
 	}
 	
 	@Override
 	public void onTakeChangeRaised() {
-		if (this.dfm.theDFM.getSolde() > 0.0) {
-			if (!this.dfm.theDFM.getPaymentCard()) {
-				this.dfm.messagesToUser.setText("<html>Argent à récuperer : <br>" + this.dfm.theDFM.getSolde() + " €");
-				this.dfm.theDFM.setSolde(0.0);	
-			}
-		}
-		this.dfm.theDFM.setOnWire(true); 
-	}
-
-	@Override
-	public void onCleaningMachineRaised() {
 		try {
 			this.dfm.labelForPictures.setIcon(new ImageIcon(ImageIO.read(new File("./picts/vide2.jpg"))));
 		} catch (IOException ee) {
 			ee.printStackTrace();
 		}
+		this.dfm.progressBar.setValue(0);
+		if (this.dfm.theDFM.getSolde() > 0.0) {
+			if (!this.dfm.theDFM.getPaymentCard()) {
+				this.dfm.messagesToUser.setText("<html>Argent à récuperer : <br>" + this.dfm.theDFM.getSolde() + " €");
+				this.dfm.theDFM.setSolde(0.0);	
+			}
+		}else {
+			this.dfm.messagesToUser.setText("<html>Pas de monnaie.");
+		}
+	}
+
+	@Override
+	public void onCleaningMachineRaised() {
 		this.dfm.messagesToUser.setText("<html> Attendez, votre machine est en cours de nettoyage.");	
 	}
 
@@ -70,8 +77,9 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		this.dfm.theDFM.setPaymentDone(false);
 		this.dfm.theDFM.setEnoughMoney(false);
 		this.dfm.theDFM.setPaymentCard(false);
+		this.dfm.theDFM.setOwnCup(false);
 		this.dfm.beverageChoice =null;
-		this.dfm.progressBar.setValue(0);
+		this.dfm.beveragePriceAfterDiscount= 0.;
 		onResetSlidersRaised();
 	}
 	
@@ -116,15 +124,20 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	public void onValidatePaymentRaised() {
 		this.dfm.messagesToUser.setText(this.dfm.messagesToUser.getText()+"<html> <br> Paiement autorisé.");
 		if(!this.dfm.theDFM.getPaymentCard()) {
-			this.dfm.theDFM.setSolde(this.dfm.roundValue(this.dfm.theDFM.getSolde()-this.dfm.beverageChoice.getPrice()));
+			this.dfm.theDFM.setSolde(this.dfm.roundValue(this.dfm.theDFM.getSolde()-this.dfm.beveragePriceAfterDiscount));
 		}
 		this.dfm.theDFM.setPaymentDone(true);
 	}
 
 	@Override
 	public void onBeverageChoiceRaised() {
+		if(this.dfm.theDFM.getOwnCup()) {
+			this.dfm.beveragePriceAfterDiscount = this.dfm.roundValue(this.dfm.beverageChoice.getPrice()-0.1);
+		}else {
+			this.dfm.beveragePriceAfterDiscount = this.dfm.roundValue(this.dfm.beverageChoice.getPrice());
+		}
 		this.dfm.messagesToUser.setText("<html> Vous avez choisis "+ this.dfm.beverageChoice.getName() + 
-				"<br> Prix : " + this.dfm.beverageChoice.getPrice() + "€." +
+				"<br> Prix : " + this.dfm.beveragePriceAfterDiscount + "€." +
 				"<br> Votre solde : " + this.dfm.theDFM.getSolde() + "€.");
 		this.dfm.enoughMoney();
 	}
@@ -231,6 +244,11 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	@Override
 	public void onRemoveTeaBagRaised() {
 		this.dfm.messagesToUser3.setText("<html> Retrait du sachet... ");
+	}
+
+	@Override
+	public void onOwnCupOKRaised() {
+		this.dfm.messagesToUser3.setText("<html> Positionnement de votre tasse... ✓");	
 	}
 
 }

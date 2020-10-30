@@ -28,6 +28,8 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		
 		public void raiseIcedTeaButton();
 		
+		public void raiseAddCupButton();
+		
 		public boolean isRaisedUpdateSolde();
 		
 		public boolean isRaisedTakeBeverage();
@@ -92,6 +94,8 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		
 		public boolean isRaisedCupOK();
 		
+		public boolean isRaisedOwnCupOK();
+		
 		public double getSolde();
 		
 		public void setSolde(double value);
@@ -99,6 +103,10 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		public boolean getOnWire();
 		
 		public void setOnWire(boolean value);
+		
+		public boolean getOwnCup();
+		
+		public void setOwnCup(boolean value);
 		
 		public boolean getPaymentCard();
 		
@@ -161,6 +169,7 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		public void onGrainCrushingOKRaised();
 		public void onWaterHeatingOKRaised();
 		public void onCupOKRaised();
+		public void onOwnCupOKRaised();
 		}
 	
 	public SCInterface getSCInterface();

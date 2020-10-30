@@ -103,6 +103,15 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 			}
 		}
 		
+		private boolean addCupButton;
+		
+		
+		public void raiseAddCupButton() {
+			synchronized(DefaultSMStatemachine.this) {
+				addCupButton = true;
+			}
+		}
+		
 		private boolean updateSolde;
 		
 		
@@ -679,6 +688,24 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 			}
 		}
 		
+		private boolean ownCupOK;
+		
+		
+		public boolean isRaisedOwnCupOK() {
+			synchronized(DefaultSMStatemachine.this) {
+				return ownCupOK;
+			}
+		}
+		
+		protected void raiseOwnCupOK() {
+			synchronized(DefaultSMStatemachine.this) {
+				ownCupOK = true;
+				for (SCInterfaceListener listener : listeners) {
+					listener.onOwnCupOKRaised();
+				}
+			}
+		}
+		
 		private double solde;
 		
 		public synchronized double getSolde() {
@@ -704,6 +731,20 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		public void setOnWire(boolean value) {
 			synchronized(DefaultSMStatemachine.this) {
 				this.onWire = value;
+			}
+		}
+		
+		private boolean ownCup;
+		
+		public synchronized boolean getOwnCup() {
+			synchronized(DefaultSMStatemachine.this) {
+				return ownCup;
+			}
+		}
+		
+		public void setOwnCup(boolean value) {
+			synchronized(DefaultSMStatemachine.this) {
+				this.ownCup = value;
 			}
 		}
 		
@@ -802,6 +843,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 			bipButton = false;
 			cancelButton = false;
 			icedTeaButton = false;
+			addCupButton = false;
 		}
 		protected void clearOutEvents() {
 		
@@ -837,6 +879,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		grainCrushingOK = false;
 		waterHeatingOK = false;
 		cupOK = false;
+		ownCupOK = false;
 		}
 		
 	}
@@ -869,6 +912,8 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		_region0_Beverage_Preparation_Second_Step_r2_Cup_In_Place,
 		_region0_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK,
 		_region0_Beverage_Preparation_Second_Step_r2_Ready2,
+		_region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK,
+		_region0_Beverage_Preparation_Second_Step_r2_Cup_Need,
 		_region0_Beverage_Preparation_Third_Step,
 		_region0_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing,
 		_region0_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK,
@@ -915,6 +960,8 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		sCInterface.setSolde(0.0);
 		
 		sCInterface.setOnWire(false);
+		
+		sCInterface.setOwnCup(false);
 		
 		sCInterface.setPaymentCard(false);
 		
@@ -1009,6 +1056,12 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 				break;
 			case _region0_Beverage_Preparation_Second_Step_r2_Ready2:
 				_region0_Beverage_Preparation_Second_Step_r2_Ready2_react(true);
+				break;
+			case _region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK:
+				_region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK_react(true);
+				break;
+			case _region0_Beverage_Preparation_Second_Step_r2_Cup_Need:
+				_region0_Beverage_Preparation_Second_Step_r2_Cup_Need_react(true);
 				break;
 			case _region0_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing:
 				_region0_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing_react(true);
@@ -1139,7 +1192,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 			return stateVector[1] == State._region0_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK;
 		case _region0_Beverage_Preparation_Second_Step:
 			return stateVector[0].ordinal() >= State.
-					_region0_Beverage_Preparation_Second_Step.ordinal()&& stateVector[0].ordinal() <= State._region0_Beverage_Preparation_Second_Step_r2_Ready2.ordinal();
+					_region0_Beverage_Preparation_Second_Step.ordinal()&& stateVector[0].ordinal() <= State._region0_Beverage_Preparation_Second_Step_r2_Cup_Need.ordinal();
 		case _region0_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature:
 			return stateVector[0] == State._region0_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature;
 		case _region0_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK:
@@ -1154,6 +1207,10 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 			return stateVector[1] == State._region0_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK;
 		case _region0_Beverage_Preparation_Second_Step_r2_Ready2:
 			return stateVector[1] == State._region0_Beverage_Preparation_Second_Step_r2_Ready2;
+		case _region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK:
+			return stateVector[1] == State._region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK;
+		case _region0_Beverage_Preparation_Second_Step_r2_Cup_Need:
+			return stateVector[1] == State._region0_Beverage_Preparation_Second_Step_r2_Cup_Need;
 		case _region0_Beverage_Preparation_Third_Step:
 			return stateVector[0].ordinal() >= State.
 					_region0_Beverage_Preparation_Third_Step.ordinal()&& stateVector[0].ordinal() <= State._region0_Beverage_Preparation_Third_Step_r2_Sugar_OK.ordinal();
@@ -1263,6 +1320,10 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	
 	public synchronized void raiseIcedTeaButton() {
 		sCInterface.raiseIcedTeaButton();
+	}
+	
+	public synchronized void raiseAddCupButton() {
+		sCInterface.raiseAddCupButton();
 	}
 	
 	public synchronized boolean isRaisedUpdateSolde() {
@@ -1393,6 +1454,10 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		return sCInterface.isRaisedCupOK();
 	}
 	
+	public synchronized boolean isRaisedOwnCupOK() {
+		return sCInterface.isRaisedOwnCupOK();
+	}
+	
 	public synchronized double getSolde() {
 		return sCInterface.getSolde();
 	}
@@ -1407,6 +1472,14 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	
 	public synchronized void setOnWire(boolean value) {
 		sCInterface.setOnWire(value);
+	}
+	
+	public synchronized boolean getOwnCup() {
+		return sCInterface.getOwnCup();
+	}
+	
+	public synchronized void setOwnCup(boolean value) {
+		sCInterface.setOwnCup(value);
 	}
 	
 	public synchronized boolean getPaymentCard() {
@@ -1469,6 +1542,10 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		return (sCInterface.getBeverageSelected()== null?"expresso" ==null :sCInterface.getBeverageSelected().equals("expresso"));
 	}
 	
+	private boolean check__region0_Beverage_Preparation_Second_Step_r2__choice_1_tr0_tr0() {
+		return sCInterface.getOwnCup()==true;
+	}
+	
 	private boolean check__region0_Beverage_Preparation_Last_Step_r1__choice_0_tr0_tr0() {
 		return (sCInterface.getBeverageSelected()== null?"thé" ==null :sCInterface.getBeverageSelected().equals("thé"));
 	}
@@ -1491,6 +1568,14 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	
 	private void effect__region0_Beverage_Preparation_Second_Step_r2__choice_0_tr1() {
 		enterSequence__region0_Beverage_Preparation_Second_Step_r2_Ready2_default();
+	}
+	
+	private void effect__region0_Beverage_Preparation_Second_Step_r2__choice_1_tr0() {
+		enterSequence__region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK_default();
+	}
+	
+	private void effect__region0_Beverage_Preparation_Second_Step_r2__choice_1_tr1() {
+		enterSequence__region0_Beverage_Preparation_Second_Step_r2_Cup_Need_default();
 	}
 	
 	private void effect__region0_Beverage_Preparation_Last_Step_r1__choice_0_tr0() {
@@ -1585,16 +1670,9 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		sCInterface.raiseWaterTempOK();
 	}
 	
-	/* Entry action for state 'Waiting Cup '. */
-	private void entryAction__region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup_() {
-		timer.setTimer(this, 8, (3 * 1000), false);
-		
-		sCInterface.raisePlaceCup();
-	}
-	
 	/* Entry action for state 'Waiting Grain Pack'. */
 	private void entryAction__region0_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack() {
-		timer.setTimer(this, 9, ((sCInterface.getSizeSelected() * 1500)), false);
+		timer.setTimer(this, 8, ((sCInterface.getSizeSelected() * 1500)), false);
 		
 		sCInterface.raisePackGrains();
 	}
@@ -1607,6 +1685,18 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	/* Entry action for state 'Grain Packing OK'. */
 	private void entryAction__region0_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK() {
 		sCInterface.raiseGrainPackingOK();
+	}
+	
+	/* Entry action for state 'Own Cup OK'. */
+	private void entryAction__region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK() {
+		sCInterface.raiseOwnCupOK();
+	}
+	
+	/* Entry action for state 'Cup Need'. */
+	private void entryAction__region0_Beverage_Preparation_Second_Step_r2_Cup_Need() {
+		timer.setTimer(this, 9, (3 * 1000), false);
+		
+		sCInterface.raisePlaceCup();
 	}
 	
 	/* Entry action for state 'Start Water Flowing'. */
@@ -1743,13 +1833,13 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		timer.unsetTimer(this, 7);
 	}
 	
-	/* Exit action for state 'Waiting Cup '. */
-	private void exitAction__region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup_() {
+	/* Exit action for state 'Waiting Grain Pack'. */
+	private void exitAction__region0_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack() {
 		timer.unsetTimer(this, 8);
 	}
 	
-	/* Exit action for state 'Waiting Grain Pack'. */
-	private void exitAction__region0_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack() {
+	/* Exit action for state 'Cup Need'. */
+	private void exitAction__region0_Beverage_Preparation_Second_Step_r2_Cup_Need() {
 		timer.unsetTimer(this, 9);
 	}
 	
@@ -1931,7 +2021,6 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	
 	/* 'default' enter sequence for state Waiting Cup  */
 	private void enterSequence__region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup__default() {
-		entryAction__region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup_();
 		nextStateIndex = 1;
 		stateVector[1] = State._region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup_;
 	}
@@ -1961,6 +2050,20 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	private void enterSequence__region0_Beverage_Preparation_Second_Step_r2_Ready2_default() {
 		nextStateIndex = 1;
 		stateVector[1] = State._region0_Beverage_Preparation_Second_Step_r2_Ready2;
+	}
+	
+	/* 'default' enter sequence for state Own Cup OK */
+	private void enterSequence__region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK_default() {
+		entryAction__region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK();
+		nextStateIndex = 1;
+		stateVector[1] = State._region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK;
+	}
+	
+	/* 'default' enter sequence for state Cup Need */
+	private void enterSequence__region0_Beverage_Preparation_Second_Step_r2_Cup_Need_default() {
+		entryAction__region0_Beverage_Preparation_Second_Step_r2_Cup_Need();
+		nextStateIndex = 1;
+		stateVector[1] = State._region0_Beverage_Preparation_Second_Step_r2_Cup_Need;
 	}
 	
 	/* 'default' enter sequence for state Start Water Flowing */
@@ -2212,8 +2315,6 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	private void exitSequence__region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup_() {
 		nextStateIndex = 1;
 		stateVector[1] = State.$NullState$;
-		
-		exitAction__region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup_();
 	}
 	
 	/* Default exit sequence for state Waiting Grain Pack */
@@ -2240,6 +2341,20 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	private void exitSequence__region0_Beverage_Preparation_Second_Step_r2_Ready2() {
 		nextStateIndex = 1;
 		stateVector[1] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state Own Cup OK */
+	private void exitSequence__region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK() {
+		nextStateIndex = 1;
+		stateVector[1] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state Cup Need */
+	private void exitSequence__region0_Beverage_Preparation_Second_Step_r2_Cup_Need() {
+		nextStateIndex = 1;
+		stateVector[1] = State.$NullState$;
+		
+		exitAction__region0_Beverage_Preparation_Second_Step_r2_Cup_Need();
 	}
 	
 	/* Default exit sequence for state Beverage Preparation Third Step */
@@ -2463,6 +2578,12 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		case _region0_Beverage_Preparation_Second_Step_r2_Ready2:
 			exitSequence__region0_Beverage_Preparation_Second_Step_r2_Ready2();
 			break;
+		case _region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK:
+			exitSequence__region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK();
+			break;
+		case _region0_Beverage_Preparation_Second_Step_r2_Cup_Need:
+			exitSequence__region0_Beverage_Preparation_Second_Step_r2_Cup_Need();
+			break;
 		case _region0_Beverage_Preparation_Third_Step_r2_Add_Sugar:
 			exitSequence__region0_Beverage_Preparation_Third_Step_r2_Add_Sugar();
 			break;
@@ -2548,6 +2669,12 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 			break;
 		case _region0_Beverage_Preparation_Second_Step_r2_Ready2:
 			exitSequence__region0_Beverage_Preparation_Second_Step_r2_Ready2();
+			break;
+		case _region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK:
+			exitSequence__region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK();
+			break;
+		case _region0_Beverage_Preparation_Second_Step_r2_Cup_Need:
+			exitSequence__region0_Beverage_Preparation_Second_Step_r2_Cup_Need();
 			break;
 		default:
 			break;
@@ -2658,6 +2785,15 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 			effect__region0_Beverage_Preparation_Second_Step_r2__choice_0_tr0();
 		} else {
 			effect__region0_Beverage_Preparation_Second_Step_r2__choice_0_tr1();
+		}
+	}
+	
+	/* The reactions of state null. */
+	private void react__region0_Beverage_Preparation_Second_Step_r2__choice_1() {
+		if (check__region0_Beverage_Preparation_Second_Step_r2__choice_1_tr0_tr0()) {
+			effect__region0_Beverage_Preparation_Second_Step_r2__choice_1_tr0();
+		} else {
+			effect__region0_Beverage_Preparation_Second_Step_r2__choice_1_tr1();
 		}
 	}
 	
@@ -2776,7 +2912,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 						exitSequence__region0_Beverage_Choice();
 						enterSequence__region0_Waiting_default();
 					} else {
-						if ((sCInterface.coffeeButton || (sCInterface.expressoButton || (sCInterface.teaButton || (sCInterface.money50centsButton || (sCInterface.money25centsButton || sCInterface.money10centsButton)))))) {
+						if ((sCInterface.coffeeButton || (sCInterface.expressoButton || (sCInterface.teaButton || (sCInterface.money50centsButton || (sCInterface.money25centsButton || (sCInterface.money10centsButton || sCInterface.addCupButton))))))) {
 							exitSequence__region0_Beverage_Choice();
 							sCInterface.raiseBeverageChoice();
 							
@@ -2982,13 +3118,8 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if (timeEvents[8]) {
-				exitSequence__region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup_();
-				enterSequence__region0_Beverage_Preparation_Second_Step_r2_Cup_In_Place_default();
-				_region0_Beverage_Preparation_Second_Step_react(false);
-			} else {
-				did_transition = false;
-			}
+			exitSequence__region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup_();
+			react__region0_Beverage_Preparation_Second_Step_r2__choice_1();
 		}
 		if (did_transition==false) {
 			did_transition = _region0_Beverage_Preparation_Second_Step_react(try_transition);
@@ -3000,7 +3131,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if (timeEvents[9]) {
+			if (timeEvents[8]) {
 				exitSequence__region0_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack();
 				enterSequence__region0_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK_default();
 				_region0_Beverage_Preparation_Second_Step_react(false);
@@ -3048,6 +3179,37 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 			if (((true && isStateActive(State._region0_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK)) && true)) {
 				exitSequence__region0_Beverage_Preparation_Second_Step();
 				react__region0__sync1();
+			} else {
+				did_transition = false;
+			}
+		}
+		if (did_transition==false) {
+			did_transition = _region0_Beverage_Preparation_Second_Step_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean _region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			exitSequence__region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK();
+			react__region0_Beverage_Preparation_Second_Step_r2__choice_0();
+		}
+		if (did_transition==false) {
+			did_transition = _region0_Beverage_Preparation_Second_Step_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean _region0_Beverage_Preparation_Second_Step_r2_Cup_Need_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (timeEvents[9]) {
+				exitSequence__region0_Beverage_Preparation_Second_Step_r2_Cup_Need();
+				enterSequence__region0_Beverage_Preparation_Second_Step_r2_Cup_In_Place_default();
+				_region0_Beverage_Preparation_Second_Step_react(false);
 			} else {
 				did_transition = false;
 			}
