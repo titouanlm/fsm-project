@@ -53,6 +53,7 @@ public class DrinkFactoryMachine extends JFrame {
 	protected double beveragePriceAfterDiscount = 0.;
 	private Thread t;
 	private Thread t1;
+	private Thread t2;
 	/**
 	 * Launch the application.
 	 */
@@ -299,8 +300,10 @@ public class DrinkFactoryMachine extends JFrame {
 					if (beverageChoice.getName() == "soupe" && sugarSlider.getValue() != 0) {
 						enoughMoneyClassicBeverage();
 					}
+					if (beverageChoice.getName() != "soupe") break;
+					if (theDFM.getPaymentDone() == true) break;
 					try {
-						Thread.sleep(20);
+						Thread.sleep(200);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -308,8 +311,10 @@ public class DrinkFactoryMachine extends JFrame {
 				
 			}
 		};
-		Thread t2 = new Thread(r);
+		t2 = new Thread(r);
 		t2.start();
+		
+		
 	}
 
 	/**
@@ -708,6 +713,9 @@ public class DrinkFactoryMachine extends JFrame {
 	protected void finalize() throws Throwable {
 		// TODO Auto-generated method stub
 		super.finalize();
+		t.destroy();
+		t1.destroy();
+		t2.destroy();
 	}
 	
 }
