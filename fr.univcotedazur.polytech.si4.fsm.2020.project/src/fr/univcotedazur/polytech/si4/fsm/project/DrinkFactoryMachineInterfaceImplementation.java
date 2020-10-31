@@ -23,7 +23,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		if (this.dfm.theDFM.getOnWire()) {
 			if(this.dfm.beverageChoice == null) {
 				this.dfm.messagesToUser.setText("Solde : " + this.dfm.theDFM.getSolde() + " €" );
-				this.dfm.enoughMoney();
+				this.dfm.enoughMoneyClassicBeverage();
 			}else {
 				onBeverageChoiceRaised();
 			}
@@ -61,7 +61,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 				this.dfm.theDFM.setSolde(0.0);	
 			}
 		}else {
-			this.dfm.messagesToUser.setText("<html>Pas de monnaie.");
+			this.dfm.messagesToUser.setText("<html>Pas de monnaie à rendre.");
 		}
 	}
 
@@ -103,7 +103,9 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	@Override
 	public void onPayByNFCRaised() {
 		this.dfm.theDFM.setPaymentCard(true);
-		this.dfm.messagesToUser.setText("<html> Veuillez choisir votre <br> boisson.");
+		if (this.dfm.beverageChoice == null) {
+			this.dfm.messagesToUser.setText("<html> Veuillez choisir votre <br> boisson.");
+		}
 	}
 
 	@Override
@@ -136,10 +138,50 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		}else {
 			this.dfm.beveragePriceAfterDiscount = this.dfm.roundValue(this.dfm.beverageChoice.getPrice());
 		}
-		this.dfm.messagesToUser.setText("<html> Vous avez choisis "+ this.dfm.beverageChoice.getName() + 
-				"<br> Prix : " + this.dfm.beveragePriceAfterDiscount + "€." +
-				"<br> Votre solde : " + this.dfm.theDFM.getSolde() + "€.");
-		this.dfm.enoughMoney();
+		if (this.dfm.beverageChoice.getName() != "thé glacé") { 
+			
+			if (this.dfm.beverageChoice.getName() == "soupe") {
+				if (this.dfm.sugarSlider.getValue() == 0) {
+					this.dfm.messagesToUser.setText("<html> Vous avez choisi "+ this.dfm.beverageChoice.getName() + 
+							"<br> Prix : " + this.dfm.beveragePriceAfterDiscount + "€." +
+							"<br> Votre solde : " + this.dfm.theDFM.getSolde() + "€." + 
+							"<br> Veuillez choisir un niveau d'épice (obligatoire)." );
+					this.dfm.onWaitingChangingSpicySlider();
+				}
+				else {
+					this.dfm.messagesToUser.setText("<html> Vous avez choisi "+ this.dfm.beverageChoice.getName() + 
+							"<br> Prix : " + this.dfm.beveragePriceAfterDiscount + "€." +
+							"<br> Votre solde : " + this.dfm.theDFM.getSolde() + "€.");
+					this.dfm.enoughMoneyClassicBeverage();
+					} 
+			}
+			else {
+				if (this.dfm.theDFM.getPaymentCard() != true) {
+				this.dfm.messagesToUser.setText("<html> Vous avez choisi "+ this.dfm.beverageChoice.getName() + 
+					"<br> Prix : " + this.dfm.beveragePriceAfterDiscount + "€." +
+					"<br> Votre solde : " + this.dfm.theDFM.getSolde() + "€.");
+				this.dfm.enoughMoneyClassicBeverage();
+				}
+				else {
+					this.dfm.messagesToUser.setText("<html> Vous avez choisi "+ this.dfm.beverageChoice.getName() + 
+							"<br> Prix : " + this.dfm.beveragePriceAfterDiscount);
+				}
+			}
+		}
+		else {
+			if (this.dfm.theDFM.getPaymentCard() != true) {
+				this.dfm.messagesToUser.setText("<html> Vous avez choisi "+ this.dfm.beverageChoice.getName() + 
+						"<br> Prix : <br>" +"-"+ this.dfm.beveragePriceAfterDiscount + "<html>€ normal size <br> " 
+						+ "-" + (this.dfm.beveragePriceAfterDiscount+0.25) + "€ long size " +
+						"<br> Votre solde : " + this.dfm.theDFM.getSolde() + "€.");
+				this.dfm.enoughMoneyIcedTeaBeverage();
+			}
+			else {
+				this.dfm.messagesToUser.setText("<html> Vous avez choisi "+ this.dfm.beverageChoice.getName() + 
+						"<br> Prix : <br>" +"-"+ this.dfm.beveragePriceAfterDiscount + "<html>€ normal size <br> " 
+						+ "-" + (this.dfm.beveragePriceAfterDiscount+0.25) + "€ long size ");
+			}
+		}
 	}
 
 	@Override
@@ -248,7 +290,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 
 	@Override
 	public void onOwnCupOKRaised() {
-		this.dfm.messagesToUser3.setText("<html> Positionnement de votre tasse... ✓");	
+		this.dfm.messagesToUser3.setText("<html> Utilisation de votre tasse... ✓");	
 	}
 
 }

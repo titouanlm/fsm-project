@@ -4,7 +4,7 @@ public class IcedTea extends Beverage {
 	
 	public IcedTea() {
 		this.name = "thé glacé";
-		this.price = 1.3;
+		this.price = 0.5;
 	}
 
 }

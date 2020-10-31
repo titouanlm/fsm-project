@@ -37,7 +37,7 @@ public class DrinkFactoryMachine extends JFrame {
 	/**
 	 * @wbp.nonvisual location=311,475
 	 */
-	 //private final ImageIcon imageIcon = new ImageIcon();
+	// private final ImageIcon imageIcon = new ImageIcon();
 
 	protected DefaultSMStatemachine theDFM;
 	protected JLabel messagesToUser;
@@ -49,6 +49,7 @@ public class DrinkFactoryMachine extends JFrame {
 	protected JSlider temperatureSlider;
 	protected Beverage beverageChoice = null;
 	protected JProgressBar progressBar;
+	protected JLabel lblSugar;
 	protected double beveragePriceAfterDiscount = 0.;
 	private Thread t;
 	private Thread t1;
@@ -68,11 +69,25 @@ public class DrinkFactoryMachine extends JFrame {
 		});
 	}
 	
-	public void enoughMoney() {
+	public void enoughMoneyClassicBeverage() {
 		if (theDFM != null && this.beverageChoice != null ) {
-			if (this.beverageChoice.getPrice() <= theDFM.getSolde()) {
+			if (this.beveragePriceAfterDiscount <= theDFM.getSolde()) {
 				theDFM.setEnoughMoney(true);
 			}else {
+				theDFM.setEnoughMoney(false);
+			}
+		}
+	}
+	
+	public void enoughMoneyIcedTeaBeverage() {
+		if (theDFM != null && this.beverageChoice != null && this.beverageChoice.getName() == "thé glacé") {
+			if ( (this.beveragePriceAfterDiscount+0.25) <= theDFM.getSolde() && sizeSlider.getValue() == 1) {
+				theDFM.setEnoughMoney(true);
+			}
+			else if ( this.beveragePriceAfterDiscount <= theDFM.getSolde() && sizeSlider.getValue() == 0){
+				theDFM.setEnoughMoney(true);
+			}
+			else {
 				theDFM.setEnoughMoney(false);
 			}
 		}
@@ -151,9 +166,7 @@ public class DrinkFactoryMachine extends JFrame {
 				while(true) {
 					try {
 						Thread.sleep(temps/100);
-						//Thread.sleep(1000);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					if (progressBar.getValue() != 100) {
@@ -167,6 +180,136 @@ public class DrinkFactoryMachine extends JFrame {
 		t1 = new Thread(r);
 		t1.start();
 		
+	}
+	
+	public void temperatureClassicBeverage() {
+		contentPane.remove(temperatureSlider);
+		Hashtable<Integer, JLabel> temperatureTable = new Hashtable<Integer, JLabel>();
+		temperatureTable.put(0, new JLabel("20°C"));
+		temperatureTable.put(1, new JLabel("35°C"));
+		temperatureTable.put(2, new JLabel("60°C"));
+		temperatureTable.put(3, new JLabel("95°C"));
+		for (JLabel l : temperatureTable.values()) {
+			l.setForeground(Color.WHITE);
+		}
+		temperatureSlider.setLabelTable(temperatureTable);
+		contentPane.add(temperatureSlider);
+		setContentPane(contentPane);
+	}
+	
+	public void icedTeaTemperature() {
+		contentPane.remove(temperatureSlider);
+		Hashtable<Integer, JLabel> temperatureTable = new Hashtable<Integer, JLabel>();
+		temperatureTable.put(0, new JLabel("1°C"));
+		temperatureTable.put(1, new JLabel("3°C"));
+		temperatureTable.put(2, new JLabel("6°C"));
+		temperatureTable.put(3, new JLabel("9°C"));
+		for (JLabel l : temperatureTable.values()) {
+			l.setForeground(Color.WHITE);
+		}
+		temperatureSlider.setLabelTable(temperatureTable);
+		contentPane.add(temperatureSlider);
+		setContentPane(contentPane);
+	}
+	
+	public void sugarClassicBeverage() {
+		contentPane.remove(lblSugar);
+		lblSugar = new JLabel("Sugar");
+		lblSugar.setForeground(Color.WHITE);
+		lblSugar.setBackground(Color.DARK_GRAY);
+		lblSugar.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSugar.setBounds(380, 34, 44, 15);
+		contentPane.add(lblSugar);
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		sugarSlider.setValue(1);
+	}
+	
+	public void spicySoupBeverage() {
+		
+		contentPane.remove(lblSugar);
+		lblSugar = new JLabel("Spicy");
+		lblSugar.setForeground(Color.WHITE);
+		lblSugar.setBackground(Color.DARK_GRAY);
+		lblSugar.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSugar.setBounds(380, 34, 44, 15);
+		contentPane.add(lblSugar);
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		sugarSlider.setValue(0);
+	}
+	
+	public void classicSizeBeverage() {
+		contentPane.remove(sizeSlider);;
+		sizeSlider = new JSlider();
+		sizeSlider.setPaintLabels(true);
+		sizeSlider.setValue(1);
+		sizeSlider.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		sizeSlider.setBackground(Color.DARK_GRAY);
+		sizeSlider.setForeground(Color.BLACK);
+		sizeSlider.setPaintTicks(true);
+		sizeSlider.setMinorTickSpacing(1);
+		sizeSlider.setMaximum(2);
+		sizeSlider.setMajorTickSpacing(1);
+		sizeSlider.setBounds(301, 115, 200, 46);
+				
+		Hashtable<Integer, JLabel> sizeTable = new Hashtable<Integer, JLabel>();
+		sizeTable.put(0, new JLabel("Short"));
+		sizeTable.put(1, new JLabel("Normal"));
+		sizeTable.put(2, new JLabel("Long"));
+		for (JLabel l : sizeTable.values()) {
+			l.setForeground(Color.WHITE);
+		}
+		sizeSlider.setLabelTable(sizeTable);
+		contentPane.add(sizeSlider);
+		setContentPane(contentPane);
+	}
+	
+	public void icedTeaSizeBeverage() {
+		contentPane.remove(sizeSlider);;
+		sizeSlider = new JSlider();
+		sizeSlider.setPaintLabels(true);
+		sizeSlider.setValue(0);
+		sizeSlider.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		sizeSlider.setBackground(Color.DARK_GRAY);
+		sizeSlider.setForeground(Color.BLACK);
+		sizeSlider.setPaintTicks(true);
+		sizeSlider.setMinorTickSpacing(1);
+		sizeSlider.setMaximum(1);
+		sizeSlider.setMajorTickSpacing(1);
+		sizeSlider.setBounds(301, 115, 200, 46);
+				
+		Hashtable<Integer, JLabel> sizeTable = new Hashtable<Integer, JLabel>();
+		sizeTable.put(0, new JLabel("Normal"));
+		sizeTable.put(1, new JLabel("Long"));
+		for (JLabel l : sizeTable.values()) {
+			l.setForeground(Color.WHITE);
+		}
+		sizeSlider.setLabelTable(sizeTable);
+		contentPane.add(sizeSlider);
+		setContentPane(contentPane);
+	}
+	
+	public void onWaitingChangingSpicySlider() {
+		Runnable r = new Runnable() {
+			
+			@Override
+			public void run() {
+				while(true) {
+					if (beverageChoice.getName() == "soupe" && sugarSlider.getValue() != 0) {
+						enoughMoneyClassicBeverage();
+					}
+					try {
+						Thread.sleep(20);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				
+			}
+		};
+		Thread t2 = new Thread(r);
+		t2.start();
 	}
 
 	/**
@@ -187,10 +330,10 @@ public class DrinkFactoryMachine extends JFrame {
 			public void run() {
 				while(true) {
 					theDFM.runCycle();
+					enoughMoneyIcedTeaBeverage();
 					try {
 						Thread.sleep(20);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -344,7 +487,7 @@ public class DrinkFactoryMachine extends JFrame {
 		icedTeaButton.setBounds(12, 182, 96, 25);
 		contentPane.add(icedTeaButton);
 
-		JLabel lblSugar = new JLabel("Sugar");
+		lblSugar = new JLabel("Sugar");
 		lblSugar.setForeground(Color.WHITE);
 		lblSugar.setBackground(Color.DARK_GRAY);
 		lblSugar.setHorizontalAlignment(SwingConstants.CENTER);
@@ -499,6 +642,9 @@ public class DrinkFactoryMachine extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e){
 				if (theDFM.getOnWire()) {
+					temperatureClassicBeverage();
+					sugarClassicBeverage();
+					classicSizeBeverage();
 					beverageChoice = new Coffee();
 					theDFM.raiseCoffeeButton();
 					}
@@ -509,6 +655,9 @@ public class DrinkFactoryMachine extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e){
 				if (theDFM.getOnWire()) {
+					temperatureClassicBeverage();
+					sugarClassicBeverage();
+					classicSizeBeverage();
 					beverageChoice = new Expresso();
 					theDFM.raiseExpressoButton();
 					}
@@ -519,16 +668,22 @@ public class DrinkFactoryMachine extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e){
 				if (theDFM.getOnWire()) {
+					temperatureClassicBeverage();
+					sugarClassicBeverage();
+					classicSizeBeverage();
 					beverageChoice = new Tea();
 					theDFM.raiseTeaButton();
 					}
 				}
 		});
-		/*
+		
 		soupButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e){
-				if (machineSurEcoute) {
+				if (theDFM.getOnWire()) {
+					temperatureClassicBeverage();
+					spicySoupBeverage();
+					classicSizeBeverage();
 					beverageChoice = new Soup();
 					theDFM.raiseTeaButton();
 					}
@@ -538,20 +693,21 @@ public class DrinkFactoryMachine extends JFrame {
 		icedTeaButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e){
-				if (machineSurEcoute) {
+				if (theDFM.getOnWire()) {
+					icedTeaTemperature();
+					sugarClassicBeverage();
+					icedTeaSizeBeverage();
 					beverageChoice = new IcedTea();
 					theDFM.raiseTeaButton();
 					}
 				}
-		});*/
+		});
 	}
 	
 	@Override
 	protected void finalize() throws Throwable {
 		// TODO Auto-generated method stub
 		super.finalize();
-		t.stop();
-		t1.stop();
 	}
 	
 }
