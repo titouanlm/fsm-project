@@ -145,7 +145,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 					this.dfm.messagesToUser.setText("<html> Vous avez choisi "+ this.dfm.beverageChoice.getName() + 
 							"<br> Prix : " + this.dfm.beveragePriceAfterDiscount + "€." +
 							"<br> Votre solde : " + this.dfm.theDFM.getSolde() + "€." + 
-							"<br> Veuillez choisir un niveau d'épice (obligatoire)." );
+							"<br> Veuillez choisir un niveau d'épice (peut être nul)." );
 					this.dfm.onWaitingChangingSpicySlider();
 				}
 				else {

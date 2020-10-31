@@ -291,14 +291,34 @@ public class DrinkFactoryMachine extends JFrame {
 		setContentPane(contentPane);
 	}
 	
+	
+	/**
+	 * Fonctionnement de la méthode ci-dessous : 
+	 * 
+	 * 		Lorsqu'une soupe est sélectionnée, le paiement ne s'effectue pas tant que l'utilisateur n'a pas fait d'action 
+	 * 		par rapport au slider.
+	 * 
+	 * 		Cela répond à l'exigence du client. Une action est ici, poser PUIS retirer le curseur de sa souris du le slider.
+	 * 		Une fois que le curseur de la souris quitte la zone du slider, la préparation de la soupe se lance.
+	 * 		
+	 * 		Nous pouvons imaginer la même chose dans la vie courante avec un slider qui permet de choisir l'intensité du choix 
+	 * 		d'épice. Et tant que le client ne touche pas le slider, rien ne se passe.
+	 * 
+	 */
 	public void onWaitingChangingSpicySlider() {
+		
 		Runnable r = new Runnable() {
 			
 			@Override
 			public void run() {
 				while(true) {
-					if (beverageChoice.getName() == "soupe" && sugarSlider.getValue() != 0) {
-						enoughMoneyClassicBeverage();
+					if (beverageChoice.getName() == "soupe" && sugarSlider.getMousePosition()!= null) {
+						while(true) {
+							if (sugarSlider.getMousePosition()== null) {
+								enoughMoneyClassicBeverage();
+								break;
+							}
+						}
 					}
 					if (beverageChoice.getName() != "soupe") break;
 					if (theDFM.getPaymentDone() == true) break;
