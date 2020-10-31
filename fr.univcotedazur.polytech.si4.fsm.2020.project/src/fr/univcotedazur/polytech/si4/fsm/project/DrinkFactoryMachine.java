@@ -85,7 +85,7 @@ public class DrinkFactoryMachine extends JFrame {
 			if ( (this.beveragePriceAfterDiscount+0.25) <= theDFM.getSolde() && sizeSlider.getValue() == 1) {
 				theDFM.setEnoughMoney(true);
 			}
-			else if ( this.beveragePriceAfterDiscount <= theDFM.getSolde() && sizeSlider.getValue() == 0){
+			else if (this.beveragePriceAfterDiscount <= theDFM.getSolde() && sizeSlider.getValue() == 0){
 				theDFM.setEnoughMoney(true);
 			}
 			else {
@@ -298,7 +298,7 @@ public class DrinkFactoryMachine extends JFrame {
 	 * 		Lorsqu'une soupe est sélectionnée, le paiement ne s'effectue pas tant que l'utilisateur n'a pas fait d'action 
 	 * 		par rapport au slider.
 	 * 
-	 * 		Cela répond à l'exigence du client. Une action est ici, poser PUIS retirer le curseur de sa souris du le slider.
+	 * 		Cela répond à l'exigence du client. Une action est ici, poser PUIS retirer le curseur de sa souris du slider.
 	 * 		Une fois que le curseur de la souris quitte la zone du slider, la préparation de la soupe se lance.
 	 * 		
 	 * 		Nous pouvons imaginer la même chose dans la vie courante avec un slider qui permet de choisir l'intensité du choix 
@@ -544,10 +544,10 @@ public class DrinkFactoryMachine extends JFrame {
 		money50centsButton.setBackground(Color.DARK_GRAY);
 		panel.add(money50centsButton);
 
-		JButton money25centsButton = new JButton("0.25 €");
-		money25centsButton.setForeground(Color.BLACK);
-		money25centsButton.setBackground(Color.DARK_GRAY);
-		panel.add(money25centsButton);
+		JButton money20centsButton = new JButton("0.20 €");
+		money20centsButton.setForeground(Color.BLACK);
+		money20centsButton.setBackground(Color.DARK_GRAY);
+		panel.add(money20centsButton);
 
 		JButton money10centsButton = new JButton("0.10 €");
 		money10centsButton.setForeground(Color.BLACK);
@@ -643,12 +643,12 @@ public class DrinkFactoryMachine extends JFrame {
 			}
 		});
 		
-		money25centsButton.addActionListener(new ActionListener() {
+		money20centsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (theDFM.getOnWire()) {
-					theDFM.setSolde(roundValue(theDFM.getSolde()+0.25));
-					theDFM.raiseMoney25centsButton();
+					theDFM.setSolde(roundValue(theDFM.getSolde()+0.20));
+					theDFM.raiseMoney20centsButton();
 				}
 			}
 		});

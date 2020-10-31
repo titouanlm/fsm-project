@@ -22,12 +22,12 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 			}
 		}
 		
-		private boolean money25centsButton;
+		private boolean money20centsButton;
 		
 		
-		public void raiseMoney25centsButton() {
+		public void raiseMoney20centsButton() {
 			synchronized(DefaultSMStatemachine.this) {
-				money25centsButton = true;
+				money20centsButton = true;
 			}
 		}
 		
@@ -834,7 +834,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		
 		protected void clearEvents() {
 			money50centsButton = false;
-			money25centsButton = false;
+			money20centsButton = false;
 			money10centsButton = false;
 			coffeeButton = false;
 			teaButton = false;
@@ -1286,8 +1286,8 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		sCInterface.raiseMoney50centsButton();
 	}
 	
-	public synchronized void raiseMoney25centsButton() {
-		sCInterface.raiseMoney25centsButton();
+	public synchronized void raiseMoney20centsButton() {
+		sCInterface.raiseMoney20centsButton();
 	}
 	
 	public synchronized void raiseMoney10centsButton() {
@@ -2912,7 +2912,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 						exitSequence__region0_Beverage_Choice();
 						enterSequence__region0_Waiting_default();
 					} else {
-						if ((sCInterface.coffeeButton || (sCInterface.expressoButton || (sCInterface.teaButton || (sCInterface.money50centsButton || (sCInterface.money25centsButton || (sCInterface.money10centsButton || sCInterface.addCupButton))))))) {
+						if ((sCInterface.coffeeButton || (sCInterface.expressoButton || (sCInterface.teaButton || (sCInterface.money50centsButton || (sCInterface.money20centsButton || (sCInterface.money10centsButton || sCInterface.addCupButton))))))) {
 							exitSequence__region0_Beverage_Choice();
 							sCInterface.raiseBeverageChoice();
 							
@@ -3374,7 +3374,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if ((sCInterface.money50centsButton || (sCInterface.money25centsButton || (sCInterface.money10centsButton || (sCInterface.coffeeButton || (sCInterface.expressoButton || sCInterface.teaButton)))))) {
+			if ((sCInterface.money50centsButton || (sCInterface.money20centsButton || (sCInterface.money10centsButton || (sCInterface.coffeeButton || (sCInterface.expressoButton || sCInterface.teaButton)))))) {
 				exitSequence_PaymentByCoins_PaymentByCoins();
 				sCInterface.raiseUpdateSolde();
 				
@@ -3409,7 +3409,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if ((sCInterface.money50centsButton || (sCInterface.money25centsButton || sCInterface.money10centsButton))) {
+			if ((sCInterface.money50centsButton || (sCInterface.money20centsButton || sCInterface.money10centsButton))) {
 				exitSequence_PaymentByCoins_WaitingCoins();
 				sCInterface.raiseUpdateSolde();
 				

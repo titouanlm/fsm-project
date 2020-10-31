@@ -10,7 +10,7 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 	
 		public void raiseMoney50centsButton();
 		
-		public void raiseMoney25centsButton();
+		public void raiseMoney20centsButton();
 		
 		public void raiseMoney10centsButton();
 		
