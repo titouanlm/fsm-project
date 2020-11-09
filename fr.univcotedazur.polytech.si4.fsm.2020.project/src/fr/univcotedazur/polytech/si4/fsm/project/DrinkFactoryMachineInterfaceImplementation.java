@@ -116,7 +116,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 
 	@Override
 	public void onResetSlidersRaised() {
-		this.dfm.sugarSlider.setValue(1);
+		this.dfm.sugarClassicBeverage();
 		this.dfm.temperatureSlider.setValue(2);
 		this.dfm.sizeSlider.setValue(1);
 		this.dfm.progressBar.setValue(0);
@@ -141,7 +141,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		if (this.dfm.beverageChoice.getName() != "thé glacé") { 
 			
 			if (this.dfm.beverageChoice.getName() == "soupe") {
-				if (this.dfm.sugarSlider.getValue() == 0) {
+				if (this.dfm.sugarOrSpicySlider.getValue() == 0) {
 					this.dfm.messagesToUser.setText("<html> Vous avez choisi "+ this.dfm.beverageChoice.getName() + 
 							"<br> Prix : " + this.dfm.beveragePriceAfterDiscount + "€." +
 							"<br> Votre solde : " + this.dfm.theDFM.getSolde() + "€." + 
@@ -230,7 +230,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 
 	@Override
 	public void onAddSugarRaised() {
-		this.dfm.messagesToUser3.setText("<html> Ajout du sucre (" +  this.dfm.sugarSlider.getValue() +" doses)...");
+		this.dfm.messagesToUser3.setText("<html> Ajout du sucre (" +  this.dfm.sugarOrSpicySlider.getValue() +" doses)...");
 	}
 
 	@Override
@@ -240,7 +240,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 
 	@Override
 	public void onSugarOKRaised() {
-		this.dfm.messagesToUser3.setText("<html> Ajout du sucre (" +  this.dfm.sugarSlider.getValue() +" doses)... ✓");
+		this.dfm.messagesToUser3.setText("<html> Ajout du sucre (" +  this.dfm.sugarOrSpicySlider.getValue() +" doses)... ✓");
 	}
 
 	@Override
@@ -291,6 +291,27 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	@Override
 	public void onOwnCupOKRaised() {
 		this.dfm.messagesToUser3.setText("<html> Utilisation de votre tasse... ✓");	
+	}
+
+	@Override
+	public void onTakeSoupPodRaised() {
+		this.dfm.messagesToUser3.setText("<html> Récupération et versement d’une dose de soupe... ");	
+	}
+
+	@Override
+	public void onSoupPodOKRaised() {
+		this.dfm.messagesToUser3.setText("<html> Récupération et versement d’une dose de soupe... ✓");
+	
+	}
+
+	@Override
+	public void onAddSpicesRaised() {
+		this.dfm.messagesToUser3.setText("<html> Ajout des épices (" +  this.dfm.sugarOrSpicySlider.getValue() +" doses)...");
+	}
+
+	@Override
+	public void onSpicesOKRaised() {
+		this.dfm.messagesToUser3.setText("<html> Ajout des épices (" +  this.dfm.sugarOrSpicySlider.getValue() +" doses)... ✓");		
 	}
 
 }

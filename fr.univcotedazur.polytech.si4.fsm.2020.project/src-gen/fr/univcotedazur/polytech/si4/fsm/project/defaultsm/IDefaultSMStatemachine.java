@@ -96,6 +96,14 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		
 		public boolean isRaisedOwnCupOK();
 		
+		public boolean isRaisedTakeSoupPod();
+		
+		public boolean isRaisedSoupPodOK();
+		
+		public boolean isRaisedAddSpices();
+		
+		public boolean isRaisedSpicesOK();
+		
 		public double getSolde();
 		
 		public void setSolde(double value);
@@ -170,6 +178,10 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		public void onWaterHeatingOKRaised();
 		public void onCupOKRaised();
 		public void onOwnCupOKRaised();
+		public void onTakeSoupPodRaised();
+		public void onSoupPodOKRaised();
+		public void onAddSpicesRaised();
+		public void onSpicesOKRaised();
 		}
 	
 	public SCInterface getSCInterface();

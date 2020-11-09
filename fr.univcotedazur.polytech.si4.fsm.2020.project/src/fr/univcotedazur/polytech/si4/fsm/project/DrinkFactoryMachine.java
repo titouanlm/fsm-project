@@ -44,12 +44,12 @@ public class DrinkFactoryMachine extends JFrame {
 	protected JLabel messagesToUser2;
 	protected JLabel messagesToUser3;
 	protected JLabel labelForPictures;
-	protected JSlider sugarSlider;
+	protected JSlider sugarOrSpicySlider;
 	protected JSlider sizeSlider;
 	protected JSlider temperatureSlider;
 	protected Beverage beverageChoice = null;
 	protected JProgressBar progressBar;
-	protected JLabel lblSugar;
+	protected JLabel lblSugarOrSpicy;
 	protected double beveragePriceAfterDiscount = 0.;
 	private Thread t;
 	private Thread t1;
@@ -137,6 +137,24 @@ public class DrinkFactoryMachine extends JFrame {
 		}
 	}
 	
+	public double chooseRightOrLeftSoup() {
+		double result =-0.2;
+		
+		if(this.theDFM.getOwnCup()) {
+			result+= 1.5;
+		}else {
+			result+= 3.0;
+		}
+		
+		double timeLeft = (getTemperatureSelected() * 0.1);
+		if(timeLeft > 4.5) {
+			result+=  timeLeft;
+		}else {
+			result+= 4.5;
+		}
+		return result;
+	}
+	
 	public double timePreparation(Beverage beverage) { // le temps se calcul en fonction de la machine à état
 		double timePreparation = 0; 
 		
@@ -149,6 +167,9 @@ public class DrinkFactoryMachine extends JFrame {
 			break;
 		case "expresso":
 			timePreparation += 3.8 + chooseRightOrLeftExpresso(); 
+			break;
+		case "soupe":
+			timePreparation += chooseRightOrLeftSoup(); 
 			break;
 		}
 		
@@ -213,31 +234,16 @@ public class DrinkFactoryMachine extends JFrame {
 		setContentPane(contentPane);
 	}
 	
-	public void sugarClassicBeverage() {
-		contentPane.remove(lblSugar);
-		lblSugar = new JLabel("Sugar");
-		lblSugar.setForeground(Color.WHITE);
-		lblSugar.setBackground(Color.DARK_GRAY);
-		lblSugar.setHorizontalAlignment(SwingConstants.CENTER);
-		lblSugar.setBounds(380, 34, 44, 15);
-		contentPane.add(lblSugar);
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		sugarSlider.setValue(1);
+	public void sugarClassicBeverage() {		
+		lblSugarOrSpicy.setText("Sugar");
+		contentPane.add(lblSugarOrSpicy);
+		sugarOrSpicySlider.setValue(1);
 	}
 	
 	public void spicySoupBeverage() {
-		
-		contentPane.remove(lblSugar);
-		lblSugar = new JLabel("Spicy");
-		lblSugar.setForeground(Color.WHITE);
-		lblSugar.setBackground(Color.DARK_GRAY);
-		lblSugar.setHorizontalAlignment(SwingConstants.CENTER);
-		lblSugar.setBounds(380, 34, 44, 15);
-		contentPane.add(lblSugar);
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		sugarSlider.setValue(0);
+		lblSugarOrSpicy.setText("Spicy");
+		contentPane.add(lblSugarOrSpicy);
+		sugarOrSpicySlider.setValue(0);
 	}
 	
 	public void classicSizeBeverage() {
@@ -312,9 +318,9 @@ public class DrinkFactoryMachine extends JFrame {
 			@Override
 			public void run() {
 				while(true) {
-					if (beverageChoice.getName() == "soupe" && sugarSlider.getMousePosition()!= null) {
+					if (beverageChoice.getName() == "soupe" && sugarOrSpicySlider.getMousePosition()!= null) {
 						while(true) {
-							if (sugarSlider.getMousePosition()== null) {
+							if (sugarOrSpicySlider.getMousePosition()== null) {
 								enoughMoneyClassicBeverage();
 								break;
 							}
@@ -449,17 +455,30 @@ public class DrinkFactoryMachine extends JFrame {
 		progressBar.setBounds(12, 254, 622, 26);
 		contentPane.add(progressBar);
 
-		sugarSlider = new JSlider();
-		sugarSlider.setValue(1);
-		sugarSlider.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		sugarSlider.setBackground(Color.DARK_GRAY);
-		sugarSlider.setForeground(Color.BLACK);
-		sugarSlider.setPaintTicks(true);
-		sugarSlider.setMinorTickSpacing(1);
-		sugarSlider.setMajorTickSpacing(1);
-		sugarSlider.setMaximum(5);
-		sugarSlider.setBounds(301, 51, 200, 36);
-		contentPane.add(sugarSlider);
+		sugarOrSpicySlider = new JSlider();
+		sugarOrSpicySlider.setValue(1);
+		sugarOrSpicySlider.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		sugarOrSpicySlider.setBackground(Color.DARK_GRAY);
+		sugarOrSpicySlider.setForeground(Color.BLACK);
+		sugarOrSpicySlider.setPaintTicks(true);
+		sugarOrSpicySlider.setPaintLabels(true);
+		sugarOrSpicySlider.setMinorTickSpacing(1);
+		sugarOrSpicySlider.setMajorTickSpacing(1);
+		sugarOrSpicySlider.setMaximum(5);
+		sugarOrSpicySlider.setBounds(301, 41, 200, 46);
+		contentPane.add(sugarOrSpicySlider);
+		
+		Hashtable<Integer, JLabel> doseTable = new Hashtable<Integer, JLabel>();
+		doseTable.put(0, new JLabel("0"));
+		doseTable.put(1, new JLabel("1"));
+		doseTable.put(2, new JLabel("2"));
+		doseTable.put(3, new JLabel("3"));
+		doseTable.put(4, new JLabel("4"));
+		doseTable.put(5, new JLabel("5"));
+		for (JLabel l : doseTable.values()) {
+			l.setForeground(Color.WHITE);
+		}
+		sugarOrSpicySlider.setLabelTable(doseTable);
 
 		sizeSlider = new JSlider();
 		sizeSlider.setPaintLabels(true);
@@ -512,13 +531,13 @@ public class DrinkFactoryMachine extends JFrame {
 		icedTeaButton.setBounds(12, 182, 96, 25);
 		contentPane.add(icedTeaButton);
 
-		lblSugar = new JLabel("Sugar");
-		lblSugar.setForeground(Color.WHITE);
-		lblSugar.setBackground(Color.DARK_GRAY);
-		lblSugar.setHorizontalAlignment(SwingConstants.CENTER);
-		lblSugar.setBounds(380, 34, 44, 15);
-		contentPane.add(lblSugar);
-
+		lblSugarOrSpicy = new JLabel();
+		lblSugarOrSpicy.setForeground(Color.WHITE);
+		lblSugarOrSpicy.setBackground(Color.DARK_GRAY);
+		lblSugarOrSpicy.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSugarOrSpicy.setBounds(380, 24, 44, 15);
+		this.sugarClassicBeverage();
+		 
 		JLabel lblSize = new JLabel("Size");
 		lblSize.setForeground(Color.WHITE);
 		lblSize.setBackground(Color.DARK_GRAY);
@@ -530,7 +549,7 @@ public class DrinkFactoryMachine extends JFrame {
 		lblTemperature.setForeground(Color.WHITE);
 		lblTemperature.setBackground(Color.DARK_GRAY);
 		lblTemperature.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTemperature.setBounds(380, 173, 96, 15);
+		lblTemperature.setBounds(355, 170, 96, 15);
 		contentPane.add(lblTemperature);
 
 		JPanel panel = new JPanel();
@@ -710,7 +729,7 @@ public class DrinkFactoryMachine extends JFrame {
 					spicySoupBeverage();
 					classicSizeBeverage();
 					beverageChoice = new Soup();
-					theDFM.raiseTeaButton();
+					theDFM.raiseSoupButton();
 					}
 				}
 		});

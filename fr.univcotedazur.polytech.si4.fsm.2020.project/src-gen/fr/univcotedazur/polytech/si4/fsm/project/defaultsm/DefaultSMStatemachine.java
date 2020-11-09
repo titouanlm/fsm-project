@@ -706,6 +706,78 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 			}
 		}
 		
+		private boolean takeSoupPod;
+		
+		
+		public boolean isRaisedTakeSoupPod() {
+			synchronized(DefaultSMStatemachine.this) {
+				return takeSoupPod;
+			}
+		}
+		
+		protected void raiseTakeSoupPod() {
+			synchronized(DefaultSMStatemachine.this) {
+				takeSoupPod = true;
+				for (SCInterfaceListener listener : listeners) {
+					listener.onTakeSoupPodRaised();
+				}
+			}
+		}
+		
+		private boolean soupPodOK;
+		
+		
+		public boolean isRaisedSoupPodOK() {
+			synchronized(DefaultSMStatemachine.this) {
+				return soupPodOK;
+			}
+		}
+		
+		protected void raiseSoupPodOK() {
+			synchronized(DefaultSMStatemachine.this) {
+				soupPodOK = true;
+				for (SCInterfaceListener listener : listeners) {
+					listener.onSoupPodOKRaised();
+				}
+			}
+		}
+		
+		private boolean addSpices;
+		
+		
+		public boolean isRaisedAddSpices() {
+			synchronized(DefaultSMStatemachine.this) {
+				return addSpices;
+			}
+		}
+		
+		protected void raiseAddSpices() {
+			synchronized(DefaultSMStatemachine.this) {
+				addSpices = true;
+				for (SCInterfaceListener listener : listeners) {
+					listener.onAddSpicesRaised();
+				}
+			}
+		}
+		
+		private boolean spicesOK;
+		
+		
+		public boolean isRaisedSpicesOK() {
+			synchronized(DefaultSMStatemachine.this) {
+				return spicesOK;
+			}
+		}
+		
+		protected void raiseSpicesOK() {
+			synchronized(DefaultSMStatemachine.this) {
+				spicesOK = true;
+				for (SCInterfaceListener listener : listeners) {
+					listener.onSpicesOKRaised();
+				}
+			}
+		}
+		
 		private double solde;
 		
 		public synchronized double getSolde() {
@@ -880,6 +952,10 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		waterHeatingOK = false;
 		cupOK = false;
 		ownCupOK = false;
+		takeSoupPod = false;
+		soupPodOK = false;
+		addSpices = false;
+		spicesOK = false;
 		}
 		
 	}
@@ -890,40 +966,48 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	private boolean initialized = false;
 	
 	public enum State {
-		_region0_Waiting,
-		_region0_Cleaning,
-		_region0_Payment_Done,
-		_region0_Beverage_Choice,
-		_region0_Beverage_Preparation_First_Step,
-		_region0_Beverage_Preparation_First_Step_r1_Start_Water_Heating,
-		_region0_Beverage_Preparation_First_Step_r1_Water_Heating_ON,
-		_region0_Beverage_Preparation_First_Step_r2_CoffeeSelected,
-		_region0_Beverage_Preparation_First_Step_r2_Ready,
-		_region0_Beverage_Preparation_First_Step_r2_TeaSelected,
-		_region0_Beverage_Preparation_First_Step_r2_ExpressoSelected,
-		_region0_Beverage_Preparation_First_Step_r2_Pod_In_Place,
-		_region0_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place,
-		_region0_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK,
-		_region0_Beverage_Preparation_Second_Step,
-		_region0_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature,
-		_region0_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK,
-		_region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup_,
-		_region0_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack,
-		_region0_Beverage_Preparation_Second_Step_r2_Cup_In_Place,
-		_region0_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK,
-		_region0_Beverage_Preparation_Second_Step_r2_Ready2,
-		_region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK,
-		_region0_Beverage_Preparation_Second_Step_r2_Cup_Need,
-		_region0_Beverage_Preparation_Third_Step,
-		_region0_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing,
-		_region0_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK,
-		_region0_Beverage_Preparation_Third_Step_r2_Add_Sugar,
-		_region0_Beverage_Preparation_Third_Step_r2_Sugar_OK,
-		_region0_Beverage_Preparation_Last_Step,
-		_region0_Beverage_Preparation_Last_Step_r1_Take_beverage,
-		_region0_Beverage_Preparation_Last_Step_r1_Waiting_Infusion,
-		_region0_Beverage_Preparation_Last_Step_r1_Remove_TeaBag,
-		_region0_Take_The_Change,
+		oncycle_Waiting,
+		oncycle_Cleaning,
+		oncycle_Payment_Done,
+		oncycle_Beverage_Choice,
+		oncycle_Beverage_Preparation_First_Step,
+		oncycle_Beverage_Preparation_First_Step_r1_Start_Water_Heating,
+		oncycle_Beverage_Preparation_First_Step_r1_Water_Heating_ON,
+		oncycle_Beverage_Preparation_First_Step_r2_CoffeeSelected,
+		oncycle_Beverage_Preparation_First_Step_r2_Ready,
+		oncycle_Beverage_Preparation_First_Step_r2_TeaSelected,
+		oncycle_Beverage_Preparation_First_Step_r2_ExpressoSelected,
+		oncycle_Beverage_Preparation_First_Step_r2_Pod_In_Place,
+		oncycle_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place,
+		oncycle_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK,
+		oncycle_Beverage_Preparation_First_Step_r2_Waiting_Cup_,
+		oncycle_Beverage_Preparation_First_Step_r2_Cup_In_Place,
+		oncycle_Beverage_Preparation_First_Step_r2_Own_Cup_OK,
+		oncycle_Beverage_Preparation_First_Step_r2_Cup_Need,
+		oncycle_Beverage_Preparation_Second_Step,
+		oncycle_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature,
+		oncycle_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK,
+		oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Cup_,
+		oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack,
+		oncycle_Beverage_Preparation_Second_Step_r2_Cup_In_Place,
+		oncycle_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK,
+		oncycle_Beverage_Preparation_Second_Step_r2_Ready2,
+		oncycle_Beverage_Preparation_Second_Step_r2_Own_Cup_OK,
+		oncycle_Beverage_Preparation_Second_Step_r2_Cup_Need,
+		oncycle_Beverage_Preparation_Second_Step_r2_SoupSelected,
+		oncycle_Beverage_Preparation_Second_Step_r2_Soup_Pod_OK,
+		oncycle_Beverage_Preparation_Second_Step_r2_Add_Spicy,
+		oncycle_Beverage_Preparation_Third_Step,
+		oncycle_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing,
+		oncycle_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK,
+		oncycle_Beverage_Preparation_Third_Step_r2_Add_Sugar,
+		oncycle_Beverage_Preparation_Third_Step_r2_Sugar_OK,
+		oncycle_Beverage_Preparation_Third_Step_r2_Ready3,
+		oncycle_Beverage_Preparation_Last_Step,
+		oncycle_Beverage_Preparation_Last_Step_r1_Take_beverage,
+		oncycle_Beverage_Preparation_Last_Step_r1_Waiting_Infusion,
+		oncycle_Beverage_Preparation_Last_Step_r1_Remove_TeaBag,
+		oncycle_Take_The_Change,
 		paymentByCoins_PaymentByCoins,
 		paymentByCoins_WaitingCoins,
 		paymentByCoins_ReturnCoins,
@@ -941,7 +1025,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	
 	private ITimer timer;
 	
-	private final boolean[] timeEvents = new boolean[25];
+	private final boolean[] timeEvents = new boolean[28];
 	
 	public DefaultSMStatemachine() {
 		sCInterface = new SCInterfaceImpl();
@@ -985,7 +1069,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		if (timer == null) {
 			throw new IllegalStateException("timer not set.");
 		}
-		enterSequence__region0_default();
+		enterSequence_oncycle_default();
 		enterSequence_PaymentByCoins_default();
 		enterSequence_PaymentByNFC_default();
 	}
@@ -997,95 +1081,119 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		clearOutEvents();
 		for (nextStateIndex = 0; nextStateIndex < stateVector.length; nextStateIndex++) {
 			switch (stateVector[nextStateIndex]) {
-			case _region0_Waiting:
-				_region0_Waiting_react(true);
+			case oncycle_Waiting:
+				oncycle_Waiting_react(true);
 				break;
-			case _region0_Cleaning:
-				_region0_Cleaning_react(true);
+			case oncycle_Cleaning:
+				oncycle_Cleaning_react(true);
 				break;
-			case _region0_Payment_Done:
-				_region0_Payment_Done_react(true);
+			case oncycle_Payment_Done:
+				oncycle_Payment_Done_react(true);
 				break;
-			case _region0_Beverage_Choice:
-				_region0_Beverage_Choice_react(true);
+			case oncycle_Beverage_Choice:
+				oncycle_Beverage_Choice_react(true);
 				break;
-			case _region0_Beverage_Preparation_First_Step_r1_Start_Water_Heating:
-				_region0_Beverage_Preparation_First_Step_r1_Start_Water_Heating_react(true);
+			case oncycle_Beverage_Preparation_First_Step_r1_Start_Water_Heating:
+				oncycle_Beverage_Preparation_First_Step_r1_Start_Water_Heating_react(true);
 				break;
-			case _region0_Beverage_Preparation_First_Step_r1_Water_Heating_ON:
-				_region0_Beverage_Preparation_First_Step_r1_Water_Heating_ON_react(true);
+			case oncycle_Beverage_Preparation_First_Step_r1_Water_Heating_ON:
+				oncycle_Beverage_Preparation_First_Step_r1_Water_Heating_ON_react(true);
 				break;
-			case _region0_Beverage_Preparation_First_Step_r2_CoffeeSelected:
-				_region0_Beverage_Preparation_First_Step_r2_CoffeeSelected_react(true);
+			case oncycle_Beverage_Preparation_First_Step_r2_CoffeeSelected:
+				oncycle_Beverage_Preparation_First_Step_r2_CoffeeSelected_react(true);
 				break;
-			case _region0_Beverage_Preparation_First_Step_r2_Ready:
-				_region0_Beverage_Preparation_First_Step_r2_Ready_react(true);
+			case oncycle_Beverage_Preparation_First_Step_r2_Ready:
+				oncycle_Beverage_Preparation_First_Step_r2_Ready_react(true);
 				break;
-			case _region0_Beverage_Preparation_First_Step_r2_TeaSelected:
-				_region0_Beverage_Preparation_First_Step_r2_TeaSelected_react(true);
+			case oncycle_Beverage_Preparation_First_Step_r2_TeaSelected:
+				oncycle_Beverage_Preparation_First_Step_r2_TeaSelected_react(true);
 				break;
-			case _region0_Beverage_Preparation_First_Step_r2_ExpressoSelected:
-				_region0_Beverage_Preparation_First_Step_r2_ExpressoSelected_react(true);
+			case oncycle_Beverage_Preparation_First_Step_r2_ExpressoSelected:
+				oncycle_Beverage_Preparation_First_Step_r2_ExpressoSelected_react(true);
 				break;
-			case _region0_Beverage_Preparation_First_Step_r2_Pod_In_Place:
-				_region0_Beverage_Preparation_First_Step_r2_Pod_In_Place_react(true);
+			case oncycle_Beverage_Preparation_First_Step_r2_Pod_In_Place:
+				oncycle_Beverage_Preparation_First_Step_r2_Pod_In_Place_react(true);
 				break;
-			case _region0_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place:
-				_region0_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place_react(true);
+			case oncycle_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place:
+				oncycle_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place_react(true);
 				break;
-			case _region0_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK:
-				_region0_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK_react(true);
+			case oncycle_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK:
+				oncycle_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK_react(true);
 				break;
-			case _region0_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature:
-				_region0_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature_react(true);
+			case oncycle_Beverage_Preparation_First_Step_r2_Waiting_Cup_:
+				oncycle_Beverage_Preparation_First_Step_r2_Waiting_Cup__react(true);
 				break;
-			case _region0_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK:
-				_region0_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK_react(true);
+			case oncycle_Beverage_Preparation_First_Step_r2_Cup_In_Place:
+				oncycle_Beverage_Preparation_First_Step_r2_Cup_In_Place_react(true);
 				break;
-			case _region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup_:
-				_region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup__react(true);
+			case oncycle_Beverage_Preparation_First_Step_r2_Own_Cup_OK:
+				oncycle_Beverage_Preparation_First_Step_r2_Own_Cup_OK_react(true);
 				break;
-			case _region0_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack:
-				_region0_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack_react(true);
+			case oncycle_Beverage_Preparation_First_Step_r2_Cup_Need:
+				oncycle_Beverage_Preparation_First_Step_r2_Cup_Need_react(true);
 				break;
-			case _region0_Beverage_Preparation_Second_Step_r2_Cup_In_Place:
-				_region0_Beverage_Preparation_Second_Step_r2_Cup_In_Place_react(true);
+			case oncycle_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature:
+				oncycle_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature_react(true);
 				break;
-			case _region0_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK:
-				_region0_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK_react(true);
+			case oncycle_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK:
+				oncycle_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK_react(true);
 				break;
-			case _region0_Beverage_Preparation_Second_Step_r2_Ready2:
-				_region0_Beverage_Preparation_Second_Step_r2_Ready2_react(true);
+			case oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Cup_:
+				oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Cup__react(true);
 				break;
-			case _region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK:
-				_region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK_react(true);
+			case oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack:
+				oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack_react(true);
 				break;
-			case _region0_Beverage_Preparation_Second_Step_r2_Cup_Need:
-				_region0_Beverage_Preparation_Second_Step_r2_Cup_Need_react(true);
+			case oncycle_Beverage_Preparation_Second_Step_r2_Cup_In_Place:
+				oncycle_Beverage_Preparation_Second_Step_r2_Cup_In_Place_react(true);
 				break;
-			case _region0_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing:
-				_region0_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing_react(true);
+			case oncycle_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK:
+				oncycle_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK_react(true);
 				break;
-			case _region0_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK:
-				_region0_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK_react(true);
+			case oncycle_Beverage_Preparation_Second_Step_r2_Ready2:
+				oncycle_Beverage_Preparation_Second_Step_r2_Ready2_react(true);
 				break;
-			case _region0_Beverage_Preparation_Third_Step_r2_Add_Sugar:
-				_region0_Beverage_Preparation_Third_Step_r2_Add_Sugar_react(true);
+			case oncycle_Beverage_Preparation_Second_Step_r2_Own_Cup_OK:
+				oncycle_Beverage_Preparation_Second_Step_r2_Own_Cup_OK_react(true);
 				break;
-			case _region0_Beverage_Preparation_Third_Step_r2_Sugar_OK:
-				_region0_Beverage_Preparation_Third_Step_r2_Sugar_OK_react(true);
+			case oncycle_Beverage_Preparation_Second_Step_r2_Cup_Need:
+				oncycle_Beverage_Preparation_Second_Step_r2_Cup_Need_react(true);
 				break;
-			case _region0_Beverage_Preparation_Last_Step_r1_Take_beverage:
-				_region0_Beverage_Preparation_Last_Step_r1_Take_beverage_react(true);
+			case oncycle_Beverage_Preparation_Second_Step_r2_SoupSelected:
+				oncycle_Beverage_Preparation_Second_Step_r2_SoupSelected_react(true);
 				break;
-			case _region0_Beverage_Preparation_Last_Step_r1_Waiting_Infusion:
-				_region0_Beverage_Preparation_Last_Step_r1_Waiting_Infusion_react(true);
+			case oncycle_Beverage_Preparation_Second_Step_r2_Soup_Pod_OK:
+				oncycle_Beverage_Preparation_Second_Step_r2_Soup_Pod_OK_react(true);
 				break;
-			case _region0_Beverage_Preparation_Last_Step_r1_Remove_TeaBag:
-				_region0_Beverage_Preparation_Last_Step_r1_Remove_TeaBag_react(true);
+			case oncycle_Beverage_Preparation_Second_Step_r2_Add_Spicy:
+				oncycle_Beverage_Preparation_Second_Step_r2_Add_Spicy_react(true);
 				break;
-			case _region0_Take_The_Change:
-				_region0_Take_The_Change_react(true);
+			case oncycle_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing:
+				oncycle_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing_react(true);
+				break;
+			case oncycle_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK:
+				oncycle_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK_react(true);
+				break;
+			case oncycle_Beverage_Preparation_Third_Step_r2_Add_Sugar:
+				oncycle_Beverage_Preparation_Third_Step_r2_Add_Sugar_react(true);
+				break;
+			case oncycle_Beverage_Preparation_Third_Step_r2_Sugar_OK:
+				oncycle_Beverage_Preparation_Third_Step_r2_Sugar_OK_react(true);
+				break;
+			case oncycle_Beverage_Preparation_Third_Step_r2_Ready3:
+				oncycle_Beverage_Preparation_Third_Step_r2_Ready3_react(true);
+				break;
+			case oncycle_Beverage_Preparation_Last_Step_r1_Take_beverage:
+				oncycle_Beverage_Preparation_Last_Step_r1_Take_beverage_react(true);
+				break;
+			case oncycle_Beverage_Preparation_Last_Step_r1_Waiting_Infusion:
+				oncycle_Beverage_Preparation_Last_Step_r1_Waiting_Infusion_react(true);
+				break;
+			case oncycle_Beverage_Preparation_Last_Step_r1_Remove_TeaBag:
+				oncycle_Beverage_Preparation_Last_Step_r1_Remove_TeaBag_react(true);
+				break;
+			case oncycle_Take_The_Change:
+				oncycle_Take_The_Change_react(true);
 				break;
 			case paymentByCoins_PaymentByCoins:
 				paymentByCoins_PaymentByCoins_react(true);
@@ -1118,7 +1226,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		clearEvents();
 	}
 	public synchronized void exit() {
-		exitSequence__region0();
+		exitSequence_oncycle();
 		exitSequence_PaymentByCoins();
 		exitSequence_PaymentByNFC();
 	}
@@ -1161,78 +1269,94 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	public synchronized boolean isStateActive(State state) {
 	
 		switch (state) {
-		case _region0_Waiting:
-			return stateVector[0] == State._region0_Waiting;
-		case _region0_Cleaning:
-			return stateVector[0] == State._region0_Cleaning;
-		case _region0_Payment_Done:
-			return stateVector[0] == State._region0_Payment_Done;
-		case _region0_Beverage_Choice:
-			return stateVector[0] == State._region0_Beverage_Choice;
-		case _region0_Beverage_Preparation_First_Step:
+		case oncycle_Waiting:
+			return stateVector[0] == State.oncycle_Waiting;
+		case oncycle_Cleaning:
+			return stateVector[0] == State.oncycle_Cleaning;
+		case oncycle_Payment_Done:
+			return stateVector[0] == State.oncycle_Payment_Done;
+		case oncycle_Beverage_Choice:
+			return stateVector[0] == State.oncycle_Beverage_Choice;
+		case oncycle_Beverage_Preparation_First_Step:
 			return stateVector[0].ordinal() >= State.
-					_region0_Beverage_Preparation_First_Step.ordinal()&& stateVector[0].ordinal() <= State._region0_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK.ordinal();
-		case _region0_Beverage_Preparation_First_Step_r1_Start_Water_Heating:
-			return stateVector[0] == State._region0_Beverage_Preparation_First_Step_r1_Start_Water_Heating;
-		case _region0_Beverage_Preparation_First_Step_r1_Water_Heating_ON:
-			return stateVector[0] == State._region0_Beverage_Preparation_First_Step_r1_Water_Heating_ON;
-		case _region0_Beverage_Preparation_First_Step_r2_CoffeeSelected:
-			return stateVector[1] == State._region0_Beverage_Preparation_First_Step_r2_CoffeeSelected;
-		case _region0_Beverage_Preparation_First_Step_r2_Ready:
-			return stateVector[1] == State._region0_Beverage_Preparation_First_Step_r2_Ready;
-		case _region0_Beverage_Preparation_First_Step_r2_TeaSelected:
-			return stateVector[1] == State._region0_Beverage_Preparation_First_Step_r2_TeaSelected;
-		case _region0_Beverage_Preparation_First_Step_r2_ExpressoSelected:
-			return stateVector[1] == State._region0_Beverage_Preparation_First_Step_r2_ExpressoSelected;
-		case _region0_Beverage_Preparation_First_Step_r2_Pod_In_Place:
-			return stateVector[1] == State._region0_Beverage_Preparation_First_Step_r2_Pod_In_Place;
-		case _region0_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place:
-			return stateVector[1] == State._region0_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place;
-		case _region0_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK:
-			return stateVector[1] == State._region0_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK;
-		case _region0_Beverage_Preparation_Second_Step:
+					oncycle_Beverage_Preparation_First_Step.ordinal()&& stateVector[0].ordinal() <= State.oncycle_Beverage_Preparation_First_Step_r2_Cup_Need.ordinal();
+		case oncycle_Beverage_Preparation_First_Step_r1_Start_Water_Heating:
+			return stateVector[0] == State.oncycle_Beverage_Preparation_First_Step_r1_Start_Water_Heating;
+		case oncycle_Beverage_Preparation_First_Step_r1_Water_Heating_ON:
+			return stateVector[0] == State.oncycle_Beverage_Preparation_First_Step_r1_Water_Heating_ON;
+		case oncycle_Beverage_Preparation_First_Step_r2_CoffeeSelected:
+			return stateVector[1] == State.oncycle_Beverage_Preparation_First_Step_r2_CoffeeSelected;
+		case oncycle_Beverage_Preparation_First_Step_r2_Ready:
+			return stateVector[1] == State.oncycle_Beverage_Preparation_First_Step_r2_Ready;
+		case oncycle_Beverage_Preparation_First_Step_r2_TeaSelected:
+			return stateVector[1] == State.oncycle_Beverage_Preparation_First_Step_r2_TeaSelected;
+		case oncycle_Beverage_Preparation_First_Step_r2_ExpressoSelected:
+			return stateVector[1] == State.oncycle_Beverage_Preparation_First_Step_r2_ExpressoSelected;
+		case oncycle_Beverage_Preparation_First_Step_r2_Pod_In_Place:
+			return stateVector[1] == State.oncycle_Beverage_Preparation_First_Step_r2_Pod_In_Place;
+		case oncycle_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place:
+			return stateVector[1] == State.oncycle_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place;
+		case oncycle_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK:
+			return stateVector[1] == State.oncycle_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK;
+		case oncycle_Beverage_Preparation_First_Step_r2_Waiting_Cup_:
+			return stateVector[1] == State.oncycle_Beverage_Preparation_First_Step_r2_Waiting_Cup_;
+		case oncycle_Beverage_Preparation_First_Step_r2_Cup_In_Place:
+			return stateVector[1] == State.oncycle_Beverage_Preparation_First_Step_r2_Cup_In_Place;
+		case oncycle_Beverage_Preparation_First_Step_r2_Own_Cup_OK:
+			return stateVector[1] == State.oncycle_Beverage_Preparation_First_Step_r2_Own_Cup_OK;
+		case oncycle_Beverage_Preparation_First_Step_r2_Cup_Need:
+			return stateVector[1] == State.oncycle_Beverage_Preparation_First_Step_r2_Cup_Need;
+		case oncycle_Beverage_Preparation_Second_Step:
 			return stateVector[0].ordinal() >= State.
-					_region0_Beverage_Preparation_Second_Step.ordinal()&& stateVector[0].ordinal() <= State._region0_Beverage_Preparation_Second_Step_r2_Cup_Need.ordinal();
-		case _region0_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature:
-			return stateVector[0] == State._region0_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature;
-		case _region0_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK:
-			return stateVector[0] == State._region0_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK;
-		case _region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup_:
-			return stateVector[1] == State._region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup_;
-		case _region0_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack:
-			return stateVector[1] == State._region0_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack;
-		case _region0_Beverage_Preparation_Second_Step_r2_Cup_In_Place:
-			return stateVector[1] == State._region0_Beverage_Preparation_Second_Step_r2_Cup_In_Place;
-		case _region0_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK:
-			return stateVector[1] == State._region0_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK;
-		case _region0_Beverage_Preparation_Second_Step_r2_Ready2:
-			return stateVector[1] == State._region0_Beverage_Preparation_Second_Step_r2_Ready2;
-		case _region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK:
-			return stateVector[1] == State._region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK;
-		case _region0_Beverage_Preparation_Second_Step_r2_Cup_Need:
-			return stateVector[1] == State._region0_Beverage_Preparation_Second_Step_r2_Cup_Need;
-		case _region0_Beverage_Preparation_Third_Step:
+					oncycle_Beverage_Preparation_Second_Step.ordinal()&& stateVector[0].ordinal() <= State.oncycle_Beverage_Preparation_Second_Step_r2_Add_Spicy.ordinal();
+		case oncycle_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature:
+			return stateVector[0] == State.oncycle_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature;
+		case oncycle_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK:
+			return stateVector[0] == State.oncycle_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK;
+		case oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Cup_:
+			return stateVector[1] == State.oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Cup_;
+		case oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack:
+			return stateVector[1] == State.oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack;
+		case oncycle_Beverage_Preparation_Second_Step_r2_Cup_In_Place:
+			return stateVector[1] == State.oncycle_Beverage_Preparation_Second_Step_r2_Cup_In_Place;
+		case oncycle_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK:
+			return stateVector[1] == State.oncycle_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK;
+		case oncycle_Beverage_Preparation_Second_Step_r2_Ready2:
+			return stateVector[1] == State.oncycle_Beverage_Preparation_Second_Step_r2_Ready2;
+		case oncycle_Beverage_Preparation_Second_Step_r2_Own_Cup_OK:
+			return stateVector[1] == State.oncycle_Beverage_Preparation_Second_Step_r2_Own_Cup_OK;
+		case oncycle_Beverage_Preparation_Second_Step_r2_Cup_Need:
+			return stateVector[1] == State.oncycle_Beverage_Preparation_Second_Step_r2_Cup_Need;
+		case oncycle_Beverage_Preparation_Second_Step_r2_SoupSelected:
+			return stateVector[1] == State.oncycle_Beverage_Preparation_Second_Step_r2_SoupSelected;
+		case oncycle_Beverage_Preparation_Second_Step_r2_Soup_Pod_OK:
+			return stateVector[1] == State.oncycle_Beverage_Preparation_Second_Step_r2_Soup_Pod_OK;
+		case oncycle_Beverage_Preparation_Second_Step_r2_Add_Spicy:
+			return stateVector[1] == State.oncycle_Beverage_Preparation_Second_Step_r2_Add_Spicy;
+		case oncycle_Beverage_Preparation_Third_Step:
 			return stateVector[0].ordinal() >= State.
-					_region0_Beverage_Preparation_Third_Step.ordinal()&& stateVector[0].ordinal() <= State._region0_Beverage_Preparation_Third_Step_r2_Sugar_OK.ordinal();
-		case _region0_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing:
-			return stateVector[0] == State._region0_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing;
-		case _region0_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK:
-			return stateVector[0] == State._region0_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK;
-		case _region0_Beverage_Preparation_Third_Step_r2_Add_Sugar:
-			return stateVector[1] == State._region0_Beverage_Preparation_Third_Step_r2_Add_Sugar;
-		case _region0_Beverage_Preparation_Third_Step_r2_Sugar_OK:
-			return stateVector[1] == State._region0_Beverage_Preparation_Third_Step_r2_Sugar_OK;
-		case _region0_Beverage_Preparation_Last_Step:
+					oncycle_Beverage_Preparation_Third_Step.ordinal()&& stateVector[0].ordinal() <= State.oncycle_Beverage_Preparation_Third_Step_r2_Ready3.ordinal();
+		case oncycle_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing:
+			return stateVector[0] == State.oncycle_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing;
+		case oncycle_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK:
+			return stateVector[0] == State.oncycle_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK;
+		case oncycle_Beverage_Preparation_Third_Step_r2_Add_Sugar:
+			return stateVector[1] == State.oncycle_Beverage_Preparation_Third_Step_r2_Add_Sugar;
+		case oncycle_Beverage_Preparation_Third_Step_r2_Sugar_OK:
+			return stateVector[1] == State.oncycle_Beverage_Preparation_Third_Step_r2_Sugar_OK;
+		case oncycle_Beverage_Preparation_Third_Step_r2_Ready3:
+			return stateVector[1] == State.oncycle_Beverage_Preparation_Third_Step_r2_Ready3;
+		case oncycle_Beverage_Preparation_Last_Step:
 			return stateVector[0].ordinal() >= State.
-					_region0_Beverage_Preparation_Last_Step.ordinal()&& stateVector[0].ordinal() <= State._region0_Beverage_Preparation_Last_Step_r1_Remove_TeaBag.ordinal();
-		case _region0_Beverage_Preparation_Last_Step_r1_Take_beverage:
-			return stateVector[0] == State._region0_Beverage_Preparation_Last_Step_r1_Take_beverage;
-		case _region0_Beverage_Preparation_Last_Step_r1_Waiting_Infusion:
-			return stateVector[0] == State._region0_Beverage_Preparation_Last_Step_r1_Waiting_Infusion;
-		case _region0_Beverage_Preparation_Last_Step_r1_Remove_TeaBag:
-			return stateVector[0] == State._region0_Beverage_Preparation_Last_Step_r1_Remove_TeaBag;
-		case _region0_Take_The_Change:
-			return stateVector[0] == State._region0_Take_The_Change;
+					oncycle_Beverage_Preparation_Last_Step.ordinal()&& stateVector[0].ordinal() <= State.oncycle_Beverage_Preparation_Last_Step_r1_Remove_TeaBag.ordinal();
+		case oncycle_Beverage_Preparation_Last_Step_r1_Take_beverage:
+			return stateVector[0] == State.oncycle_Beverage_Preparation_Last_Step_r1_Take_beverage;
+		case oncycle_Beverage_Preparation_Last_Step_r1_Waiting_Infusion:
+			return stateVector[0] == State.oncycle_Beverage_Preparation_Last_Step_r1_Waiting_Infusion;
+		case oncycle_Beverage_Preparation_Last_Step_r1_Remove_TeaBag:
+			return stateVector[0] == State.oncycle_Beverage_Preparation_Last_Step_r1_Remove_TeaBag;
+		case oncycle_Take_The_Change:
+			return stateVector[0] == State.oncycle_Take_The_Change;
 		case paymentByCoins_PaymentByCoins:
 			return stateVector[2] == State.paymentByCoins_PaymentByCoins;
 		case paymentByCoins_WaitingCoins:
@@ -1458,6 +1582,22 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		return sCInterface.isRaisedOwnCupOK();
 	}
 	
+	public synchronized boolean isRaisedTakeSoupPod() {
+		return sCInterface.isRaisedTakeSoupPod();
+	}
+	
+	public synchronized boolean isRaisedSoupPodOK() {
+		return sCInterface.isRaisedSoupPodOK();
+	}
+	
+	public synchronized boolean isRaisedAddSpices() {
+		return sCInterface.isRaisedAddSpices();
+	}
+	
+	public synchronized boolean isRaisedSpicesOK() {
+		return sCInterface.isRaisedSpicesOK();
+	}
+	
 	public synchronized double getSolde() {
 		return sCInterface.getSolde();
 	}
@@ -1530,596 +1670,745 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		sCInterface.setSizeSelected(value);
 	}
 	
-	private boolean check__region0_Beverage_Preparation_First_Step_r2__choice_0_tr0_tr0() {
+	private boolean check_oncycle_Beverage_Preparation_First_Step_r2__choice_0_tr0_tr0() {
 		return (sCInterface.getBeverageSelected()== null?"café" ==null :sCInterface.getBeverageSelected().equals("café"));
 	}
 	
-	private boolean check__region0_Beverage_Preparation_First_Step_r2__choice_0_tr1_tr1() {
+	private boolean check_oncycle_Beverage_Preparation_First_Step_r2__choice_0_tr1_tr1() {
 		return (sCInterface.getBeverageSelected()== null?"thé" ==null :sCInterface.getBeverageSelected().equals("thé"));
 	}
 	
-	private boolean check__region0_Beverage_Preparation_Second_Step_r2__choice_0_tr0_tr0() {
+	private boolean check_oncycle_Beverage_Preparation_First_Step_r2__choice_0_tr2_tr2() {
 		return (sCInterface.getBeverageSelected()== null?"expresso" ==null :sCInterface.getBeverageSelected().equals("expresso"));
 	}
 	
-	private boolean check__region0_Beverage_Preparation_Second_Step_r2__choice_1_tr0_tr0() {
+	private boolean check_oncycle_Beverage_Preparation_First_Step_r2__choice_1_tr0_tr0() {
 		return sCInterface.getOwnCup()==true;
 	}
 	
-	private boolean check__region0_Beverage_Preparation_Last_Step_r1__choice_0_tr0_tr0() {
+	private boolean check_oncycle_Beverage_Preparation_Second_Step_r2__choice_0_tr0_tr0() {
+		return (sCInterface.getBeverageSelected()== null?"expresso" ==null :sCInterface.getBeverageSelected().equals("expresso"));
+	}
+	
+	private boolean check_oncycle_Beverage_Preparation_Second_Step_r2__choice_1_tr0_tr0() {
+		return sCInterface.getOwnCup()==true;
+	}
+	
+	private boolean check_oncycle_Beverage_Preparation_Second_Step_r2__choice_2_tr1_tr1() {
+		return (sCInterface.getBeverageSelected()== null?"soupe" ==null :sCInterface.getBeverageSelected().equals("soupe"));
+	}
+	
+	private boolean check_oncycle_Beverage_Preparation_Third_Step_r2__choice_0_tr1_tr1() {
+		return (sCInterface.getBeverageSelected()== null?"soupe" ==null :sCInterface.getBeverageSelected().equals("soupe"));
+	}
+	
+	private boolean check_oncycle_Beverage_Preparation_Last_Step_r1__choice_0_tr0_tr0() {
 		return (sCInterface.getBeverageSelected()== null?"thé" ==null :sCInterface.getBeverageSelected().equals("thé"));
 	}
 	
-	private void effect__region0_Beverage_Preparation_First_Step_r2__choice_0_tr0() {
-		enterSequence__region0_Beverage_Preparation_First_Step_r2_CoffeeSelected_default();
+	private void effect_oncycle_Beverage_Preparation_First_Step_r2__choice_0_tr0() {
+		enterSequence_oncycle_Beverage_Preparation_First_Step_r2_CoffeeSelected_default();
 	}
 	
-	private void effect__region0_Beverage_Preparation_First_Step_r2__choice_0_tr1() {
-		enterSequence__region0_Beverage_Preparation_First_Step_r2_TeaSelected_default();
+	private void effect_oncycle_Beverage_Preparation_First_Step_r2__choice_0_tr1() {
+		enterSequence_oncycle_Beverage_Preparation_First_Step_r2_TeaSelected_default();
 	}
 	
-	private void effect__region0_Beverage_Preparation_First_Step_r2__choice_0_tr2() {
-		enterSequence__region0_Beverage_Preparation_First_Step_r2_ExpressoSelected_default();
+	private void effect_oncycle_Beverage_Preparation_First_Step_r2__choice_0_tr2() {
+		enterSequence_oncycle_Beverage_Preparation_First_Step_r2_ExpressoSelected_default();
 	}
 	
-	private void effect__region0_Beverage_Preparation_Second_Step_r2__choice_0_tr0() {
-		enterSequence__region0_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack_default();
+	private void effect_oncycle_Beverage_Preparation_First_Step_r2__choice_0_tr3() {
+		enterSequence_oncycle_Beverage_Preparation_First_Step_r2_Waiting_Cup__default();
 	}
 	
-	private void effect__region0_Beverage_Preparation_Second_Step_r2__choice_0_tr1() {
-		enterSequence__region0_Beverage_Preparation_Second_Step_r2_Ready2_default();
+	private void effect_oncycle_Beverage_Preparation_First_Step_r2__choice_1_tr0() {
+		enterSequence_oncycle_Beverage_Preparation_First_Step_r2_Own_Cup_OK_default();
 	}
 	
-	private void effect__region0_Beverage_Preparation_Second_Step_r2__choice_1_tr0() {
-		enterSequence__region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK_default();
+	private void effect_oncycle_Beverage_Preparation_First_Step_r2__choice_1_tr1() {
+		enterSequence_oncycle_Beverage_Preparation_First_Step_r2_Cup_Need_default();
 	}
 	
-	private void effect__region0_Beverage_Preparation_Second_Step_r2__choice_1_tr1() {
-		enterSequence__region0_Beverage_Preparation_Second_Step_r2_Cup_Need_default();
+	private void effect_oncycle_Beverage_Preparation_Second_Step_r2__choice_0_tr0() {
+		enterSequence_oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack_default();
 	}
 	
-	private void effect__region0_Beverage_Preparation_Last_Step_r1__choice_0_tr0() {
-		enterSequence__region0_Beverage_Preparation_Last_Step_r1_Waiting_Infusion_default();
+	private void effect_oncycle_Beverage_Preparation_Second_Step_r2__choice_0_tr1() {
+		enterSequence_oncycle_Beverage_Preparation_Second_Step_r2_Ready2_default();
 	}
 	
-	private void effect__region0_Beverage_Preparation_Last_Step_r1__choice_0_tr1() {
-		enterSequence__region0_Beverage_Preparation_Last_Step_r1_Take_beverage_default();
+	private void effect_oncycle_Beverage_Preparation_Second_Step_r2__choice_1_tr0() {
+		enterSequence_oncycle_Beverage_Preparation_Second_Step_r2_Own_Cup_OK_default();
+	}
+	
+	private void effect_oncycle_Beverage_Preparation_Second_Step_r2__choice_1_tr1() {
+		enterSequence_oncycle_Beverage_Preparation_Second_Step_r2_Cup_Need_default();
+	}
+	
+	private void effect_oncycle_Beverage_Preparation_Second_Step_r2__choice_2_tr1() {
+		enterSequence_oncycle_Beverage_Preparation_Second_Step_r2_SoupSelected_default();
+	}
+	
+	private void effect_oncycle_Beverage_Preparation_Second_Step_r2__choice_2_tr0() {
+		enterSequence_oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Cup__default();
+	}
+	
+	private void effect_oncycle_Beverage_Preparation_Third_Step_r2__choice_0_tr1() {
+		enterSequence_oncycle_Beverage_Preparation_Third_Step_r2_Ready3_default();
+	}
+	
+	private void effect_oncycle_Beverage_Preparation_Third_Step_r2__choice_0_tr0() {
+		enterSequence_oncycle_Beverage_Preparation_Third_Step_r2_Add_Sugar_default();
+	}
+	
+	private void effect_oncycle_Beverage_Preparation_Last_Step_r1__choice_0_tr0() {
+		enterSequence_oncycle_Beverage_Preparation_Last_Step_r1_Waiting_Infusion_default();
+	}
+	
+	private void effect_oncycle_Beverage_Preparation_Last_Step_r1__choice_0_tr1() {
+		enterSequence_oncycle_Beverage_Preparation_Last_Step_r1_Take_beverage_default();
 	}
 	
 	/* Entry action for state 'Waiting'. */
-	private void entryAction__region0_Waiting() {
+	private void entryAction_oncycle_Waiting() {
 		sCInterface.raiseMachineReady();
 	}
 	
 	/* Entry action for state 'Cleaning'. */
-	private void entryAction__region0_Cleaning() {
+	private void entryAction_oncycle_Cleaning() {
 		timer.setTimer(this, 0, (3 * 1000), false);
 		
 		sCInterface.setPaymentDone(false);
 	}
 	
 	/* Entry action for state 'Payment Done'. */
-	private void entryAction__region0_Payment_Done() {
+	private void entryAction_oncycle_Payment_Done() {
 		timer.setTimer(this, 1, (2 * 1000), false);
 		
 		sCInterface.setPaymentDone(true);
 	}
 	
 	/* Entry action for state 'Beverage Choice'. */
-	private void entryAction__region0_Beverage_Choice() {
+	private void entryAction_oncycle_Beverage_Choice() {
 		timer.setTimer(this, 2, (45 * 1000), false);
 	}
 	
 	/* Entry action for state 'Start Water Heating'. */
-	private void entryAction__region0_Beverage_Preparation_First_Step_r1_Start_Water_Heating() {
+	private void entryAction_oncycle_Beverage_Preparation_First_Step_r1_Start_Water_Heating() {
 		timer.setTimer(this, 3, 1500, false);
 		
 		sCInterface.raiseTurnOnWaterHeating();
 	}
 	
 	/* Entry action for state 'Water Heating ON'. */
-	private void entryAction__region0_Beverage_Preparation_First_Step_r1_Water_Heating_ON() {
+	private void entryAction_oncycle_Beverage_Preparation_First_Step_r1_Water_Heating_ON() {
 		sCInterface.raiseWaterHeatingOK();
 	}
 	
 	/* Entry action for state 'CoffeeSelected'. */
-	private void entryAction__region0_Beverage_Preparation_First_Step_r2_CoffeeSelected() {
+	private void entryAction_oncycle_Beverage_Preparation_First_Step_r2_CoffeeSelected() {
 		timer.setTimer(this, 4, 2500, false);
 		
 		sCInterface.raisePlacePod();
 	}
 	
 	/* Entry action for state 'TeaSelected'. */
-	private void entryAction__region0_Beverage_Preparation_First_Step_r2_TeaSelected() {
+	private void entryAction_oncycle_Beverage_Preparation_First_Step_r2_TeaSelected() {
 		timer.setTimer(this, 5, 2500, false);
 		
 		sCInterface.raisePlaceTeaBag();
 	}
 	
 	/* Entry action for state 'ExpressoSelected'. */
-	private void entryAction__region0_Beverage_Preparation_First_Step_r2_ExpressoSelected() {
+	private void entryAction_oncycle_Beverage_Preparation_First_Step_r2_ExpressoSelected() {
 		timer.setTimer(this, 6, (4 * 1000), false);
 		
 		sCInterface.raiseGrindGrains();
 	}
 	
 	/* Entry action for state 'Pod In Place'. */
-	private void entryAction__region0_Beverage_Preparation_First_Step_r2_Pod_In_Place() {
+	private void entryAction_oncycle_Beverage_Preparation_First_Step_r2_Pod_In_Place() {
 		sCInterface.raisePodOK();
 	}
 	
 	/* Entry action for state 'Tea Bag In Place'. */
-	private void entryAction__region0_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place() {
+	private void entryAction_oncycle_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place() {
 		sCInterface.raiseTeaBagOK();
 	}
 	
 	/* Entry action for state 'Grain Crushing OK'. */
-	private void entryAction__region0_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK() {
+	private void entryAction_oncycle_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK() {
 		sCInterface.raiseGrainCrushingOK();
 	}
 	
+	/* Entry action for state 'Cup In Place'. */
+	private void entryAction_oncycle_Beverage_Preparation_First_Step_r2_Cup_In_Place() {
+		sCInterface.raiseCupOK();
+	}
+	
+	/* Entry action for state 'Own Cup OK'. */
+	private void entryAction_oncycle_Beverage_Preparation_First_Step_r2_Own_Cup_OK() {
+		sCInterface.raiseOwnCupOK();
+	}
+	
+	/* Entry action for state 'Cup Need'. */
+	private void entryAction_oncycle_Beverage_Preparation_First_Step_r2_Cup_Need() {
+		timer.setTimer(this, 7, (3 * 1000), false);
+		
+		sCInterface.raisePlaceCup();
+	}
+	
 	/* Entry action for state 'Waiting Water Temperature'. */
-	private void entryAction__region0_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature() {
-		timer.setTimer(this, 7, ((sCInterface.getTemperatureSelected() * 100)), false);
+	private void entryAction_oncycle_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature() {
+		timer.setTimer(this, 8, ((sCInterface.getTemperatureSelected() * 100)), false);
 		
 		sCInterface.raiseWaitTemperature();
 	}
 	
 	/* Entry action for state 'Water Temperature OK'. */
-	private void entryAction__region0_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK() {
+	private void entryAction_oncycle_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK() {
 		sCInterface.raiseWaterTempOK();
 	}
 	
 	/* Entry action for state 'Waiting Grain Pack'. */
-	private void entryAction__region0_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack() {
-		timer.setTimer(this, 8, ((sCInterface.getSizeSelected() * 1500)), false);
+	private void entryAction_oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack() {
+		timer.setTimer(this, 9, ((sCInterface.getSizeSelected() * 1500)), false);
 		
 		sCInterface.raisePackGrains();
 	}
 	
 	/* Entry action for state 'Cup In Place'. */
-	private void entryAction__region0_Beverage_Preparation_Second_Step_r2_Cup_In_Place() {
+	private void entryAction_oncycle_Beverage_Preparation_Second_Step_r2_Cup_In_Place() {
 		sCInterface.raiseCupOK();
 	}
 	
 	/* Entry action for state 'Grain Packing OK'. */
-	private void entryAction__region0_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK() {
+	private void entryAction_oncycle_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK() {
 		sCInterface.raiseGrainPackingOK();
 	}
 	
 	/* Entry action for state 'Own Cup OK'. */
-	private void entryAction__region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK() {
+	private void entryAction_oncycle_Beverage_Preparation_Second_Step_r2_Own_Cup_OK() {
 		sCInterface.raiseOwnCupOK();
 	}
 	
 	/* Entry action for state 'Cup Need'. */
-	private void entryAction__region0_Beverage_Preparation_Second_Step_r2_Cup_Need() {
-		timer.setTimer(this, 9, (3 * 1000), false);
+	private void entryAction_oncycle_Beverage_Preparation_Second_Step_r2_Cup_Need() {
+		timer.setTimer(this, 10, (3 * 1000), false);
 		
 		sCInterface.raisePlaceCup();
 	}
 	
+	/* Entry action for state 'SoupSelected'. */
+	private void entryAction_oncycle_Beverage_Preparation_Second_Step_r2_SoupSelected() {
+		timer.setTimer(this, 11, 2500, false);
+		
+		sCInterface.raiseTakeSoupPod();
+	}
+	
+	/* Entry action for state 'Soup Pod OK'. */
+	private void entryAction_oncycle_Beverage_Preparation_Second_Step_r2_Soup_Pod_OK() {
+		sCInterface.raiseSoupPodOK();
+	}
+	
+	/* Entry action for state 'Add Spicy'. */
+	private void entryAction_oncycle_Beverage_Preparation_Second_Step_r2_Add_Spicy() {
+		timer.setTimer(this, 12, (2 * 1000), false);
+		
+		sCInterface.raiseAddSpices();
+	}
+	
 	/* Entry action for state 'Start Water Flowing'. */
-	private void entryAction__region0_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing() {
-		timer.setTimer(this, 10, (((3 * sCInterface.getSizeSelected())) * 1000), false);
+	private void entryAction_oncycle_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing() {
+		timer.setTimer(this, 13, (((3 * sCInterface.getSizeSelected())) * 1000), false);
 		
 		sCInterface.raiseFlowWater();
 	}
 	
 	/* Entry action for state 'Water Flowing OK'. */
-	private void entryAction__region0_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK() {
+	private void entryAction_oncycle_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK() {
 		sCInterface.raiseFlowWaterOK();
 	}
 	
 	/* Entry action for state 'Add Sugar'. */
-	private void entryAction__region0_Beverage_Preparation_Third_Step_r2_Add_Sugar() {
-		timer.setTimer(this, 11, (2 * 1000), false);
+	private void entryAction_oncycle_Beverage_Preparation_Third_Step_r2_Add_Sugar() {
+		timer.setTimer(this, 14, (2 * 1000), false);
 		
 		sCInterface.raiseAddSugar();
 	}
 	
 	/* Entry action for state 'Sugar OK'. */
-	private void entryAction__region0_Beverage_Preparation_Third_Step_r2_Sugar_OK() {
+	private void entryAction_oncycle_Beverage_Preparation_Third_Step_r2_Sugar_OK() {
 		sCInterface.raiseSugarOK();
 	}
 	
 	/* Entry action for state 'Take beverage'. */
-	private void entryAction__region0_Beverage_Preparation_Last_Step_r1_Take_beverage() {
-		timer.setTimer(this, 12, (5 * 1000), false);
+	private void entryAction_oncycle_Beverage_Preparation_Last_Step_r1_Take_beverage() {
+		timer.setTimer(this, 15, (5 * 1000), false);
 		
 		sCInterface.raiseTakeBeverage();
 	}
 	
 	/* Entry action for state 'Waiting Infusion'. */
-	private void entryAction__region0_Beverage_Preparation_Last_Step_r1_Waiting_Infusion() {
-		timer.setTimer(this, 13, (3 * 1000), false);
+	private void entryAction_oncycle_Beverage_Preparation_Last_Step_r1_Waiting_Infusion() {
+		timer.setTimer(this, 16, (3 * 1000), false);
 		
 		sCInterface.raiseWaitingInfusion();
 	}
 	
 	/* Entry action for state 'Remove TeaBag'. */
-	private void entryAction__region0_Beverage_Preparation_Last_Step_r1_Remove_TeaBag() {
-		timer.setTimer(this, 14, (2 * 1000), false);
+	private void entryAction_oncycle_Beverage_Preparation_Last_Step_r1_Remove_TeaBag() {
+		timer.setTimer(this, 17, (2 * 1000), false);
 		
 		sCInterface.raiseRemoveTeaBag();
 	}
 	
 	/* Entry action for state 'Take The Change'. */
-	private void entryAction__region0_Take_The_Change() {
-		timer.setTimer(this, 15, (3 * 1000), false);
+	private void entryAction_oncycle_Take_The_Change() {
+		timer.setTimer(this, 18, (3 * 1000), false);
 		
 		sCInterface.raiseTakeChange();
 	}
 	
 	/* Entry action for state 'PaymentByCoins'. */
 	private void entryAction_PaymentByCoins_PaymentByCoins() {
-		timer.setTimer(this, 16, (45 * 1000), false);
+		timer.setTimer(this, 19, (45 * 1000), false);
 	}
 	
 	/* Entry action for state 'WaitingCoins'. */
 	private void entryAction_PaymentByCoins_WaitingCoins() {
-		timer.setTimer(this, 17, 100, true);
+		timer.setTimer(this, 20, 100, true);
 	}
 	
 	/* Entry action for state 'ReturnCoins'. */
 	private void entryAction_PaymentByCoins_ReturnCoins() {
-		timer.setTimer(this, 18, (5 * 1000), false);
+		timer.setTimer(this, 21, (5 * 1000), false);
 	}
 	
 	/* Entry action for state 'Blocked'. */
 	private void entryAction_PaymentByCoins_Blocked() {
-		timer.setTimer(this, 19, 100, true);
+		timer.setTimer(this, 22, 100, true);
 	}
 	
 	/* Entry action for state 'WaitingNFC'. */
 	private void entryAction_PaymentByNFC_WaitingNFC() {
-		timer.setTimer(this, 20, 100, true);
+		timer.setTimer(this, 23, 100, true);
 	}
 	
 	/* Entry action for state 'PaymentByNFC'. */
 	private void entryAction_PaymentByNFC_PaymentByNFC() {
-		timer.setTimer(this, 21, (45 * 1000), false);
+		timer.setTimer(this, 24, (45 * 1000), false);
 		
-		timer.setTimer(this, 22, 1, true);
+		timer.setTimer(this, 25, 1, true);
 	}
 	
 	/* Entry action for state 'CancelTransaction'. */
 	private void entryAction_PaymentByNFC_CancelTransaction() {
-		timer.setTimer(this, 23, (5 * 1000), false);
+		timer.setTimer(this, 26, (5 * 1000), false);
 	}
 	
 	/* Entry action for state 'Blocked'. */
 	private void entryAction_PaymentByNFC_Blocked() {
-		timer.setTimer(this, 24, 100, true);
+		timer.setTimer(this, 27, 100, true);
 	}
 	
 	/* Exit action for state 'Cleaning'. */
-	private void exitAction__region0_Cleaning() {
+	private void exitAction_oncycle_Cleaning() {
 		timer.unsetTimer(this, 0);
 	}
 	
 	/* Exit action for state 'Payment Done'. */
-	private void exitAction__region0_Payment_Done() {
+	private void exitAction_oncycle_Payment_Done() {
 		timer.unsetTimer(this, 1);
 	}
 	
 	/* Exit action for state 'Beverage Choice'. */
-	private void exitAction__region0_Beverage_Choice() {
+	private void exitAction_oncycle_Beverage_Choice() {
 		timer.unsetTimer(this, 2);
 	}
 	
 	/* Exit action for state 'Start Water Heating'. */
-	private void exitAction__region0_Beverage_Preparation_First_Step_r1_Start_Water_Heating() {
+	private void exitAction_oncycle_Beverage_Preparation_First_Step_r1_Start_Water_Heating() {
 		timer.unsetTimer(this, 3);
 	}
 	
 	/* Exit action for state 'CoffeeSelected'. */
-	private void exitAction__region0_Beverage_Preparation_First_Step_r2_CoffeeSelected() {
+	private void exitAction_oncycle_Beverage_Preparation_First_Step_r2_CoffeeSelected() {
 		timer.unsetTimer(this, 4);
 	}
 	
 	/* Exit action for state 'TeaSelected'. */
-	private void exitAction__region0_Beverage_Preparation_First_Step_r2_TeaSelected() {
+	private void exitAction_oncycle_Beverage_Preparation_First_Step_r2_TeaSelected() {
 		timer.unsetTimer(this, 5);
 	}
 	
 	/* Exit action for state 'ExpressoSelected'. */
-	private void exitAction__region0_Beverage_Preparation_First_Step_r2_ExpressoSelected() {
+	private void exitAction_oncycle_Beverage_Preparation_First_Step_r2_ExpressoSelected() {
 		timer.unsetTimer(this, 6);
 	}
 	
-	/* Exit action for state 'Waiting Water Temperature'. */
-	private void exitAction__region0_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature() {
+	/* Exit action for state 'Cup Need'. */
+	private void exitAction_oncycle_Beverage_Preparation_First_Step_r2_Cup_Need() {
 		timer.unsetTimer(this, 7);
 	}
 	
-	/* Exit action for state 'Waiting Grain Pack'. */
-	private void exitAction__region0_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack() {
+	/* Exit action for state 'Waiting Water Temperature'. */
+	private void exitAction_oncycle_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature() {
 		timer.unsetTimer(this, 8);
 	}
 	
-	/* Exit action for state 'Cup Need'. */
-	private void exitAction__region0_Beverage_Preparation_Second_Step_r2_Cup_Need() {
+	/* Exit action for state 'Waiting Grain Pack'. */
+	private void exitAction_oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack() {
 		timer.unsetTimer(this, 9);
 	}
 	
-	/* Exit action for state 'Start Water Flowing'. */
-	private void exitAction__region0_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing() {
+	/* Exit action for state 'Cup Need'. */
+	private void exitAction_oncycle_Beverage_Preparation_Second_Step_r2_Cup_Need() {
 		timer.unsetTimer(this, 10);
 	}
 	
-	/* Exit action for state 'Add Sugar'. */
-	private void exitAction__region0_Beverage_Preparation_Third_Step_r2_Add_Sugar() {
+	/* Exit action for state 'SoupSelected'. */
+	private void exitAction_oncycle_Beverage_Preparation_Second_Step_r2_SoupSelected() {
 		timer.unsetTimer(this, 11);
 	}
 	
-	/* Exit action for state 'Take beverage'. */
-	private void exitAction__region0_Beverage_Preparation_Last_Step_r1_Take_beverage() {
+	/* Exit action for state 'Add Spicy'. */
+	private void exitAction_oncycle_Beverage_Preparation_Second_Step_r2_Add_Spicy() {
 		timer.unsetTimer(this, 12);
 	}
 	
-	/* Exit action for state 'Waiting Infusion'. */
-	private void exitAction__region0_Beverage_Preparation_Last_Step_r1_Waiting_Infusion() {
+	/* Exit action for state 'Start Water Flowing'. */
+	private void exitAction_oncycle_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing() {
 		timer.unsetTimer(this, 13);
 	}
 	
-	/* Exit action for state 'Remove TeaBag'. */
-	private void exitAction__region0_Beverage_Preparation_Last_Step_r1_Remove_TeaBag() {
+	/* Exit action for state 'Add Sugar'. */
+	private void exitAction_oncycle_Beverage_Preparation_Third_Step_r2_Add_Sugar() {
 		timer.unsetTimer(this, 14);
 	}
 	
-	/* Exit action for state 'Take The Change'. */
-	private void exitAction__region0_Take_The_Change() {
+	/* Exit action for state 'Take beverage'. */
+	private void exitAction_oncycle_Beverage_Preparation_Last_Step_r1_Take_beverage() {
 		timer.unsetTimer(this, 15);
+	}
+	
+	/* Exit action for state 'Waiting Infusion'. */
+	private void exitAction_oncycle_Beverage_Preparation_Last_Step_r1_Waiting_Infusion() {
+		timer.unsetTimer(this, 16);
+	}
+	
+	/* Exit action for state 'Remove TeaBag'. */
+	private void exitAction_oncycle_Beverage_Preparation_Last_Step_r1_Remove_TeaBag() {
+		timer.unsetTimer(this, 17);
+	}
+	
+	/* Exit action for state 'Take The Change'. */
+	private void exitAction_oncycle_Take_The_Change() {
+		timer.unsetTimer(this, 18);
 	}
 	
 	/* Exit action for state 'PaymentByCoins'. */
 	private void exitAction_PaymentByCoins_PaymentByCoins() {
-		timer.unsetTimer(this, 16);
+		timer.unsetTimer(this, 19);
 	}
 	
 	/* Exit action for state 'WaitingCoins'. */
 	private void exitAction_PaymentByCoins_WaitingCoins() {
-		timer.unsetTimer(this, 17);
+		timer.unsetTimer(this, 20);
 	}
 	
 	/* Exit action for state 'ReturnCoins'. */
 	private void exitAction_PaymentByCoins_ReturnCoins() {
-		timer.unsetTimer(this, 18);
+		timer.unsetTimer(this, 21);
 	}
 	
 	/* Exit action for state 'Blocked'. */
 	private void exitAction_PaymentByCoins_Blocked() {
-		timer.unsetTimer(this, 19);
+		timer.unsetTimer(this, 22);
 	}
 	
 	/* Exit action for state 'WaitingNFC'. */
 	private void exitAction_PaymentByNFC_WaitingNFC() {
-		timer.unsetTimer(this, 20);
+		timer.unsetTimer(this, 23);
 	}
 	
 	/* Exit action for state 'PaymentByNFC'. */
 	private void exitAction_PaymentByNFC_PaymentByNFC() {
-		timer.unsetTimer(this, 21);
+		timer.unsetTimer(this, 24);
 		
-		timer.unsetTimer(this, 22);
+		timer.unsetTimer(this, 25);
 	}
 	
 	/* Exit action for state 'CancelTransaction'. */
 	private void exitAction_PaymentByNFC_CancelTransaction() {
-		timer.unsetTimer(this, 23);
+		timer.unsetTimer(this, 26);
 	}
 	
 	/* Exit action for state 'Blocked'. */
 	private void exitAction_PaymentByNFC_Blocked() {
-		timer.unsetTimer(this, 24);
+		timer.unsetTimer(this, 27);
 	}
 	
 	/* 'default' enter sequence for state Waiting */
-	private void enterSequence__region0_Waiting_default() {
-		entryAction__region0_Waiting();
+	private void enterSequence_oncycle_Waiting_default() {
+		entryAction_oncycle_Waiting();
 		nextStateIndex = 0;
-		stateVector[0] = State._region0_Waiting;
+		stateVector[0] = State.oncycle_Waiting;
 	}
 	
 	/* 'default' enter sequence for state Cleaning */
-	private void enterSequence__region0_Cleaning_default() {
-		entryAction__region0_Cleaning();
+	private void enterSequence_oncycle_Cleaning_default() {
+		entryAction_oncycle_Cleaning();
 		nextStateIndex = 0;
-		stateVector[0] = State._region0_Cleaning;
+		stateVector[0] = State.oncycle_Cleaning;
 	}
 	
 	/* 'default' enter sequence for state Payment Done */
-	private void enterSequence__region0_Payment_Done_default() {
-		entryAction__region0_Payment_Done();
+	private void enterSequence_oncycle_Payment_Done_default() {
+		entryAction_oncycle_Payment_Done();
 		nextStateIndex = 0;
-		stateVector[0] = State._region0_Payment_Done;
+		stateVector[0] = State.oncycle_Payment_Done;
 	}
 	
 	/* 'default' enter sequence for state Beverage Choice */
-	private void enterSequence__region0_Beverage_Choice_default() {
-		entryAction__region0_Beverage_Choice();
+	private void enterSequence_oncycle_Beverage_Choice_default() {
+		entryAction_oncycle_Beverage_Choice();
 		nextStateIndex = 0;
-		stateVector[0] = State._region0_Beverage_Choice;
+		stateVector[0] = State.oncycle_Beverage_Choice;
 	}
 	
 	/* 'default' enter sequence for state Start Water Heating */
-	private void enterSequence__region0_Beverage_Preparation_First_Step_r1_Start_Water_Heating_default() {
-		entryAction__region0_Beverage_Preparation_First_Step_r1_Start_Water_Heating();
+	private void enterSequence_oncycle_Beverage_Preparation_First_Step_r1_Start_Water_Heating_default() {
+		entryAction_oncycle_Beverage_Preparation_First_Step_r1_Start_Water_Heating();
 		nextStateIndex = 0;
-		stateVector[0] = State._region0_Beverage_Preparation_First_Step_r1_Start_Water_Heating;
+		stateVector[0] = State.oncycle_Beverage_Preparation_First_Step_r1_Start_Water_Heating;
 	}
 	
 	/* 'default' enter sequence for state Water Heating ON */
-	private void enterSequence__region0_Beverage_Preparation_First_Step_r1_Water_Heating_ON_default() {
-		entryAction__region0_Beverage_Preparation_First_Step_r1_Water_Heating_ON();
+	private void enterSequence_oncycle_Beverage_Preparation_First_Step_r1_Water_Heating_ON_default() {
+		entryAction_oncycle_Beverage_Preparation_First_Step_r1_Water_Heating_ON();
 		nextStateIndex = 0;
-		stateVector[0] = State._region0_Beverage_Preparation_First_Step_r1_Water_Heating_ON;
+		stateVector[0] = State.oncycle_Beverage_Preparation_First_Step_r1_Water_Heating_ON;
 	}
 	
 	/* 'default' enter sequence for state CoffeeSelected */
-	private void enterSequence__region0_Beverage_Preparation_First_Step_r2_CoffeeSelected_default() {
-		entryAction__region0_Beverage_Preparation_First_Step_r2_CoffeeSelected();
+	private void enterSequence_oncycle_Beverage_Preparation_First_Step_r2_CoffeeSelected_default() {
+		entryAction_oncycle_Beverage_Preparation_First_Step_r2_CoffeeSelected();
 		nextStateIndex = 1;
-		stateVector[1] = State._region0_Beverage_Preparation_First_Step_r2_CoffeeSelected;
+		stateVector[1] = State.oncycle_Beverage_Preparation_First_Step_r2_CoffeeSelected;
 	}
 	
 	/* 'default' enter sequence for state Ready */
-	private void enterSequence__region0_Beverage_Preparation_First_Step_r2_Ready_default() {
+	private void enterSequence_oncycle_Beverage_Preparation_First_Step_r2_Ready_default() {
 		nextStateIndex = 1;
-		stateVector[1] = State._region0_Beverage_Preparation_First_Step_r2_Ready;
+		stateVector[1] = State.oncycle_Beverage_Preparation_First_Step_r2_Ready;
 	}
 	
 	/* 'default' enter sequence for state TeaSelected */
-	private void enterSequence__region0_Beverage_Preparation_First_Step_r2_TeaSelected_default() {
-		entryAction__region0_Beverage_Preparation_First_Step_r2_TeaSelected();
+	private void enterSequence_oncycle_Beverage_Preparation_First_Step_r2_TeaSelected_default() {
+		entryAction_oncycle_Beverage_Preparation_First_Step_r2_TeaSelected();
 		nextStateIndex = 1;
-		stateVector[1] = State._region0_Beverage_Preparation_First_Step_r2_TeaSelected;
+		stateVector[1] = State.oncycle_Beverage_Preparation_First_Step_r2_TeaSelected;
 	}
 	
 	/* 'default' enter sequence for state ExpressoSelected */
-	private void enterSequence__region0_Beverage_Preparation_First_Step_r2_ExpressoSelected_default() {
-		entryAction__region0_Beverage_Preparation_First_Step_r2_ExpressoSelected();
+	private void enterSequence_oncycle_Beverage_Preparation_First_Step_r2_ExpressoSelected_default() {
+		entryAction_oncycle_Beverage_Preparation_First_Step_r2_ExpressoSelected();
 		nextStateIndex = 1;
-		stateVector[1] = State._region0_Beverage_Preparation_First_Step_r2_ExpressoSelected;
+		stateVector[1] = State.oncycle_Beverage_Preparation_First_Step_r2_ExpressoSelected;
 	}
 	
 	/* 'default' enter sequence for state Pod In Place */
-	private void enterSequence__region0_Beverage_Preparation_First_Step_r2_Pod_In_Place_default() {
-		entryAction__region0_Beverage_Preparation_First_Step_r2_Pod_In_Place();
+	private void enterSequence_oncycle_Beverage_Preparation_First_Step_r2_Pod_In_Place_default() {
+		entryAction_oncycle_Beverage_Preparation_First_Step_r2_Pod_In_Place();
 		nextStateIndex = 1;
-		stateVector[1] = State._region0_Beverage_Preparation_First_Step_r2_Pod_In_Place;
+		stateVector[1] = State.oncycle_Beverage_Preparation_First_Step_r2_Pod_In_Place;
 	}
 	
 	/* 'default' enter sequence for state Tea Bag In Place */
-	private void enterSequence__region0_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place_default() {
-		entryAction__region0_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place();
+	private void enterSequence_oncycle_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place_default() {
+		entryAction_oncycle_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place();
 		nextStateIndex = 1;
-		stateVector[1] = State._region0_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place;
+		stateVector[1] = State.oncycle_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place;
 	}
 	
 	/* 'default' enter sequence for state Grain Crushing OK */
-	private void enterSequence__region0_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK_default() {
-		entryAction__region0_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK();
+	private void enterSequence_oncycle_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK_default() {
+		entryAction_oncycle_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK();
 		nextStateIndex = 1;
-		stateVector[1] = State._region0_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK;
-	}
-	
-	/* 'default' enter sequence for state Waiting Water Temperature */
-	private void enterSequence__region0_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature_default() {
-		entryAction__region0_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature();
-		nextStateIndex = 0;
-		stateVector[0] = State._region0_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature;
-	}
-	
-	/* 'default' enter sequence for state Water Temperature OK */
-	private void enterSequence__region0_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK_default() {
-		entryAction__region0_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK();
-		nextStateIndex = 0;
-		stateVector[0] = State._region0_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK;
+		stateVector[1] = State.oncycle_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK;
 	}
 	
 	/* 'default' enter sequence for state Waiting Cup  */
-	private void enterSequence__region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup__default() {
+	private void enterSequence_oncycle_Beverage_Preparation_First_Step_r2_Waiting_Cup__default() {
 		nextStateIndex = 1;
-		stateVector[1] = State._region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup_;
-	}
-	
-	/* 'default' enter sequence for state Waiting Grain Pack */
-	private void enterSequence__region0_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack_default() {
-		entryAction__region0_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack();
-		nextStateIndex = 1;
-		stateVector[1] = State._region0_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack;
+		stateVector[1] = State.oncycle_Beverage_Preparation_First_Step_r2_Waiting_Cup_;
 	}
 	
 	/* 'default' enter sequence for state Cup In Place */
-	private void enterSequence__region0_Beverage_Preparation_Second_Step_r2_Cup_In_Place_default() {
-		entryAction__region0_Beverage_Preparation_Second_Step_r2_Cup_In_Place();
+	private void enterSequence_oncycle_Beverage_Preparation_First_Step_r2_Cup_In_Place_default() {
+		entryAction_oncycle_Beverage_Preparation_First_Step_r2_Cup_In_Place();
 		nextStateIndex = 1;
-		stateVector[1] = State._region0_Beverage_Preparation_Second_Step_r2_Cup_In_Place;
-	}
-	
-	/* 'default' enter sequence for state Grain Packing OK */
-	private void enterSequence__region0_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK_default() {
-		entryAction__region0_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK();
-		nextStateIndex = 1;
-		stateVector[1] = State._region0_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK;
-	}
-	
-	/* 'default' enter sequence for state Ready2 */
-	private void enterSequence__region0_Beverage_Preparation_Second_Step_r2_Ready2_default() {
-		nextStateIndex = 1;
-		stateVector[1] = State._region0_Beverage_Preparation_Second_Step_r2_Ready2;
+		stateVector[1] = State.oncycle_Beverage_Preparation_First_Step_r2_Cup_In_Place;
 	}
 	
 	/* 'default' enter sequence for state Own Cup OK */
-	private void enterSequence__region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK_default() {
-		entryAction__region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK();
+	private void enterSequence_oncycle_Beverage_Preparation_First_Step_r2_Own_Cup_OK_default() {
+		entryAction_oncycle_Beverage_Preparation_First_Step_r2_Own_Cup_OK();
 		nextStateIndex = 1;
-		stateVector[1] = State._region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK;
+		stateVector[1] = State.oncycle_Beverage_Preparation_First_Step_r2_Own_Cup_OK;
 	}
 	
 	/* 'default' enter sequence for state Cup Need */
-	private void enterSequence__region0_Beverage_Preparation_Second_Step_r2_Cup_Need_default() {
-		entryAction__region0_Beverage_Preparation_Second_Step_r2_Cup_Need();
+	private void enterSequence_oncycle_Beverage_Preparation_First_Step_r2_Cup_Need_default() {
+		entryAction_oncycle_Beverage_Preparation_First_Step_r2_Cup_Need();
 		nextStateIndex = 1;
-		stateVector[1] = State._region0_Beverage_Preparation_Second_Step_r2_Cup_Need;
+		stateVector[1] = State.oncycle_Beverage_Preparation_First_Step_r2_Cup_Need;
+	}
+	
+	/* 'default' enter sequence for state Waiting Water Temperature */
+	private void enterSequence_oncycle_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature_default() {
+		entryAction_oncycle_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature();
+		nextStateIndex = 0;
+		stateVector[0] = State.oncycle_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature;
+	}
+	
+	/* 'default' enter sequence for state Water Temperature OK */
+	private void enterSequence_oncycle_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK_default() {
+		entryAction_oncycle_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK();
+		nextStateIndex = 0;
+		stateVector[0] = State.oncycle_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK;
+	}
+	
+	/* 'default' enter sequence for state Waiting Cup  */
+	private void enterSequence_oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Cup__default() {
+		nextStateIndex = 1;
+		stateVector[1] = State.oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Cup_;
+	}
+	
+	/* 'default' enter sequence for state Waiting Grain Pack */
+	private void enterSequence_oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack_default() {
+		entryAction_oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack();
+		nextStateIndex = 1;
+		stateVector[1] = State.oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack;
+	}
+	
+	/* 'default' enter sequence for state Cup In Place */
+	private void enterSequence_oncycle_Beverage_Preparation_Second_Step_r2_Cup_In_Place_default() {
+		entryAction_oncycle_Beverage_Preparation_Second_Step_r2_Cup_In_Place();
+		nextStateIndex = 1;
+		stateVector[1] = State.oncycle_Beverage_Preparation_Second_Step_r2_Cup_In_Place;
+	}
+	
+	/* 'default' enter sequence for state Grain Packing OK */
+	private void enterSequence_oncycle_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK_default() {
+		entryAction_oncycle_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK();
+		nextStateIndex = 1;
+		stateVector[1] = State.oncycle_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK;
+	}
+	
+	/* 'default' enter sequence for state Ready2 */
+	private void enterSequence_oncycle_Beverage_Preparation_Second_Step_r2_Ready2_default() {
+		nextStateIndex = 1;
+		stateVector[1] = State.oncycle_Beverage_Preparation_Second_Step_r2_Ready2;
+	}
+	
+	/* 'default' enter sequence for state Own Cup OK */
+	private void enterSequence_oncycle_Beverage_Preparation_Second_Step_r2_Own_Cup_OK_default() {
+		entryAction_oncycle_Beverage_Preparation_Second_Step_r2_Own_Cup_OK();
+		nextStateIndex = 1;
+		stateVector[1] = State.oncycle_Beverage_Preparation_Second_Step_r2_Own_Cup_OK;
+	}
+	
+	/* 'default' enter sequence for state Cup Need */
+	private void enterSequence_oncycle_Beverage_Preparation_Second_Step_r2_Cup_Need_default() {
+		entryAction_oncycle_Beverage_Preparation_Second_Step_r2_Cup_Need();
+		nextStateIndex = 1;
+		stateVector[1] = State.oncycle_Beverage_Preparation_Second_Step_r2_Cup_Need;
+	}
+	
+	/* 'default' enter sequence for state SoupSelected */
+	private void enterSequence_oncycle_Beverage_Preparation_Second_Step_r2_SoupSelected_default() {
+		entryAction_oncycle_Beverage_Preparation_Second_Step_r2_SoupSelected();
+		nextStateIndex = 1;
+		stateVector[1] = State.oncycle_Beverage_Preparation_Second_Step_r2_SoupSelected;
+	}
+	
+	/* 'default' enter sequence for state Soup Pod OK */
+	private void enterSequence_oncycle_Beverage_Preparation_Second_Step_r2_Soup_Pod_OK_default() {
+		entryAction_oncycle_Beverage_Preparation_Second_Step_r2_Soup_Pod_OK();
+		nextStateIndex = 1;
+		stateVector[1] = State.oncycle_Beverage_Preparation_Second_Step_r2_Soup_Pod_OK;
+	}
+	
+	/* 'default' enter sequence for state Add Spicy */
+	private void enterSequence_oncycle_Beverage_Preparation_Second_Step_r2_Add_Spicy_default() {
+		entryAction_oncycle_Beverage_Preparation_Second_Step_r2_Add_Spicy();
+		nextStateIndex = 1;
+		stateVector[1] = State.oncycle_Beverage_Preparation_Second_Step_r2_Add_Spicy;
 	}
 	
 	/* 'default' enter sequence for state Start Water Flowing */
-	private void enterSequence__region0_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing_default() {
-		entryAction__region0_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing();
+	private void enterSequence_oncycle_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing_default() {
+		entryAction_oncycle_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing();
 		nextStateIndex = 0;
-		stateVector[0] = State._region0_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing;
+		stateVector[0] = State.oncycle_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing;
 	}
 	
 	/* 'default' enter sequence for state Water Flowing OK */
-	private void enterSequence__region0_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK_default() {
-		entryAction__region0_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK();
+	private void enterSequence_oncycle_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK_default() {
+		entryAction_oncycle_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK();
 		nextStateIndex = 0;
-		stateVector[0] = State._region0_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK;
+		stateVector[0] = State.oncycle_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK;
 	}
 	
 	/* 'default' enter sequence for state Add Sugar */
-	private void enterSequence__region0_Beverage_Preparation_Third_Step_r2_Add_Sugar_default() {
-		entryAction__region0_Beverage_Preparation_Third_Step_r2_Add_Sugar();
+	private void enterSequence_oncycle_Beverage_Preparation_Third_Step_r2_Add_Sugar_default() {
+		entryAction_oncycle_Beverage_Preparation_Third_Step_r2_Add_Sugar();
 		nextStateIndex = 1;
-		stateVector[1] = State._region0_Beverage_Preparation_Third_Step_r2_Add_Sugar;
+		stateVector[1] = State.oncycle_Beverage_Preparation_Third_Step_r2_Add_Sugar;
 	}
 	
 	/* 'default' enter sequence for state Sugar OK */
-	private void enterSequence__region0_Beverage_Preparation_Third_Step_r2_Sugar_OK_default() {
-		entryAction__region0_Beverage_Preparation_Third_Step_r2_Sugar_OK();
+	private void enterSequence_oncycle_Beverage_Preparation_Third_Step_r2_Sugar_OK_default() {
+		entryAction_oncycle_Beverage_Preparation_Third_Step_r2_Sugar_OK();
 		nextStateIndex = 1;
-		stateVector[1] = State._region0_Beverage_Preparation_Third_Step_r2_Sugar_OK;
+		stateVector[1] = State.oncycle_Beverage_Preparation_Third_Step_r2_Sugar_OK;
+	}
+	
+	/* 'default' enter sequence for state Ready3 */
+	private void enterSequence_oncycle_Beverage_Preparation_Third_Step_r2_Ready3_default() {
+		nextStateIndex = 1;
+		stateVector[1] = State.oncycle_Beverage_Preparation_Third_Step_r2_Ready3;
 	}
 	
 	/* 'default' enter sequence for state Take beverage */
-	private void enterSequence__region0_Beverage_Preparation_Last_Step_r1_Take_beverage_default() {
-		entryAction__region0_Beverage_Preparation_Last_Step_r1_Take_beverage();
+	private void enterSequence_oncycle_Beverage_Preparation_Last_Step_r1_Take_beverage_default() {
+		entryAction_oncycle_Beverage_Preparation_Last_Step_r1_Take_beverage();
 		nextStateIndex = 0;
-		stateVector[0] = State._region0_Beverage_Preparation_Last_Step_r1_Take_beverage;
+		stateVector[0] = State.oncycle_Beverage_Preparation_Last_Step_r1_Take_beverage;
 	}
 	
 	/* 'default' enter sequence for state Waiting Infusion */
-	private void enterSequence__region0_Beverage_Preparation_Last_Step_r1_Waiting_Infusion_default() {
-		entryAction__region0_Beverage_Preparation_Last_Step_r1_Waiting_Infusion();
+	private void enterSequence_oncycle_Beverage_Preparation_Last_Step_r1_Waiting_Infusion_default() {
+		entryAction_oncycle_Beverage_Preparation_Last_Step_r1_Waiting_Infusion();
 		nextStateIndex = 0;
-		stateVector[0] = State._region0_Beverage_Preparation_Last_Step_r1_Waiting_Infusion;
+		stateVector[0] = State.oncycle_Beverage_Preparation_Last_Step_r1_Waiting_Infusion;
 	}
 	
 	/* 'default' enter sequence for state Remove TeaBag */
-	private void enterSequence__region0_Beverage_Preparation_Last_Step_r1_Remove_TeaBag_default() {
-		entryAction__region0_Beverage_Preparation_Last_Step_r1_Remove_TeaBag();
+	private void enterSequence_oncycle_Beverage_Preparation_Last_Step_r1_Remove_TeaBag_default() {
+		entryAction_oncycle_Beverage_Preparation_Last_Step_r1_Remove_TeaBag();
 		nextStateIndex = 0;
-		stateVector[0] = State._region0_Beverage_Preparation_Last_Step_r1_Remove_TeaBag;
+		stateVector[0] = State.oncycle_Beverage_Preparation_Last_Step_r1_Remove_TeaBag;
 	}
 	
 	/* 'default' enter sequence for state Take The Change */
-	private void enterSequence__region0_Take_The_Change_default() {
-		entryAction__region0_Take_The_Change();
+	private void enterSequence_oncycle_Take_The_Change_default() {
+		entryAction_oncycle_Take_The_Change();
 		nextStateIndex = 0;
-		stateVector[0] = State._region0_Take_The_Change;
+		stateVector[0] = State.oncycle_Take_The_Change;
 	}
 	
 	/* 'default' enter sequence for state PaymentByCoins */
@@ -2178,9 +2467,9 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		stateVector[3] = State.paymentByNFC_Blocked;
 	}
 	
-	/* 'default' enter sequence for region  */
-	private void enterSequence__region0_default() {
-		react__region0__entry_Default();
+	/* 'default' enter sequence for region oncycle */
+	private void enterSequence_oncycle_default() {
+		react_oncycle__entry_Default();
 	}
 	
 	/* 'default' enter sequence for region PaymentByCoins */
@@ -2194,238 +2483,292 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	}
 	
 	/* Default exit sequence for state Waiting */
-	private void exitSequence__region0_Waiting() {
+	private void exitSequence_oncycle_Waiting() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state Cleaning */
-	private void exitSequence__region0_Cleaning() {
+	private void exitSequence_oncycle_Cleaning() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 		
-		exitAction__region0_Cleaning();
+		exitAction_oncycle_Cleaning();
 	}
 	
 	/* Default exit sequence for state Payment Done */
-	private void exitSequence__region0_Payment_Done() {
+	private void exitSequence_oncycle_Payment_Done() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 		
-		exitAction__region0_Payment_Done();
+		exitAction_oncycle_Payment_Done();
 	}
 	
 	/* Default exit sequence for state Beverage Choice */
-	private void exitSequence__region0_Beverage_Choice() {
+	private void exitSequence_oncycle_Beverage_Choice() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 		
-		exitAction__region0_Beverage_Choice();
+		exitAction_oncycle_Beverage_Choice();
 	}
 	
 	/* Default exit sequence for state Beverage Preparation First Step */
-	private void exitSequence__region0_Beverage_Preparation_First_Step() {
-		exitSequence__region0_Beverage_Preparation_First_Step_r1();
-		exitSequence__region0_Beverage_Preparation_First_Step_r2();
+	private void exitSequence_oncycle_Beverage_Preparation_First_Step() {
+		exitSequence_oncycle_Beverage_Preparation_First_Step_r1();
+		exitSequence_oncycle_Beverage_Preparation_First_Step_r2();
 	}
 	
 	/* Default exit sequence for state Start Water Heating */
-	private void exitSequence__region0_Beverage_Preparation_First_Step_r1_Start_Water_Heating() {
+	private void exitSequence_oncycle_Beverage_Preparation_First_Step_r1_Start_Water_Heating() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 		
-		exitAction__region0_Beverage_Preparation_First_Step_r1_Start_Water_Heating();
+		exitAction_oncycle_Beverage_Preparation_First_Step_r1_Start_Water_Heating();
 	}
 	
 	/* Default exit sequence for state Water Heating ON */
-	private void exitSequence__region0_Beverage_Preparation_First_Step_r1_Water_Heating_ON() {
+	private void exitSequence_oncycle_Beverage_Preparation_First_Step_r1_Water_Heating_ON() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state CoffeeSelected */
-	private void exitSequence__region0_Beverage_Preparation_First_Step_r2_CoffeeSelected() {
+	private void exitSequence_oncycle_Beverage_Preparation_First_Step_r2_CoffeeSelected() {
 		nextStateIndex = 1;
 		stateVector[1] = State.$NullState$;
 		
-		exitAction__region0_Beverage_Preparation_First_Step_r2_CoffeeSelected();
+		exitAction_oncycle_Beverage_Preparation_First_Step_r2_CoffeeSelected();
 	}
 	
 	/* Default exit sequence for state Ready */
-	private void exitSequence__region0_Beverage_Preparation_First_Step_r2_Ready() {
+	private void exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Ready() {
 		nextStateIndex = 1;
 		stateVector[1] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state TeaSelected */
-	private void exitSequence__region0_Beverage_Preparation_First_Step_r2_TeaSelected() {
+	private void exitSequence_oncycle_Beverage_Preparation_First_Step_r2_TeaSelected() {
 		nextStateIndex = 1;
 		stateVector[1] = State.$NullState$;
 		
-		exitAction__region0_Beverage_Preparation_First_Step_r2_TeaSelected();
+		exitAction_oncycle_Beverage_Preparation_First_Step_r2_TeaSelected();
 	}
 	
 	/* Default exit sequence for state ExpressoSelected */
-	private void exitSequence__region0_Beverage_Preparation_First_Step_r2_ExpressoSelected() {
+	private void exitSequence_oncycle_Beverage_Preparation_First_Step_r2_ExpressoSelected() {
 		nextStateIndex = 1;
 		stateVector[1] = State.$NullState$;
 		
-		exitAction__region0_Beverage_Preparation_First_Step_r2_ExpressoSelected();
+		exitAction_oncycle_Beverage_Preparation_First_Step_r2_ExpressoSelected();
 	}
 	
 	/* Default exit sequence for state Pod In Place */
-	private void exitSequence__region0_Beverage_Preparation_First_Step_r2_Pod_In_Place() {
+	private void exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Pod_In_Place() {
 		nextStateIndex = 1;
 		stateVector[1] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state Tea Bag In Place */
-	private void exitSequence__region0_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place() {
+	private void exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place() {
 		nextStateIndex = 1;
 		stateVector[1] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state Grain Crushing OK */
-	private void exitSequence__region0_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK() {
+	private void exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK() {
 		nextStateIndex = 1;
 		stateVector[1] = State.$NullState$;
-	}
-	
-	/* Default exit sequence for state Beverage Preparation Second Step */
-	private void exitSequence__region0_Beverage_Preparation_Second_Step() {
-		exitSequence__region0_Beverage_Preparation_Second_Step_r1();
-		exitSequence__region0_Beverage_Preparation_Second_Step_r2();
-	}
-	
-	/* Default exit sequence for state Waiting Water Temperature */
-	private void exitSequence__region0_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature() {
-		nextStateIndex = 0;
-		stateVector[0] = State.$NullState$;
-		
-		exitAction__region0_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature();
-	}
-	
-	/* Default exit sequence for state Water Temperature OK */
-	private void exitSequence__region0_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK() {
-		nextStateIndex = 0;
-		stateVector[0] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state Waiting Cup  */
-	private void exitSequence__region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup_() {
+	private void exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Waiting_Cup_() {
 		nextStateIndex = 1;
 		stateVector[1] = State.$NullState$;
-	}
-	
-	/* Default exit sequence for state Waiting Grain Pack */
-	private void exitSequence__region0_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack() {
-		nextStateIndex = 1;
-		stateVector[1] = State.$NullState$;
-		
-		exitAction__region0_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack();
 	}
 	
 	/* Default exit sequence for state Cup In Place */
-	private void exitSequence__region0_Beverage_Preparation_Second_Step_r2_Cup_In_Place() {
-		nextStateIndex = 1;
-		stateVector[1] = State.$NullState$;
-	}
-	
-	/* Default exit sequence for state Grain Packing OK */
-	private void exitSequence__region0_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK() {
-		nextStateIndex = 1;
-		stateVector[1] = State.$NullState$;
-	}
-	
-	/* Default exit sequence for state Ready2 */
-	private void exitSequence__region0_Beverage_Preparation_Second_Step_r2_Ready2() {
+	private void exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Cup_In_Place() {
 		nextStateIndex = 1;
 		stateVector[1] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state Own Cup OK */
-	private void exitSequence__region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK() {
+	private void exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Own_Cup_OK() {
 		nextStateIndex = 1;
 		stateVector[1] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state Cup Need */
-	private void exitSequence__region0_Beverage_Preparation_Second_Step_r2_Cup_Need() {
+	private void exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Cup_Need() {
 		nextStateIndex = 1;
 		stateVector[1] = State.$NullState$;
 		
-		exitAction__region0_Beverage_Preparation_Second_Step_r2_Cup_Need();
+		exitAction_oncycle_Beverage_Preparation_First_Step_r2_Cup_Need();
 	}
 	
-	/* Default exit sequence for state Beverage Preparation Third Step */
-	private void exitSequence__region0_Beverage_Preparation_Third_Step() {
-		exitSequence__region0_Beverage_Preparation_Third_Step_r1();
-		exitSequence__region0_Beverage_Preparation_Third_Step_r2();
+	/* Default exit sequence for state Beverage Preparation Second Step */
+	private void exitSequence_oncycle_Beverage_Preparation_Second_Step() {
+		exitSequence_oncycle_Beverage_Preparation_Second_Step_r1();
+		exitSequence_oncycle_Beverage_Preparation_Second_Step_r2();
 	}
 	
-	/* Default exit sequence for state Start Water Flowing */
-	private void exitSequence__region0_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing() {
+	/* Default exit sequence for state Waiting Water Temperature */
+	private void exitSequence_oncycle_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 		
-		exitAction__region0_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing();
+		exitAction_oncycle_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature();
+	}
+	
+	/* Default exit sequence for state Water Temperature OK */
+	private void exitSequence_oncycle_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state Waiting Cup  */
+	private void exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Cup_() {
+		nextStateIndex = 1;
+		stateVector[1] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state Waiting Grain Pack */
+	private void exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack() {
+		nextStateIndex = 1;
+		stateVector[1] = State.$NullState$;
+		
+		exitAction_oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack();
+	}
+	
+	/* Default exit sequence for state Cup In Place */
+	private void exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Cup_In_Place() {
+		nextStateIndex = 1;
+		stateVector[1] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state Grain Packing OK */
+	private void exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK() {
+		nextStateIndex = 1;
+		stateVector[1] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state Ready2 */
+	private void exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Ready2() {
+		nextStateIndex = 1;
+		stateVector[1] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state Own Cup OK */
+	private void exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Own_Cup_OK() {
+		nextStateIndex = 1;
+		stateVector[1] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state Cup Need */
+	private void exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Cup_Need() {
+		nextStateIndex = 1;
+		stateVector[1] = State.$NullState$;
+		
+		exitAction_oncycle_Beverage_Preparation_Second_Step_r2_Cup_Need();
+	}
+	
+	/* Default exit sequence for state SoupSelected */
+	private void exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_SoupSelected() {
+		nextStateIndex = 1;
+		stateVector[1] = State.$NullState$;
+		
+		exitAction_oncycle_Beverage_Preparation_Second_Step_r2_SoupSelected();
+	}
+	
+	/* Default exit sequence for state Soup Pod OK */
+	private void exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Soup_Pod_OK() {
+		nextStateIndex = 1;
+		stateVector[1] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state Add Spicy */
+	private void exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Add_Spicy() {
+		nextStateIndex = 1;
+		stateVector[1] = State.$NullState$;
+		
+		exitAction_oncycle_Beverage_Preparation_Second_Step_r2_Add_Spicy();
+	}
+	
+	/* Default exit sequence for state Beverage Preparation Third Step */
+	private void exitSequence_oncycle_Beverage_Preparation_Third_Step() {
+		exitSequence_oncycle_Beverage_Preparation_Third_Step_r1();
+		exitSequence_oncycle_Beverage_Preparation_Third_Step_r2();
+	}
+	
+	/* Default exit sequence for state Start Water Flowing */
+	private void exitSequence_oncycle_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+		
+		exitAction_oncycle_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing();
 	}
 	
 	/* Default exit sequence for state Water Flowing OK */
-	private void exitSequence__region0_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK() {
+	private void exitSequence_oncycle_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state Add Sugar */
-	private void exitSequence__region0_Beverage_Preparation_Third_Step_r2_Add_Sugar() {
+	private void exitSequence_oncycle_Beverage_Preparation_Third_Step_r2_Add_Sugar() {
 		nextStateIndex = 1;
 		stateVector[1] = State.$NullState$;
 		
-		exitAction__region0_Beverage_Preparation_Third_Step_r2_Add_Sugar();
+		exitAction_oncycle_Beverage_Preparation_Third_Step_r2_Add_Sugar();
 	}
 	
 	/* Default exit sequence for state Sugar OK */
-	private void exitSequence__region0_Beverage_Preparation_Third_Step_r2_Sugar_OK() {
+	private void exitSequence_oncycle_Beverage_Preparation_Third_Step_r2_Sugar_OK() {
+		nextStateIndex = 1;
+		stateVector[1] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state Ready3 */
+	private void exitSequence_oncycle_Beverage_Preparation_Third_Step_r2_Ready3() {
 		nextStateIndex = 1;
 		stateVector[1] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state Beverage Preparation Last Step */
-	private void exitSequence__region0_Beverage_Preparation_Last_Step() {
-		exitSequence__region0_Beverage_Preparation_Last_Step_r1();
+	private void exitSequence_oncycle_Beverage_Preparation_Last_Step() {
+		exitSequence_oncycle_Beverage_Preparation_Last_Step_r1();
 	}
 	
 	/* Default exit sequence for state Take beverage */
-	private void exitSequence__region0_Beverage_Preparation_Last_Step_r1_Take_beverage() {
+	private void exitSequence_oncycle_Beverage_Preparation_Last_Step_r1_Take_beverage() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 		
-		exitAction__region0_Beverage_Preparation_Last_Step_r1_Take_beverage();
+		exitAction_oncycle_Beverage_Preparation_Last_Step_r1_Take_beverage();
 	}
 	
 	/* Default exit sequence for state Waiting Infusion */
-	private void exitSequence__region0_Beverage_Preparation_Last_Step_r1_Waiting_Infusion() {
+	private void exitSequence_oncycle_Beverage_Preparation_Last_Step_r1_Waiting_Infusion() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 		
-		exitAction__region0_Beverage_Preparation_Last_Step_r1_Waiting_Infusion();
+		exitAction_oncycle_Beverage_Preparation_Last_Step_r1_Waiting_Infusion();
 	}
 	
 	/* Default exit sequence for state Remove TeaBag */
-	private void exitSequence__region0_Beverage_Preparation_Last_Step_r1_Remove_TeaBag() {
+	private void exitSequence_oncycle_Beverage_Preparation_Last_Step_r1_Remove_TeaBag() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 		
-		exitAction__region0_Beverage_Preparation_Last_Step_r1_Remove_TeaBag();
+		exitAction_oncycle_Beverage_Preparation_Last_Step_r1_Remove_TeaBag();
 	}
 	
 	/* Default exit sequence for state Take The Change */
-	private void exitSequence__region0_Take_The_Change() {
+	private void exitSequence_oncycle_Take_The_Change() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 		
-		exitAction__region0_Take_The_Change();
+		exitAction_oncycle_Take_The_Change();
 	}
 	
 	/* Default exit sequence for state PaymentByCoins */
@@ -2492,103 +2835,127 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		exitAction_PaymentByNFC_Blocked();
 	}
 	
-	/* Default exit sequence for region  */
-	private void exitSequence__region0() {
+	/* Default exit sequence for region oncycle */
+	private void exitSequence_oncycle() {
 		switch (stateVector[0]) {
-		case _region0_Waiting:
-			exitSequence__region0_Waiting();
+		case oncycle_Waiting:
+			exitSequence_oncycle_Waiting();
 			break;
-		case _region0_Cleaning:
-			exitSequence__region0_Cleaning();
+		case oncycle_Cleaning:
+			exitSequence_oncycle_Cleaning();
 			break;
-		case _region0_Payment_Done:
-			exitSequence__region0_Payment_Done();
+		case oncycle_Payment_Done:
+			exitSequence_oncycle_Payment_Done();
 			break;
-		case _region0_Beverage_Choice:
-			exitSequence__region0_Beverage_Choice();
+		case oncycle_Beverage_Choice:
+			exitSequence_oncycle_Beverage_Choice();
 			break;
-		case _region0_Beverage_Preparation_First_Step_r1_Start_Water_Heating:
-			exitSequence__region0_Beverage_Preparation_First_Step_r1_Start_Water_Heating();
+		case oncycle_Beverage_Preparation_First_Step_r1_Start_Water_Heating:
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r1_Start_Water_Heating();
 			break;
-		case _region0_Beverage_Preparation_First_Step_r1_Water_Heating_ON:
-			exitSequence__region0_Beverage_Preparation_First_Step_r1_Water_Heating_ON();
+		case oncycle_Beverage_Preparation_First_Step_r1_Water_Heating_ON:
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r1_Water_Heating_ON();
 			break;
-		case _region0_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature:
-			exitSequence__region0_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature();
+		case oncycle_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature:
+			exitSequence_oncycle_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature();
 			break;
-		case _region0_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK:
-			exitSequence__region0_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK();
+		case oncycle_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK:
+			exitSequence_oncycle_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK();
 			break;
-		case _region0_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing:
-			exitSequence__region0_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing();
+		case oncycle_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing:
+			exitSequence_oncycle_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing();
 			break;
-		case _region0_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK:
-			exitSequence__region0_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK();
+		case oncycle_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK:
+			exitSequence_oncycle_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK();
 			break;
-		case _region0_Beverage_Preparation_Last_Step_r1_Take_beverage:
-			exitSequence__region0_Beverage_Preparation_Last_Step_r1_Take_beverage();
+		case oncycle_Beverage_Preparation_Last_Step_r1_Take_beverage:
+			exitSequence_oncycle_Beverage_Preparation_Last_Step_r1_Take_beverage();
 			break;
-		case _region0_Beverage_Preparation_Last_Step_r1_Waiting_Infusion:
-			exitSequence__region0_Beverage_Preparation_Last_Step_r1_Waiting_Infusion();
+		case oncycle_Beverage_Preparation_Last_Step_r1_Waiting_Infusion:
+			exitSequence_oncycle_Beverage_Preparation_Last_Step_r1_Waiting_Infusion();
 			break;
-		case _region0_Beverage_Preparation_Last_Step_r1_Remove_TeaBag:
-			exitSequence__region0_Beverage_Preparation_Last_Step_r1_Remove_TeaBag();
+		case oncycle_Beverage_Preparation_Last_Step_r1_Remove_TeaBag:
+			exitSequence_oncycle_Beverage_Preparation_Last_Step_r1_Remove_TeaBag();
 			break;
-		case _region0_Take_The_Change:
-			exitSequence__region0_Take_The_Change();
+		case oncycle_Take_The_Change:
+			exitSequence_oncycle_Take_The_Change();
 			break;
 		default:
 			break;
 		}
 		
 		switch (stateVector[1]) {
-		case _region0_Beverage_Preparation_First_Step_r2_CoffeeSelected:
-			exitSequence__region0_Beverage_Preparation_First_Step_r2_CoffeeSelected();
+		case oncycle_Beverage_Preparation_First_Step_r2_CoffeeSelected:
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r2_CoffeeSelected();
 			break;
-		case _region0_Beverage_Preparation_First_Step_r2_Ready:
-			exitSequence__region0_Beverage_Preparation_First_Step_r2_Ready();
+		case oncycle_Beverage_Preparation_First_Step_r2_Ready:
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Ready();
 			break;
-		case _region0_Beverage_Preparation_First_Step_r2_TeaSelected:
-			exitSequence__region0_Beverage_Preparation_First_Step_r2_TeaSelected();
+		case oncycle_Beverage_Preparation_First_Step_r2_TeaSelected:
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r2_TeaSelected();
 			break;
-		case _region0_Beverage_Preparation_First_Step_r2_ExpressoSelected:
-			exitSequence__region0_Beverage_Preparation_First_Step_r2_ExpressoSelected();
+		case oncycle_Beverage_Preparation_First_Step_r2_ExpressoSelected:
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r2_ExpressoSelected();
 			break;
-		case _region0_Beverage_Preparation_First_Step_r2_Pod_In_Place:
-			exitSequence__region0_Beverage_Preparation_First_Step_r2_Pod_In_Place();
+		case oncycle_Beverage_Preparation_First_Step_r2_Pod_In_Place:
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Pod_In_Place();
 			break;
-		case _region0_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place:
-			exitSequence__region0_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place();
+		case oncycle_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place:
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place();
 			break;
-		case _region0_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK:
-			exitSequence__region0_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK();
+		case oncycle_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK:
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK();
 			break;
-		case _region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup_:
-			exitSequence__region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup_();
+		case oncycle_Beverage_Preparation_First_Step_r2_Waiting_Cup_:
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Waiting_Cup_();
 			break;
-		case _region0_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack:
-			exitSequence__region0_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack();
+		case oncycle_Beverage_Preparation_First_Step_r2_Cup_In_Place:
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Cup_In_Place();
 			break;
-		case _region0_Beverage_Preparation_Second_Step_r2_Cup_In_Place:
-			exitSequence__region0_Beverage_Preparation_Second_Step_r2_Cup_In_Place();
+		case oncycle_Beverage_Preparation_First_Step_r2_Own_Cup_OK:
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Own_Cup_OK();
 			break;
-		case _region0_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK:
-			exitSequence__region0_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK();
+		case oncycle_Beverage_Preparation_First_Step_r2_Cup_Need:
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Cup_Need();
 			break;
-		case _region0_Beverage_Preparation_Second_Step_r2_Ready2:
-			exitSequence__region0_Beverage_Preparation_Second_Step_r2_Ready2();
+		case oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Cup_:
+			exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Cup_();
 			break;
-		case _region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK:
-			exitSequence__region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK();
+		case oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack:
+			exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack();
 			break;
-		case _region0_Beverage_Preparation_Second_Step_r2_Cup_Need:
-			exitSequence__region0_Beverage_Preparation_Second_Step_r2_Cup_Need();
+		case oncycle_Beverage_Preparation_Second_Step_r2_Cup_In_Place:
+			exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Cup_In_Place();
 			break;
-		case _region0_Beverage_Preparation_Third_Step_r2_Add_Sugar:
-			exitSequence__region0_Beverage_Preparation_Third_Step_r2_Add_Sugar();
+		case oncycle_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK:
+			exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK();
 			break;
-		case _region0_Beverage_Preparation_Third_Step_r2_Sugar_OK:
-			exitSequence__region0_Beverage_Preparation_Third_Step_r2_Sugar_OK();
+		case oncycle_Beverage_Preparation_Second_Step_r2_Ready2:
+			exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Ready2();
+			break;
+		case oncycle_Beverage_Preparation_Second_Step_r2_Own_Cup_OK:
+			exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Own_Cup_OK();
+			break;
+		case oncycle_Beverage_Preparation_Second_Step_r2_Cup_Need:
+			exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Cup_Need();
+			break;
+		case oncycle_Beverage_Preparation_Second_Step_r2_SoupSelected:
+			exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_SoupSelected();
+			break;
+		case oncycle_Beverage_Preparation_Second_Step_r2_Soup_Pod_OK:
+			exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Soup_Pod_OK();
+			break;
+		case oncycle_Beverage_Preparation_Second_Step_r2_Add_Spicy:
+			exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Add_Spicy();
+			break;
+		case oncycle_Beverage_Preparation_Third_Step_r2_Add_Sugar:
+			exitSequence_oncycle_Beverage_Preparation_Third_Step_r2_Add_Sugar();
+			break;
+		case oncycle_Beverage_Preparation_Third_Step_r2_Sugar_OK:
+			exitSequence_oncycle_Beverage_Preparation_Third_Step_r2_Sugar_OK();
+			break;
+		case oncycle_Beverage_Preparation_Third_Step_r2_Ready3:
+			exitSequence_oncycle_Beverage_Preparation_Third_Step_r2_Ready3();
 			break;
 		default:
 			break;
@@ -2596,13 +2963,13 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	}
 	
 	/* Default exit sequence for region r1 */
-	private void exitSequence__region0_Beverage_Preparation_First_Step_r1() {
+	private void exitSequence_oncycle_Beverage_Preparation_First_Step_r1() {
 		switch (stateVector[0]) {
-		case _region0_Beverage_Preparation_First_Step_r1_Start_Water_Heating:
-			exitSequence__region0_Beverage_Preparation_First_Step_r1_Start_Water_Heating();
+		case oncycle_Beverage_Preparation_First_Step_r1_Start_Water_Heating:
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r1_Start_Water_Heating();
 			break;
-		case _region0_Beverage_Preparation_First_Step_r1_Water_Heating_ON:
-			exitSequence__region0_Beverage_Preparation_First_Step_r1_Water_Heating_ON();
+		case oncycle_Beverage_Preparation_First_Step_r1_Water_Heating_ON:
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r1_Water_Heating_ON();
 			break;
 		default:
 			break;
@@ -2610,28 +2977,40 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	}
 	
 	/* Default exit sequence for region r2 */
-	private void exitSequence__region0_Beverage_Preparation_First_Step_r2() {
+	private void exitSequence_oncycle_Beverage_Preparation_First_Step_r2() {
 		switch (stateVector[1]) {
-		case _region0_Beverage_Preparation_First_Step_r2_CoffeeSelected:
-			exitSequence__region0_Beverage_Preparation_First_Step_r2_CoffeeSelected();
+		case oncycle_Beverage_Preparation_First_Step_r2_CoffeeSelected:
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r2_CoffeeSelected();
 			break;
-		case _region0_Beverage_Preparation_First_Step_r2_Ready:
-			exitSequence__region0_Beverage_Preparation_First_Step_r2_Ready();
+		case oncycle_Beverage_Preparation_First_Step_r2_Ready:
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Ready();
 			break;
-		case _region0_Beverage_Preparation_First_Step_r2_TeaSelected:
-			exitSequence__region0_Beverage_Preparation_First_Step_r2_TeaSelected();
+		case oncycle_Beverage_Preparation_First_Step_r2_TeaSelected:
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r2_TeaSelected();
 			break;
-		case _region0_Beverage_Preparation_First_Step_r2_ExpressoSelected:
-			exitSequence__region0_Beverage_Preparation_First_Step_r2_ExpressoSelected();
+		case oncycle_Beverage_Preparation_First_Step_r2_ExpressoSelected:
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r2_ExpressoSelected();
 			break;
-		case _region0_Beverage_Preparation_First_Step_r2_Pod_In_Place:
-			exitSequence__region0_Beverage_Preparation_First_Step_r2_Pod_In_Place();
+		case oncycle_Beverage_Preparation_First_Step_r2_Pod_In_Place:
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Pod_In_Place();
 			break;
-		case _region0_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place:
-			exitSequence__region0_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place();
+		case oncycle_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place:
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place();
 			break;
-		case _region0_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK:
-			exitSequence__region0_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK();
+		case oncycle_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK:
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK();
+			break;
+		case oncycle_Beverage_Preparation_First_Step_r2_Waiting_Cup_:
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Waiting_Cup_();
+			break;
+		case oncycle_Beverage_Preparation_First_Step_r2_Cup_In_Place:
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Cup_In_Place();
+			break;
+		case oncycle_Beverage_Preparation_First_Step_r2_Own_Cup_OK:
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Own_Cup_OK();
+			break;
+		case oncycle_Beverage_Preparation_First_Step_r2_Cup_Need:
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Cup_Need();
 			break;
 		default:
 			break;
@@ -2639,13 +3018,13 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	}
 	
 	/* Default exit sequence for region r1 */
-	private void exitSequence__region0_Beverage_Preparation_Second_Step_r1() {
+	private void exitSequence_oncycle_Beverage_Preparation_Second_Step_r1() {
 		switch (stateVector[0]) {
-		case _region0_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature:
-			exitSequence__region0_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature();
+		case oncycle_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature:
+			exitSequence_oncycle_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature();
 			break;
-		case _region0_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK:
-			exitSequence__region0_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK();
+		case oncycle_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK:
+			exitSequence_oncycle_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK();
 			break;
 		default:
 			break;
@@ -2653,28 +3032,37 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	}
 	
 	/* Default exit sequence for region r2 */
-	private void exitSequence__region0_Beverage_Preparation_Second_Step_r2() {
+	private void exitSequence_oncycle_Beverage_Preparation_Second_Step_r2() {
 		switch (stateVector[1]) {
-		case _region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup_:
-			exitSequence__region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup_();
+		case oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Cup_:
+			exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Cup_();
 			break;
-		case _region0_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack:
-			exitSequence__region0_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack();
+		case oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack:
+			exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack();
 			break;
-		case _region0_Beverage_Preparation_Second_Step_r2_Cup_In_Place:
-			exitSequence__region0_Beverage_Preparation_Second_Step_r2_Cup_In_Place();
+		case oncycle_Beverage_Preparation_Second_Step_r2_Cup_In_Place:
+			exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Cup_In_Place();
 			break;
-		case _region0_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK:
-			exitSequence__region0_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK();
+		case oncycle_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK:
+			exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK();
 			break;
-		case _region0_Beverage_Preparation_Second_Step_r2_Ready2:
-			exitSequence__region0_Beverage_Preparation_Second_Step_r2_Ready2();
+		case oncycle_Beverage_Preparation_Second_Step_r2_Ready2:
+			exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Ready2();
 			break;
-		case _region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK:
-			exitSequence__region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK();
+		case oncycle_Beverage_Preparation_Second_Step_r2_Own_Cup_OK:
+			exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Own_Cup_OK();
 			break;
-		case _region0_Beverage_Preparation_Second_Step_r2_Cup_Need:
-			exitSequence__region0_Beverage_Preparation_Second_Step_r2_Cup_Need();
+		case oncycle_Beverage_Preparation_Second_Step_r2_Cup_Need:
+			exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Cup_Need();
+			break;
+		case oncycle_Beverage_Preparation_Second_Step_r2_SoupSelected:
+			exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_SoupSelected();
+			break;
+		case oncycle_Beverage_Preparation_Second_Step_r2_Soup_Pod_OK:
+			exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Soup_Pod_OK();
+			break;
+		case oncycle_Beverage_Preparation_Second_Step_r2_Add_Spicy:
+			exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Add_Spicy();
 			break;
 		default:
 			break;
@@ -2682,13 +3070,13 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	}
 	
 	/* Default exit sequence for region r1 */
-	private void exitSequence__region0_Beverage_Preparation_Third_Step_r1() {
+	private void exitSequence_oncycle_Beverage_Preparation_Third_Step_r1() {
 		switch (stateVector[0]) {
-		case _region0_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing:
-			exitSequence__region0_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing();
+		case oncycle_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing:
+			exitSequence_oncycle_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing();
 			break;
-		case _region0_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK:
-			exitSequence__region0_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK();
+		case oncycle_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK:
+			exitSequence_oncycle_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK();
 			break;
 		default:
 			break;
@@ -2696,13 +3084,16 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	}
 	
 	/* Default exit sequence for region r2 */
-	private void exitSequence__region0_Beverage_Preparation_Third_Step_r2() {
+	private void exitSequence_oncycle_Beverage_Preparation_Third_Step_r2() {
 		switch (stateVector[1]) {
-		case _region0_Beverage_Preparation_Third_Step_r2_Add_Sugar:
-			exitSequence__region0_Beverage_Preparation_Third_Step_r2_Add_Sugar();
+		case oncycle_Beverage_Preparation_Third_Step_r2_Add_Sugar:
+			exitSequence_oncycle_Beverage_Preparation_Third_Step_r2_Add_Sugar();
 			break;
-		case _region0_Beverage_Preparation_Third_Step_r2_Sugar_OK:
-			exitSequence__region0_Beverage_Preparation_Third_Step_r2_Sugar_OK();
+		case oncycle_Beverage_Preparation_Third_Step_r2_Sugar_OK:
+			exitSequence_oncycle_Beverage_Preparation_Third_Step_r2_Sugar_OK();
+			break;
+		case oncycle_Beverage_Preparation_Third_Step_r2_Ready3:
+			exitSequence_oncycle_Beverage_Preparation_Third_Step_r2_Ready3();
 			break;
 		default:
 			break;
@@ -2710,16 +3101,16 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	}
 	
 	/* Default exit sequence for region r1 */
-	private void exitSequence__region0_Beverage_Preparation_Last_Step_r1() {
+	private void exitSequence_oncycle_Beverage_Preparation_Last_Step_r1() {
 		switch (stateVector[0]) {
-		case _region0_Beverage_Preparation_Last_Step_r1_Take_beverage:
-			exitSequence__region0_Beverage_Preparation_Last_Step_r1_Take_beverage();
+		case oncycle_Beverage_Preparation_Last_Step_r1_Take_beverage:
+			exitSequence_oncycle_Beverage_Preparation_Last_Step_r1_Take_beverage();
 			break;
-		case _region0_Beverage_Preparation_Last_Step_r1_Waiting_Infusion:
-			exitSequence__region0_Beverage_Preparation_Last_Step_r1_Waiting_Infusion();
+		case oncycle_Beverage_Preparation_Last_Step_r1_Waiting_Infusion:
+			exitSequence_oncycle_Beverage_Preparation_Last_Step_r1_Waiting_Infusion();
 			break;
-		case _region0_Beverage_Preparation_Last_Step_r1_Remove_TeaBag:
-			exitSequence__region0_Beverage_Preparation_Last_Step_r1_Remove_TeaBag();
+		case oncycle_Beverage_Preparation_Last_Step_r1_Remove_TeaBag:
+			exitSequence_oncycle_Beverage_Preparation_Last_Step_r1_Remove_TeaBag();
 			break;
 		default:
 			break;
@@ -2767,48 +3158,79 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	}
 	
 	/* The reactions of state null. */
-	private void react__region0_Beverage_Preparation_First_Step_r2__choice_0() {
-		if (check__region0_Beverage_Preparation_First_Step_r2__choice_0_tr0_tr0()) {
-			effect__region0_Beverage_Preparation_First_Step_r2__choice_0_tr0();
+	private void react_oncycle_Beverage_Preparation_First_Step_r2__choice_0() {
+		if (check_oncycle_Beverage_Preparation_First_Step_r2__choice_0_tr0_tr0()) {
+			effect_oncycle_Beverage_Preparation_First_Step_r2__choice_0_tr0();
 		} else {
-			if (check__region0_Beverage_Preparation_First_Step_r2__choice_0_tr1_tr1()) {
-				effect__region0_Beverage_Preparation_First_Step_r2__choice_0_tr1();
+			if (check_oncycle_Beverage_Preparation_First_Step_r2__choice_0_tr1_tr1()) {
+				effect_oncycle_Beverage_Preparation_First_Step_r2__choice_0_tr1();
 			} else {
-				effect__region0_Beverage_Preparation_First_Step_r2__choice_0_tr2();
+				if (check_oncycle_Beverage_Preparation_First_Step_r2__choice_0_tr2_tr2()) {
+					effect_oncycle_Beverage_Preparation_First_Step_r2__choice_0_tr2();
+				} else {
+					effect_oncycle_Beverage_Preparation_First_Step_r2__choice_0_tr3();
+				}
 			}
 		}
 	}
 	
 	/* The reactions of state null. */
-	private void react__region0_Beverage_Preparation_Second_Step_r2__choice_0() {
-		if (check__region0_Beverage_Preparation_Second_Step_r2__choice_0_tr0_tr0()) {
-			effect__region0_Beverage_Preparation_Second_Step_r2__choice_0_tr0();
+	private void react_oncycle_Beverage_Preparation_First_Step_r2__choice_1() {
+		if (check_oncycle_Beverage_Preparation_First_Step_r2__choice_1_tr0_tr0()) {
+			effect_oncycle_Beverage_Preparation_First_Step_r2__choice_1_tr0();
 		} else {
-			effect__region0_Beverage_Preparation_Second_Step_r2__choice_0_tr1();
+			effect_oncycle_Beverage_Preparation_First_Step_r2__choice_1_tr1();
 		}
 	}
 	
 	/* The reactions of state null. */
-	private void react__region0_Beverage_Preparation_Second_Step_r2__choice_1() {
-		if (check__region0_Beverage_Preparation_Second_Step_r2__choice_1_tr0_tr0()) {
-			effect__region0_Beverage_Preparation_Second_Step_r2__choice_1_tr0();
+	private void react_oncycle_Beverage_Preparation_Second_Step_r2__choice_0() {
+		if (check_oncycle_Beverage_Preparation_Second_Step_r2__choice_0_tr0_tr0()) {
+			effect_oncycle_Beverage_Preparation_Second_Step_r2__choice_0_tr0();
 		} else {
-			effect__region0_Beverage_Preparation_Second_Step_r2__choice_1_tr1();
+			effect_oncycle_Beverage_Preparation_Second_Step_r2__choice_0_tr1();
 		}
 	}
 	
 	/* The reactions of state null. */
-	private void react__region0_Beverage_Preparation_Last_Step_r1__choice_0() {
-		if (check__region0_Beverage_Preparation_Last_Step_r1__choice_0_tr0_tr0()) {
-			effect__region0_Beverage_Preparation_Last_Step_r1__choice_0_tr0();
+	private void react_oncycle_Beverage_Preparation_Second_Step_r2__choice_1() {
+		if (check_oncycle_Beverage_Preparation_Second_Step_r2__choice_1_tr0_tr0()) {
+			effect_oncycle_Beverage_Preparation_Second_Step_r2__choice_1_tr0();
 		} else {
-			effect__region0_Beverage_Preparation_Last_Step_r1__choice_0_tr1();
+			effect_oncycle_Beverage_Preparation_Second_Step_r2__choice_1_tr1();
+		}
+	}
+	
+	/* The reactions of state null. */
+	private void react_oncycle_Beverage_Preparation_Second_Step_r2__choice_2() {
+		if (check_oncycle_Beverage_Preparation_Second_Step_r2__choice_2_tr1_tr1()) {
+			effect_oncycle_Beverage_Preparation_Second_Step_r2__choice_2_tr1();
+		} else {
+			effect_oncycle_Beverage_Preparation_Second_Step_r2__choice_2_tr0();
+		}
+	}
+	
+	/* The reactions of state null. */
+	private void react_oncycle_Beverage_Preparation_Third_Step_r2__choice_0() {
+		if (check_oncycle_Beverage_Preparation_Third_Step_r2__choice_0_tr1_tr1()) {
+			effect_oncycle_Beverage_Preparation_Third_Step_r2__choice_0_tr1();
+		} else {
+			effect_oncycle_Beverage_Preparation_Third_Step_r2__choice_0_tr0();
+		}
+	}
+	
+	/* The reactions of state null. */
+	private void react_oncycle_Beverage_Preparation_Last_Step_r1__choice_0() {
+		if (check_oncycle_Beverage_Preparation_Last_Step_r1__choice_0_tr0_tr0()) {
+			effect_oncycle_Beverage_Preparation_Last_Step_r1__choice_0_tr0();
+		} else {
+			effect_oncycle_Beverage_Preparation_Last_Step_r1__choice_0_tr1();
 		}
 	}
 	
 	/* Default react sequence for initial entry  */
-	private void react__region0__entry_Default() {
-		enterSequence__region0_Waiting_default();
+	private void react_oncycle__entry_Default() {
+		enterSequence_oncycle_Waiting_default();
 	}
 	
 	/* Default react sequence for initial entry  */
@@ -2822,41 +3244,41 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	}
 	
 	/* The reactions of state null. */
-	private void react__region0__sync0() {
-		enterSequence__region0_Beverage_Preparation_First_Step_r1_Start_Water_Heating_default();
-		react__region0_Beverage_Preparation_First_Step_r2__choice_0();
+	private void react_oncycle__sync0() {
+		enterSequence_oncycle_Beverage_Preparation_First_Step_r1_Start_Water_Heating_default();
+		react_oncycle_Beverage_Preparation_First_Step_r2__choice_0();
 	}
 	
 	/* The reactions of state null. */
-	private void react__region0__sync1() {
-		enterSequence__region0_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing_default();
-		enterSequence__region0_Beverage_Preparation_Third_Step_r2_Add_Sugar_default();
+	private void react_oncycle__sync1() {
+		enterSequence_oncycle_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing_default();
+		react_oncycle_Beverage_Preparation_Third_Step_r2__choice_0();
 	}
 	
 	/* The reactions of state null. */
-	private void react__region0__sync2() {
-		enterSequence__region0_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature_default();
-		enterSequence__region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup__default();
+	private void react_oncycle__sync2() {
+		enterSequence_oncycle_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature_default();
+		react_oncycle_Beverage_Preparation_Second_Step_r2__choice_2();
 	}
 	
 	/* The reactions of state null. */
-	private void react__region0__sync3() {
-		react__region0_Beverage_Preparation_Last_Step_r1__choice_0();
+	private void react_oncycle__sync3() {
+		react_oncycle_Beverage_Preparation_Last_Step_r1__choice_0();
 	}
 	
 	private boolean react() {
 		return false;
 	}
 	
-	private boolean _region0_Waiting_react(boolean try_transition) {
+	private boolean oncycle_Waiting_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if ((sCInterface.coffeeButton || (sCInterface.expressoButton || sCInterface.teaButton))) {
-				exitSequence__region0_Waiting();
+			if ((sCInterface.coffeeButton || (sCInterface.expressoButton || (sCInterface.teaButton || sCInterface.soupButton)))) {
+				exitSequence_oncycle_Waiting();
 				sCInterface.raiseBeverageChoice();
 				
-				enterSequence__region0_Beverage_Choice_default();
+				enterSequence_oncycle_Beverage_Choice_default();
 			} else {
 				did_transition = false;
 			}
@@ -2864,13 +3286,13 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		return did_transition;
 	}
 	
-	private boolean _region0_Cleaning_react(boolean try_transition) {
+	private boolean oncycle_Cleaning_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (timeEvents[0]) {
-				exitSequence__region0_Cleaning();
-				enterSequence__region0_Waiting_default();
+				exitSequence_oncycle_Cleaning();
+				enterSequence_oncycle_Waiting_default();
 			} else {
 				did_transition = false;
 			}
@@ -2878,15 +3300,15 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		return did_transition;
 	}
 	
-	private boolean _region0_Payment_Done_react(boolean try_transition) {
+	private boolean oncycle_Payment_Done_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (timeEvents[1]) {
-				exitSequence__region0_Payment_Done();
+				exitSequence_oncycle_Payment_Done();
 				sCInterface.raiseBeveragePreparation();
 				
-				react__region0__sync0();
+				react_oncycle__sync0();
 			} else {
 				did_transition = false;
 			}
@@ -2894,29 +3316,29 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		return did_transition;
 	}
 	
-	private boolean _region0_Beverage_Choice_react(boolean try_transition) {
+	private boolean oncycle_Beverage_Choice_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (((sCInterface.getPaymentCard() || sCInterface.getEnoughMoney()))==true) {
-				exitSequence__region0_Beverage_Choice();
+				exitSequence_oncycle_Beverage_Choice();
 				sCInterface.raiseValidatePayment();
 				
-				enterSequence__region0_Payment_Done_default();
+				enterSequence_oncycle_Payment_Done_default();
 			} else {
 				if (sCInterface.cancelButton) {
-					exitSequence__region0_Beverage_Choice();
-					enterSequence__region0_Waiting_default();
+					exitSequence_oncycle_Beverage_Choice();
+					enterSequence_oncycle_Waiting_default();
 				} else {
 					if (timeEvents[2]) {
-						exitSequence__region0_Beverage_Choice();
-						enterSequence__region0_Waiting_default();
+						exitSequence_oncycle_Beverage_Choice();
+						enterSequence_oncycle_Waiting_default();
 					} else {
-						if ((sCInterface.coffeeButton || (sCInterface.expressoButton || (sCInterface.teaButton || (sCInterface.money50centsButton || (sCInterface.money20centsButton || (sCInterface.money10centsButton || sCInterface.addCupButton))))))) {
-							exitSequence__region0_Beverage_Choice();
+						if ((sCInterface.coffeeButton || (sCInterface.expressoButton || (sCInterface.teaButton || (sCInterface.soupButton || (sCInterface.money50centsButton || (sCInterface.money20centsButton || (sCInterface.money10centsButton || sCInterface.addCupButton)))))))) {
+							exitSequence_oncycle_Beverage_Choice();
 							sCInterface.raiseBeverageChoice();
 							
-							enterSequence__region0_Beverage_Choice_default();
+							enterSequence_oncycle_Beverage_Choice_default();
 						} else {
 							did_transition = false;
 						}
@@ -2927,7 +3349,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		return did_transition;
 	}
 	
-	private boolean _region0_Beverage_Preparation_First_Step_react(boolean try_transition) {
+	private boolean oncycle_Beverage_Preparation_First_Step_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
@@ -2936,13 +3358,13 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		return did_transition;
 	}
 	
-	private boolean _region0_Beverage_Preparation_First_Step_r1_Start_Water_Heating_react(boolean try_transition) {
+	private boolean oncycle_Beverage_Preparation_First_Step_r1_Start_Water_Heating_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (timeEvents[3]) {
-				exitSequence__region0_Beverage_Preparation_First_Step_r1_Start_Water_Heating();
-				enterSequence__region0_Beverage_Preparation_First_Step_r1_Water_Heating_ON_default();
+				exitSequence_oncycle_Beverage_Preparation_First_Step_r1_Start_Water_Heating();
+				enterSequence_oncycle_Beverage_Preparation_First_Step_r1_Water_Heating_ON_default();
 			} else {
 				did_transition = false;
 			}
@@ -2950,13 +3372,13 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		return did_transition;
 	}
 	
-	private boolean _region0_Beverage_Preparation_First_Step_r1_Water_Heating_ON_react(boolean try_transition) {
+	private boolean oncycle_Beverage_Preparation_First_Step_r1_Water_Heating_ON_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if (((true && isStateActive(State._region0_Beverage_Preparation_First_Step_r2_Ready)) && true)) {
-				exitSequence__region0_Beverage_Preparation_First_Step();
-				react__region0__sync2();
+			if (((true && isStateActive(State.oncycle_Beverage_Preparation_First_Step_r2_Ready)) && true)) {
+				exitSequence_oncycle_Beverage_Preparation_First_Step();
+				react_oncycle__sync2();
 			} else {
 				did_transition = false;
 			}
@@ -2964,335 +3386,374 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		return did_transition;
 	}
 	
-	private boolean _region0_Beverage_Preparation_First_Step_r2_CoffeeSelected_react(boolean try_transition) {
+	private boolean oncycle_Beverage_Preparation_First_Step_r2_CoffeeSelected_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (timeEvents[4]) {
-				exitSequence__region0_Beverage_Preparation_First_Step_r2_CoffeeSelected();
-				enterSequence__region0_Beverage_Preparation_First_Step_r2_Pod_In_Place_default();
-				_region0_Beverage_Preparation_First_Step_react(false);
+				exitSequence_oncycle_Beverage_Preparation_First_Step_r2_CoffeeSelected();
+				enterSequence_oncycle_Beverage_Preparation_First_Step_r2_Pod_In_Place_default();
+				oncycle_Beverage_Preparation_First_Step_react(false);
 			} else {
 				did_transition = false;
 			}
 		}
 		if (did_transition==false) {
-			did_transition = _region0_Beverage_Preparation_First_Step_react(try_transition);
+			did_transition = oncycle_Beverage_Preparation_First_Step_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean _region0_Beverage_Preparation_First_Step_r2_Ready_react(boolean try_transition) {
+	private boolean oncycle_Beverage_Preparation_First_Step_r2_Ready_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if (((true && isStateActive(State._region0_Beverage_Preparation_First_Step_r1_Water_Heating_ON)) && true)) {
-				exitSequence__region0_Beverage_Preparation_First_Step();
-				react__region0__sync2();
+			if (((true && isStateActive(State.oncycle_Beverage_Preparation_First_Step_r1_Water_Heating_ON)) && true)) {
+				exitSequence_oncycle_Beverage_Preparation_First_Step();
+				react_oncycle__sync2();
 			} else {
 				did_transition = false;
 			}
 		}
 		if (did_transition==false) {
-			did_transition = _region0_Beverage_Preparation_First_Step_react(try_transition);
+			did_transition = oncycle_Beverage_Preparation_First_Step_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean _region0_Beverage_Preparation_First_Step_r2_TeaSelected_react(boolean try_transition) {
+	private boolean oncycle_Beverage_Preparation_First_Step_r2_TeaSelected_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (timeEvents[5]) {
-				exitSequence__region0_Beverage_Preparation_First_Step_r2_TeaSelected();
-				enterSequence__region0_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place_default();
-				_region0_Beverage_Preparation_First_Step_react(false);
+				exitSequence_oncycle_Beverage_Preparation_First_Step_r2_TeaSelected();
+				enterSequence_oncycle_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place_default();
+				oncycle_Beverage_Preparation_First_Step_react(false);
 			} else {
 				did_transition = false;
 			}
 		}
 		if (did_transition==false) {
-			did_transition = _region0_Beverage_Preparation_First_Step_react(try_transition);
+			did_transition = oncycle_Beverage_Preparation_First_Step_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean _region0_Beverage_Preparation_First_Step_r2_ExpressoSelected_react(boolean try_transition) {
+	private boolean oncycle_Beverage_Preparation_First_Step_r2_ExpressoSelected_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (timeEvents[6]) {
-				exitSequence__region0_Beverage_Preparation_First_Step_r2_ExpressoSelected();
-				enterSequence__region0_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK_default();
-				_region0_Beverage_Preparation_First_Step_react(false);
+				exitSequence_oncycle_Beverage_Preparation_First_Step_r2_ExpressoSelected();
+				enterSequence_oncycle_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK_default();
+				oncycle_Beverage_Preparation_First_Step_react(false);
 			} else {
 				did_transition = false;
 			}
 		}
 		if (did_transition==false) {
-			did_transition = _region0_Beverage_Preparation_First_Step_react(try_transition);
+			did_transition = oncycle_Beverage_Preparation_First_Step_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean _region0_Beverage_Preparation_First_Step_r2_Pod_In_Place_react(boolean try_transition) {
+	private boolean oncycle_Beverage_Preparation_First_Step_r2_Pod_In_Place_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			exitSequence__region0_Beverage_Preparation_First_Step_r2_Pod_In_Place();
-			enterSequence__region0_Beverage_Preparation_First_Step_r2_Ready_default();
-			_region0_Beverage_Preparation_First_Step_react(false);
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Pod_In_Place();
+			enterSequence_oncycle_Beverage_Preparation_First_Step_r2_Ready_default();
+			oncycle_Beverage_Preparation_First_Step_react(false);
 		}
 		if (did_transition==false) {
-			did_transition = _region0_Beverage_Preparation_First_Step_react(try_transition);
+			did_transition = oncycle_Beverage_Preparation_First_Step_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean _region0_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place_react(boolean try_transition) {
+	private boolean oncycle_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			exitSequence__region0_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place();
-			enterSequence__region0_Beverage_Preparation_First_Step_r2_Ready_default();
-			_region0_Beverage_Preparation_First_Step_react(false);
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Tea_Bag_In_Place();
+			enterSequence_oncycle_Beverage_Preparation_First_Step_r2_Ready_default();
+			oncycle_Beverage_Preparation_First_Step_react(false);
 		}
 		if (did_transition==false) {
-			did_transition = _region0_Beverage_Preparation_First_Step_react(try_transition);
+			did_transition = oncycle_Beverage_Preparation_First_Step_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean _region0_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK_react(boolean try_transition) {
+	private boolean oncycle_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			exitSequence__region0_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK();
-			enterSequence__region0_Beverage_Preparation_First_Step_r2_Ready_default();
-			_region0_Beverage_Preparation_First_Step_react(false);
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Grain_Crushing_OK();
+			enterSequence_oncycle_Beverage_Preparation_First_Step_r2_Ready_default();
+			oncycle_Beverage_Preparation_First_Step_react(false);
 		}
 		if (did_transition==false) {
-			did_transition = _region0_Beverage_Preparation_First_Step_react(try_transition);
+			did_transition = oncycle_Beverage_Preparation_First_Step_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean _region0_Beverage_Preparation_Second_Step_react(boolean try_transition) {
+	private boolean oncycle_Beverage_Preparation_First_Step_r2_Waiting_Cup__react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			did_transition = false;
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Waiting_Cup_();
+			react_oncycle_Beverage_Preparation_First_Step_r2__choice_1();
+		}
+		if (did_transition==false) {
+			did_transition = oncycle_Beverage_Preparation_First_Step_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean _region0_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature_react(boolean try_transition) {
+	private boolean oncycle_Beverage_Preparation_First_Step_r2_Cup_In_Place_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Cup_In_Place();
+			enterSequence_oncycle_Beverage_Preparation_First_Step_r2_Ready_default();
+			oncycle_Beverage_Preparation_First_Step_react(false);
+		}
+		if (did_transition==false) {
+			did_transition = oncycle_Beverage_Preparation_First_Step_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean oncycle_Beverage_Preparation_First_Step_r2_Own_Cup_OK_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Own_Cup_OK();
+			enterSequence_oncycle_Beverage_Preparation_First_Step_r2_Ready_default();
+			oncycle_Beverage_Preparation_First_Step_react(false);
+		}
+		if (did_transition==false) {
+			did_transition = oncycle_Beverage_Preparation_First_Step_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean oncycle_Beverage_Preparation_First_Step_r2_Cup_Need_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (timeEvents[7]) {
-				exitSequence__region0_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature();
-				enterSequence__region0_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK_default();
+				exitSequence_oncycle_Beverage_Preparation_First_Step_r2_Cup_Need();
+				enterSequence_oncycle_Beverage_Preparation_First_Step_r2_Cup_In_Place_default();
+				oncycle_Beverage_Preparation_First_Step_react(false);
 			} else {
 				did_transition = false;
 			}
-		}
-		return did_transition;
-	}
-	
-	private boolean _region0_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK_react(boolean try_transition) {
-		boolean did_transition = try_transition;
-		
-		if (try_transition) {
-			if (((true && isStateActive(State._region0_Beverage_Preparation_Second_Step_r2_Ready2)) && true)) {
-				exitSequence__region0_Beverage_Preparation_Second_Step();
-				react__region0__sync1();
-			} else {
-				did_transition = false;
-			}
-		}
-		return did_transition;
-	}
-	
-	private boolean _region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup__react(boolean try_transition) {
-		boolean did_transition = try_transition;
-		
-		if (try_transition) {
-			exitSequence__region0_Beverage_Preparation_Second_Step_r2_Waiting_Cup_();
-			react__region0_Beverage_Preparation_Second_Step_r2__choice_1();
 		}
 		if (did_transition==false) {
-			did_transition = _region0_Beverage_Preparation_Second_Step_react(try_transition);
+			did_transition = oncycle_Beverage_Preparation_First_Step_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean _region0_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack_react(boolean try_transition) {
+	private boolean oncycle_Beverage_Preparation_Second_Step_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			did_transition = false;
+		}
+		return did_transition;
+	}
+	
+	private boolean oncycle_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (timeEvents[8]) {
-				exitSequence__region0_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack();
-				enterSequence__region0_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK_default();
-				_region0_Beverage_Preparation_Second_Step_react(false);
+				exitSequence_oncycle_Beverage_Preparation_Second_Step_r1_Waiting_Water_Temperature();
+				enterSequence_oncycle_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK_default();
 			} else {
 				did_transition = false;
 			}
 		}
-		if (did_transition==false) {
-			did_transition = _region0_Beverage_Preparation_Second_Step_react(try_transition);
-		}
 		return did_transition;
 	}
 	
-	private boolean _region0_Beverage_Preparation_Second_Step_r2_Cup_In_Place_react(boolean try_transition) {
+	private boolean oncycle_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			exitSequence__region0_Beverage_Preparation_Second_Step_r2_Cup_In_Place();
-			react__region0_Beverage_Preparation_Second_Step_r2__choice_0();
-		}
-		if (did_transition==false) {
-			did_transition = _region0_Beverage_Preparation_Second_Step_react(try_transition);
-		}
-		return did_transition;
-	}
-	
-	private boolean _region0_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK_react(boolean try_transition) {
-		boolean did_transition = try_transition;
-		
-		if (try_transition) {
-			exitSequence__region0_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK();
-			enterSequence__region0_Beverage_Preparation_Second_Step_r2_Ready2_default();
-			_region0_Beverage_Preparation_Second_Step_react(false);
-		}
-		if (did_transition==false) {
-			did_transition = _region0_Beverage_Preparation_Second_Step_react(try_transition);
-		}
-		return did_transition;
-	}
-	
-	private boolean _region0_Beverage_Preparation_Second_Step_r2_Ready2_react(boolean try_transition) {
-		boolean did_transition = try_transition;
-		
-		if (try_transition) {
-			if (((true && isStateActive(State._region0_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK)) && true)) {
-				exitSequence__region0_Beverage_Preparation_Second_Step();
-				react__region0__sync1();
+			if (((true && isStateActive(State.oncycle_Beverage_Preparation_Second_Step_r2_Ready2)) && true)) {
+				exitSequence_oncycle_Beverage_Preparation_Second_Step();
+				react_oncycle__sync1();
 			} else {
 				did_transition = false;
 			}
 		}
-		if (did_transition==false) {
-			did_transition = _region0_Beverage_Preparation_Second_Step_react(try_transition);
-		}
 		return did_transition;
 	}
 	
-	private boolean _region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK_react(boolean try_transition) {
+	private boolean oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Cup__react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			exitSequence__region0_Beverage_Preparation_Second_Step_r2_Own_Cup_OK();
-			react__region0_Beverage_Preparation_Second_Step_r2__choice_0();
+			exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Cup_();
+			react_oncycle_Beverage_Preparation_Second_Step_r2__choice_1();
 		}
 		if (did_transition==false) {
-			did_transition = _region0_Beverage_Preparation_Second_Step_react(try_transition);
+			did_transition = oncycle_Beverage_Preparation_Second_Step_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean _region0_Beverage_Preparation_Second_Step_r2_Cup_Need_react(boolean try_transition) {
+	private boolean oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (timeEvents[9]) {
-				exitSequence__region0_Beverage_Preparation_Second_Step_r2_Cup_Need();
-				enterSequence__region0_Beverage_Preparation_Second_Step_r2_Cup_In_Place_default();
-				_region0_Beverage_Preparation_Second_Step_react(false);
+				exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Waiting_Grain_Pack();
+				enterSequence_oncycle_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK_default();
+				oncycle_Beverage_Preparation_Second_Step_react(false);
 			} else {
 				did_transition = false;
 			}
 		}
 		if (did_transition==false) {
-			did_transition = _region0_Beverage_Preparation_Second_Step_react(try_transition);
+			did_transition = oncycle_Beverage_Preparation_Second_Step_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean _region0_Beverage_Preparation_Third_Step_react(boolean try_transition) {
+	private boolean oncycle_Beverage_Preparation_Second_Step_r2_Cup_In_Place_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			did_transition = false;
+			exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Cup_In_Place();
+			react_oncycle_Beverage_Preparation_Second_Step_r2__choice_0();
+		}
+		if (did_transition==false) {
+			did_transition = oncycle_Beverage_Preparation_Second_Step_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean _region0_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing_react(boolean try_transition) {
+	private boolean oncycle_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Grain_Packing_OK();
+			enterSequence_oncycle_Beverage_Preparation_Second_Step_r2_Ready2_default();
+			oncycle_Beverage_Preparation_Second_Step_react(false);
+		}
+		if (did_transition==false) {
+			did_transition = oncycle_Beverage_Preparation_Second_Step_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean oncycle_Beverage_Preparation_Second_Step_r2_Ready2_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (((true && isStateActive(State.oncycle_Beverage_Preparation_Second_Step_r1_Water_Temperature_OK)) && true)) {
+				exitSequence_oncycle_Beverage_Preparation_Second_Step();
+				react_oncycle__sync1();
+			} else {
+				did_transition = false;
+			}
+		}
+		if (did_transition==false) {
+			did_transition = oncycle_Beverage_Preparation_Second_Step_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean oncycle_Beverage_Preparation_Second_Step_r2_Own_Cup_OK_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Own_Cup_OK();
+			react_oncycle_Beverage_Preparation_Second_Step_r2__choice_0();
+		}
+		if (did_transition==false) {
+			did_transition = oncycle_Beverage_Preparation_Second_Step_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean oncycle_Beverage_Preparation_Second_Step_r2_Cup_Need_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (timeEvents[10]) {
-				exitSequence__region0_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing();
-				enterSequence__region0_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK_default();
+				exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Cup_Need();
+				enterSequence_oncycle_Beverage_Preparation_Second_Step_r2_Cup_In_Place_default();
+				oncycle_Beverage_Preparation_Second_Step_react(false);
 			} else {
 				did_transition = false;
 			}
 		}
-		return did_transition;
-	}
-	
-	private boolean _region0_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK_react(boolean try_transition) {
-		boolean did_transition = try_transition;
-		
-		if (try_transition) {
-			if (isStateActive(State._region0_Beverage_Preparation_Third_Step_r2_Sugar_OK)) {
-				exitSequence__region0_Beverage_Preparation_Third_Step();
-				react__region0__sync3();
-			} else {
-				did_transition = false;
-			}
+		if (did_transition==false) {
+			did_transition = oncycle_Beverage_Preparation_Second_Step_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean _region0_Beverage_Preparation_Third_Step_r2_Add_Sugar_react(boolean try_transition) {
+	private boolean oncycle_Beverage_Preparation_Second_Step_r2_SoupSelected_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (timeEvents[11]) {
-				exitSequence__region0_Beverage_Preparation_Third_Step_r2_Add_Sugar();
-				enterSequence__region0_Beverage_Preparation_Third_Step_r2_Sugar_OK_default();
-				_region0_Beverage_Preparation_Third_Step_react(false);
+				exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_SoupSelected();
+				enterSequence_oncycle_Beverage_Preparation_Second_Step_r2_Soup_Pod_OK_default();
+				oncycle_Beverage_Preparation_Second_Step_react(false);
 			} else {
 				did_transition = false;
 			}
 		}
 		if (did_transition==false) {
-			did_transition = _region0_Beverage_Preparation_Third_Step_react(try_transition);
+			did_transition = oncycle_Beverage_Preparation_Second_Step_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean _region0_Beverage_Preparation_Third_Step_r2_Sugar_OK_react(boolean try_transition) {
+	private boolean oncycle_Beverage_Preparation_Second_Step_r2_Soup_Pod_OK_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if (isStateActive(State._region0_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK)) {
-				exitSequence__region0_Beverage_Preparation_Third_Step();
-				react__region0__sync3();
+			exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Soup_Pod_OK();
+			enterSequence_oncycle_Beverage_Preparation_Second_Step_r2_Add_Spicy_default();
+			oncycle_Beverage_Preparation_Second_Step_react(false);
+		}
+		if (did_transition==false) {
+			did_transition = oncycle_Beverage_Preparation_Second_Step_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean oncycle_Beverage_Preparation_Second_Step_r2_Add_Spicy_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (timeEvents[12]) {
+				exitSequence_oncycle_Beverage_Preparation_Second_Step_r2_Add_Spicy();
+				sCInterface.raiseSpicesOK();
+				
+				enterSequence_oncycle_Beverage_Preparation_Second_Step_r2_Ready2_default();
+				oncycle_Beverage_Preparation_Second_Step_react(false);
 			} else {
 				did_transition = false;
 			}
 		}
 		if (did_transition==false) {
-			did_transition = _region0_Beverage_Preparation_Third_Step_react(try_transition);
+			did_transition = oncycle_Beverage_Preparation_Second_Step_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean _region0_Beverage_Preparation_Last_Step_react(boolean try_transition) {
+	private boolean oncycle_Beverage_Preparation_Third_Step_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
@@ -3301,68 +3762,154 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		return did_transition;
 	}
 	
-	private boolean _region0_Beverage_Preparation_Last_Step_r1_Take_beverage_react(boolean try_transition) {
-		boolean did_transition = try_transition;
-		
-		if (try_transition) {
-			if (timeEvents[12]) {
-				exitSequence__region0_Beverage_Preparation_Last_Step();
-				enterSequence__region0_Take_The_Change_default();
-			} else {
-				did_transition = false;
-			}
-		}
-		if (did_transition==false) {
-			did_transition = _region0_Beverage_Preparation_Last_Step_react(try_transition);
-		}
-		return did_transition;
-	}
-	
-	private boolean _region0_Beverage_Preparation_Last_Step_r1_Waiting_Infusion_react(boolean try_transition) {
+	private boolean oncycle_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (timeEvents[13]) {
-				exitSequence__region0_Beverage_Preparation_Last_Step_r1_Waiting_Infusion();
-				enterSequence__region0_Beverage_Preparation_Last_Step_r1_Remove_TeaBag_default();
-				_region0_Beverage_Preparation_Last_Step_react(false);
+				exitSequence_oncycle_Beverage_Preparation_Third_Step_r1_Start_Water_Flowing();
+				enterSequence_oncycle_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK_default();
 			} else {
 				did_transition = false;
 			}
 		}
-		if (did_transition==false) {
-			did_transition = _region0_Beverage_Preparation_Last_Step_react(try_transition);
+		return did_transition;
+	}
+	
+	private boolean oncycle_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (((true && isStateActive(State.oncycle_Beverage_Preparation_Third_Step_r2_Ready3)) && true)) {
+				exitSequence_oncycle_Beverage_Preparation_Third_Step();
+				react_oncycle__sync3();
+			} else {
+				did_transition = false;
+			}
 		}
 		return did_transition;
 	}
 	
-	private boolean _region0_Beverage_Preparation_Last_Step_r1_Remove_TeaBag_react(boolean try_transition) {
+	private boolean oncycle_Beverage_Preparation_Third_Step_r2_Add_Sugar_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (timeEvents[14]) {
-				exitSequence__region0_Beverage_Preparation_Last_Step_r1_Remove_TeaBag();
-				enterSequence__region0_Beverage_Preparation_Last_Step_r1_Take_beverage_default();
-				_region0_Beverage_Preparation_Last_Step_react(false);
+				exitSequence_oncycle_Beverage_Preparation_Third_Step_r2_Add_Sugar();
+				enterSequence_oncycle_Beverage_Preparation_Third_Step_r2_Sugar_OK_default();
+				oncycle_Beverage_Preparation_Third_Step_react(false);
 			} else {
 				did_transition = false;
 			}
 		}
 		if (did_transition==false) {
-			did_transition = _region0_Beverage_Preparation_Last_Step_react(try_transition);
+			did_transition = oncycle_Beverage_Preparation_Third_Step_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean _region0_Take_The_Change_react(boolean try_transition) {
+	private boolean oncycle_Beverage_Preparation_Third_Step_r2_Sugar_OK_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			exitSequence_oncycle_Beverage_Preparation_Third_Step_r2_Sugar_OK();
+			enterSequence_oncycle_Beverage_Preparation_Third_Step_r2_Ready3_default();
+			oncycle_Beverage_Preparation_Third_Step_react(false);
+		}
+		if (did_transition==false) {
+			did_transition = oncycle_Beverage_Preparation_Third_Step_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean oncycle_Beverage_Preparation_Third_Step_r2_Ready3_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (((true && isStateActive(State.oncycle_Beverage_Preparation_Third_Step_r1_Water_Flowing_OK)) && true)) {
+				exitSequence_oncycle_Beverage_Preparation_Third_Step();
+				react_oncycle__sync3();
+			} else {
+				did_transition = false;
+			}
+		}
+		if (did_transition==false) {
+			did_transition = oncycle_Beverage_Preparation_Third_Step_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean oncycle_Beverage_Preparation_Last_Step_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			did_transition = false;
+		}
+		return did_transition;
+	}
+	
+	private boolean oncycle_Beverage_Preparation_Last_Step_r1_Take_beverage_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (timeEvents[15]) {
-				exitSequence__region0_Take_The_Change();
+				exitSequence_oncycle_Beverage_Preparation_Last_Step();
+				enterSequence_oncycle_Take_The_Change_default();
+			} else {
+				did_transition = false;
+			}
+		}
+		if (did_transition==false) {
+			did_transition = oncycle_Beverage_Preparation_Last_Step_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean oncycle_Beverage_Preparation_Last_Step_r1_Waiting_Infusion_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (timeEvents[16]) {
+				exitSequence_oncycle_Beverage_Preparation_Last_Step_r1_Waiting_Infusion();
+				enterSequence_oncycle_Beverage_Preparation_Last_Step_r1_Remove_TeaBag_default();
+				oncycle_Beverage_Preparation_Last_Step_react(false);
+			} else {
+				did_transition = false;
+			}
+		}
+		if (did_transition==false) {
+			did_transition = oncycle_Beverage_Preparation_Last_Step_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean oncycle_Beverage_Preparation_Last_Step_r1_Remove_TeaBag_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (timeEvents[17]) {
+				exitSequence_oncycle_Beverage_Preparation_Last_Step_r1_Remove_TeaBag();
+				enterSequence_oncycle_Beverage_Preparation_Last_Step_r1_Take_beverage_default();
+				oncycle_Beverage_Preparation_Last_Step_react(false);
+			} else {
+				did_transition = false;
+			}
+		}
+		if (did_transition==false) {
+			did_transition = oncycle_Beverage_Preparation_Last_Step_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean oncycle_Take_The_Change_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (timeEvents[18]) {
+				exitSequence_oncycle_Take_The_Change();
 				sCInterface.raiseCleaningMachine();
 				
-				enterSequence__region0_Cleaning_default();
+				enterSequence_oncycle_Cleaning_default();
 			} else {
 				did_transition = false;
 			}
@@ -3374,13 +3921,13 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if ((sCInterface.money50centsButton || (sCInterface.money20centsButton || (sCInterface.money10centsButton || (sCInterface.coffeeButton || (sCInterface.expressoButton || sCInterface.teaButton)))))) {
+			if ((sCInterface.money50centsButton || (sCInterface.money20centsButton || (sCInterface.money10centsButton || (sCInterface.coffeeButton || (sCInterface.expressoButton || (sCInterface.teaButton || sCInterface.soupButton))))))) {
 				exitSequence_PaymentByCoins_PaymentByCoins();
 				sCInterface.raiseUpdateSolde();
 				
 				enterSequence_PaymentByCoins_PaymentByCoins_default();
 			} else {
-				if (timeEvents[16]) {
+				if (timeEvents[19]) {
 					exitSequence_PaymentByCoins_PaymentByCoins();
 					sCInterface.raiseCancelPreparation();
 					
@@ -3415,7 +3962,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 				
 				enterSequence_PaymentByCoins_PaymentByCoins_default();
 			} else {
-				if (((timeEvents[17]) && (sCInterface.getOnWire()==false))) {
+				if (((timeEvents[20]) && (sCInterface.getOnWire()==false))) {
 					exitSequence_PaymentByCoins_WaitingCoins();
 					enterSequence_PaymentByCoins_Blocked_default();
 				} else {
@@ -3430,7 +3977,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if (timeEvents[18]) {
+			if (timeEvents[21]) {
 				exitSequence_PaymentByCoins_ReturnCoins();
 				sCInterface.raiseMachineReady();
 				
@@ -3446,7 +3993,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if (((timeEvents[19]) && (sCInterface.getOnWire()==true))) {
+			if (((timeEvents[22]) && (sCInterface.getOnWire()==true))) {
 				exitSequence_PaymentByCoins_Blocked();
 				enterSequence_PaymentByCoins_WaitingCoins_default();
 			} else {
@@ -3467,7 +4014,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 				enterSequence_PaymentByNFC_PaymentByNFC_default();
 				react();
 			} else {
-				if (((timeEvents[20]) && (sCInterface.getOnWire()==false))) {
+				if (((timeEvents[23]) && (sCInterface.getOnWire()==false))) {
 					exitSequence_PaymentByNFC_WaitingNFC();
 					enterSequence_PaymentByNFC_Blocked_default();
 					react();
@@ -3486,7 +4033,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if (timeEvents[21]) {
+			if (timeEvents[24]) {
 				exitSequence_PaymentByNFC_PaymentByNFC();
 				sCInterface.raiseCancelTransaction();
 				
@@ -3500,7 +4047,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 					enterSequence_PaymentByNFC_CancelTransaction_default();
 					react();
 				} else {
-					if (((timeEvents[22]) && (sCInterface.getPaymentDone()==true))) {
+					if (((timeEvents[25]) && (sCInterface.getPaymentDone()==true))) {
 						exitSequence_PaymentByNFC_PaymentByNFC();
 						enterSequence_PaymentByNFC_WaitingNFC_default();
 						react();
@@ -3520,7 +4067,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if (timeEvents[23]) {
+			if (timeEvents[26]) {
 				exitSequence_PaymentByNFC_CancelTransaction();
 				sCInterface.raiseMachineReady();
 				
@@ -3540,7 +4087,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if (((timeEvents[24]) && (sCInterface.getOnWire()==true))) {
+			if (((timeEvents[27]) && (sCInterface.getOnWire()==true))) {
 				exitSequence_PaymentByNFC_Blocked();
 				enterSequence_PaymentByNFC_WaitingNFC_default();
 				react();
