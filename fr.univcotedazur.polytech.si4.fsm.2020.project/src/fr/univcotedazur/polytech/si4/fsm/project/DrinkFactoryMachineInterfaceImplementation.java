@@ -77,6 +77,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		this.dfm.theDFM.setPaymentDone(false);
 		this.dfm.theDFM.setEnoughMoney(false);
 		this.dfm.theDFM.setPaymentCard(false);
+		this.dfm.delayBlueCardPayment = false;
 		this.dfm.theDFM.setOwnCup(false);
 		this.dfm.beverageChoice =null;
 		this.dfm.beveragePriceAfterDiscount= 0.;
@@ -103,7 +104,8 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 
 	@Override
 	public void onPayByNFCRaised() {
-		this.dfm.theDFM.setPaymentCard(true);
+		if (!this.dfm.delayBlueCardPayment) this.dfm.theDFM.setPaymentCard(true);
+		else this.dfm.theDFM.setPaymentCard(false);
 		if (this.dfm.beverageChoice == null) {
 			this.dfm.messagesToUser.setText("<html> Veuillez choisir votre <br> boisson.");
 		}
@@ -173,7 +175,8 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 							"<br> Prix : " + this.dfm.beveragePriceAfterDiscount + "€." +
 							"<br> Votre solde : " + this.dfm.theDFM.getSolde() + "€.");
 					this.dfm.enoughMoneyClassicBeverage();
-					} 
+					
+				} 
 			}
 			else {
 				if (this.dfm.theDFM.getPaymentCard() != true) {
@@ -385,3 +388,5 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	}
 
 }
+
+

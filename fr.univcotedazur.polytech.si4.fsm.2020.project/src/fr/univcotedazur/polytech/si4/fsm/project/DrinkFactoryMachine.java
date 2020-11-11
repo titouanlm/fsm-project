@@ -60,6 +60,7 @@ public class DrinkFactoryMachine extends JFrame {
 	protected JCheckBox checkboxVanilla;
 	protected JCheckBox checkboxCrouton;
 	protected double beveragePriceAfterDiscount = 0.;
+	protected boolean delayBlueCardPayment = false;
 	private Thread t;
 	private Thread t1;
 	private Thread t2;
@@ -377,10 +378,15 @@ public class DrinkFactoryMachine extends JFrame {
 			@Override
 			public void run() {
 				while(true) {
+					
 					if (beverageChoice.getName() == "soupe" && sugarOrSpicySlider.getMousePosition()!= null) {
-						while(true) {
-							if (sugarOrSpicySlider.getMousePosition()== null) {
+						while(true) {		
+							if (sugarOrSpicySlider.getMousePosition()== null && !delayBlueCardPayment) {
 								enoughMoneyClassicBeverage();
+								break;
+							}
+							else if (sugarOrSpicySlider.getMousePosition()== null && delayBlueCardPayment){
+								theDFM.setPaymentCard(true);
 								break;
 							}
 						}
@@ -789,7 +795,15 @@ public class DrinkFactoryMachine extends JFrame {
 		nfcBiiiipButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				theDFM.raiseBipButton();
+				if (theDFM.getOnWire()) {
+					if (beverageChoice != null && beverageChoice.getName() == "soupe" && sugarOrSpicySlider.getValue() !=0) {
+						theDFM.setPaymentCard(true);
+					}
+					else if (beverageChoice != null && beverageChoice.getName() == "soupe") {
+						delayBlueCardPayment = true;
+						}
+					theDFM.raiseBipButton();
+				}
 			}
 		});
 		
@@ -879,6 +893,10 @@ public class DrinkFactoryMachine extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e){
 				if (theDFM.getOnWire()) {
+					if (theDFM.getPaymentCard() == true) {
+						delayBlueCardPayment = true;
+						theDFM.setPaymentCard(false);
+						}
 					resetPanelOption();
 					temperatureClassicBeverage();
 					spicySoupBeverage();
@@ -886,8 +904,8 @@ public class DrinkFactoryMachine extends JFrame {
 					updatePanelSoupOption();
 					beverageChoice = new Soup();
 					theDFM.raiseSoupButton();
-					}
 				}
+			}
 		});
 		
 		icedTeaButton.addActionListener(new ActionListener() {
