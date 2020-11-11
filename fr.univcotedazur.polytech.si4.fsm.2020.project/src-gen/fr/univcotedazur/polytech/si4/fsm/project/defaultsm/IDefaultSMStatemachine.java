@@ -30,6 +30,14 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		
 		public void raiseAddCupButton();
 		
+		public void raiseCheckbMilk();
+		
+		public void raiseCheckbVanilla();
+		
+		public void raiseCheckbMapleSyrup();
+		
+		public void raiseCheckbCrouton();
+		
 		public boolean isRaisedUpdateSolde();
 		
 		public boolean isRaisedTakeBeverage();
@@ -104,6 +112,26 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		
 		public boolean isRaisedSpicesOK();
 		
+		public boolean isRaisedPoorMilk();
+		
+		public boolean isRaisedPoorMilkOK();
+		
+		public boolean isRaisedAddVanilla();
+		
+		public boolean isRaisedVanillaOK();
+		
+		public boolean isRaisedMixBeverage();
+		
+		public boolean isRaisedMixOK();
+		
+		public boolean isRaisedAddMapleSyrup();
+		
+		public boolean isRaisedMapleSyrupOK();
+		
+		public boolean isRaisedAddCrouton();
+		
+		public boolean isRaisedCroutonOK();
+		
 		public double getSolde();
 		
 		public void setSolde(double value);
@@ -111,6 +139,22 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		public boolean getOnWire();
 		
 		public void setOnWire(boolean value);
+		
+		public boolean getMilkOption();
+		
+		public void setMilkOption(boolean value);
+		
+		public boolean getVanillaOption();
+		
+		public void setVanillaOption(boolean value);
+		
+		public boolean getMapleSyrupOption();
+		
+		public void setMapleSyrupOption(boolean value);
+		
+		public boolean getCroutonOption();
+		
+		public void setCroutonOption(boolean value);
 		
 		public boolean getOwnCup();
 		
@@ -182,6 +226,16 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		public void onSoupPodOKRaised();
 		public void onAddSpicesRaised();
 		public void onSpicesOKRaised();
+		public void onPoorMilkRaised();
+		public void onPoorMilkOKRaised();
+		public void onAddVanillaRaised();
+		public void onVanillaOKRaised();
+		public void onMixBeverageRaised();
+		public void onMixOKRaised();
+		public void onAddMapleSyrupRaised();
+		public void onMapleSyrupOKRaised();
+		public void onAddCroutonRaised();
+		public void onCroutonOKRaised();
 		}
 	
 	public SCInterface getSCInterface();

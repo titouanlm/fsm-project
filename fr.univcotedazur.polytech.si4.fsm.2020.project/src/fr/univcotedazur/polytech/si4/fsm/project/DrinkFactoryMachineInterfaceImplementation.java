@@ -80,6 +80,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		this.dfm.theDFM.setOwnCup(false);
 		this.dfm.beverageChoice =null;
 		this.dfm.beveragePriceAfterDiscount= 0.;
+		this.dfm.resetPanelOption();
 		onResetSlidersRaised();
 	}
 	
@@ -138,6 +139,25 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		}else {
 			this.dfm.beveragePriceAfterDiscount = this.dfm.roundValue(this.dfm.beverageChoice.getPrice());
 		}
+		
+		//OPTIONS
+		if(this.dfm.theDFM.getMilkOption()) {
+			this.dfm.beveragePriceAfterDiscount = this.dfm.roundValue(this.dfm.beveragePriceAfterDiscount+0.1);
+		}
+		
+		if(this.dfm.theDFM.getVanillaOption()) {
+			this.dfm.beveragePriceAfterDiscount = this.dfm.roundValue(this.dfm.beveragePriceAfterDiscount+0.4);
+		}
+		
+		if(this.dfm.theDFM.getMapleSyrupOption()) {
+			this.dfm.beveragePriceAfterDiscount = this.dfm.roundValue(this.dfm.beveragePriceAfterDiscount+0.1);
+		}
+		
+		if(this.dfm.theDFM.getCroutonOption()) {
+			this.dfm.beveragePriceAfterDiscount = this.dfm.roundValue(this.dfm.beveragePriceAfterDiscount+0.3);
+		}
+		
+		
 		if (this.dfm.beverageChoice.getName() != "thé glacé") { 
 			
 			if (this.dfm.beverageChoice.getName() == "soupe") {
@@ -312,6 +332,56 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	@Override
 	public void onSpicesOKRaised() {
 		this.dfm.messagesToUser3.setText("<html> Ajout des épices (" +  this.dfm.sugarOrSpicySlider.getValue() +" doses)... ✓");		
+	}
+
+	@Override
+	public void onPoorMilkRaised() {
+		this.dfm.messagesToUser3.setText("<html> Ajout d'un nuage de lait...");		
+	}
+
+	@Override
+	public void onPoorMilkOKRaised() {
+		this.dfm.messagesToUser3.setText("<html> Ajout d'un nuage de lait...✓");				
+	}
+
+	@Override
+	public void onAddVanillaRaised() {
+		this.dfm.messagesToUser3.setText("<html> Ajout d'une dose de glace vanille...");
+	}
+
+	@Override
+	public void onVanillaOKRaised() {
+		this.dfm.messagesToUser3.setText("<html> Ajout d'une dose de glace vanille...✓");
+	}
+
+	@Override
+	public void onMixBeverageRaised() {
+		this.dfm.messagesToUser3.setText("<html> Mixage de la préparation...");
+	}
+
+	@Override
+	public void onMixOKRaised() {
+		this.dfm.messagesToUser3.setText("<html> Mixage de la préparation... ✓");
+	}
+
+	@Override
+	public void onAddMapleSyrupRaised() {
+		this.dfm.messagesToUser3.setText("<html> Ajout du sirop d'érable... ");
+	}
+
+	@Override
+	public void onMapleSyrupOKRaised() {
+		this.dfm.messagesToUser3.setText("<html> Ajout du sirop d'érable... ✓");
+	}
+
+	@Override
+	public void onAddCroutonRaised() {
+		this.dfm.messagesToUser3.setText("<html> Ajout des croutons...") ; 	
+	}
+
+	@Override
+	public void onCroutonOKRaised() {
+		this.dfm.messagesToUser3.setText("<html> Ajout des croutons... ✓") ; 	
 	}
 
 }

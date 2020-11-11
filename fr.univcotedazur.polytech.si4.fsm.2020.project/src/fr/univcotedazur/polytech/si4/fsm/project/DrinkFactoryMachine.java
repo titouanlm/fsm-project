@@ -3,6 +3,7 @@ package fr.univcotedazur.polytech.si4.fsm.project;
 import java.awt.Color;
 
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,6 +17,7 @@ import java.util.Hashtable;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -43,13 +45,20 @@ public class DrinkFactoryMachine extends JFrame {
 	protected JLabel messagesToUser;
 	protected JLabel messagesToUser2;
 	protected JLabel messagesToUser3;
+	protected JLabel options;
 	protected JLabel labelForPictures;
+	protected JPanel panelCofExpTeaOptions;
+	protected JPanel panelSoupOptions;
 	protected JSlider sugarOrSpicySlider;
 	protected JSlider sizeSlider;
 	protected JSlider temperatureSlider;
 	protected Beverage beverageChoice = null;
 	protected JProgressBar progressBar;
 	protected JLabel lblSugarOrSpicy;
+	protected JCheckBox checkboxMilk;
+	protected JCheckBox checkboxMapleSyrup;
+	protected JCheckBox checkboxVanilla;
+	protected JCheckBox checkboxCrouton;
 	protected double beveragePriceAfterDiscount = 0.;
 	private Thread t;
 	private Thread t1;
@@ -155,6 +164,22 @@ public class DrinkFactoryMachine extends JFrame {
 		return result;
 	}
 	
+	private double addOptions() {
+		double result =0;
+		if(checkboxMilk.isSelected()) {
+			result+= 2;	
+		}
+		
+		if(checkboxVanilla.isSelected()) {
+			result += 5;
+		}
+		
+		if(checkboxCrouton.isSelected() && sizeSlider.getValue() == 0) {
+			result += 2;
+		}
+		return result;
+	}
+	
 	public double timePreparation(Beverage beverage) { // le temps se calcul en fonction de la machine à état
 		double timePreparation = 0; 
 		
@@ -174,10 +199,13 @@ public class DrinkFactoryMachine extends JFrame {
 		}
 		
 		timePreparation += (sizeSlider.getValue()+1)*3;
-		 
+		timePreparation += addOptions();
+		
 		return timePreparation;
 	}
 	
+	
+
 	public void progressBarStart() {
 		
 		long temps = (long)(timePreparation(beverageChoice)*1000);		
@@ -210,7 +238,7 @@ public class DrinkFactoryMachine extends JFrame {
 		temperatureTable.put(0, new JLabel("20°C"));
 		temperatureTable.put(1, new JLabel("35°C"));
 		temperatureTable.put(2, new JLabel("60°C"));
-		temperatureTable.put(3, new JLabel("95°C"));
+		temperatureTable.put(3, new JLabel("85°C"));
 		for (JLabel l : temperatureTable.values()) {
 			l.setForeground(Color.WHITE);
 		}
@@ -297,6 +325,37 @@ public class DrinkFactoryMachine extends JFrame {
 		setContentPane(contentPane);
 	}
 	
+	public void updatePanelCofExpOption() {
+		panelCofExpTeaOptions.add(checkboxVanilla);
+		contentPane.add(panelCofExpTeaOptions);	
+	}
+	
+	public void updatePanelTeaOption() {
+		panelCofExpTeaOptions.remove(checkboxVanilla);
+		contentPane.add(panelCofExpTeaOptions);	
+	}
+	
+
+	public void updatePanelSoupOption() {
+		contentPane.add(panelSoupOptions);
+	}
+
+	public void resetPanelOption() {
+		
+		contentPane.remove(panelCofExpTeaOptions);
+		contentPane.remove(panelSoupOptions);
+		checkboxMilk.setSelected(false);
+		theDFM.setMilkOption(false);
+		checkboxVanilla.setSelected(false);
+		theDFM.setVanillaOption(false);
+		checkboxMapleSyrup.setSelected(false);
+		theDFM.setMapleSyrupOption(false);
+		checkboxCrouton.setSelected(false);
+		theDFM.setCroutonOption(false);
+		
+		contentPane.revalidate();
+		contentPane.repaint();
+	}
 	
 	/**
 	 * Fonctionnement de la méthode ci-dessous : 
@@ -606,7 +665,7 @@ public class DrinkFactoryMachine extends JFrame {
 			e.printStackTrace();
 		}
 		labelForPictures = new JLabel(new ImageIcon(myPicture));
-		labelForPictures.setBounds(175, 319, 286, 260);
+		labelForPictures.setBounds(255, 319, 286, 260);
 		contentPane.add(labelForPictures);
 
 		JPanel panel_2 = new JPanel();
@@ -619,7 +678,96 @@ public class DrinkFactoryMachine extends JFrame {
 		cancelButton.setBackground(Color.DARK_GRAY);
 		panel_2.add(cancelButton);
 
+		
+		//OPTIONS
+	
+		options = new JLabel("Options :");
+		options.setForeground(Color.WHITE);
+		options.setHorizontalAlignment(SwingConstants.LEFT);
+		options.setVerticalAlignment(SwingConstants.TOP);
+		options.setToolTipText("message to the user 3");
+		options.setBackground(Color.WHITE);
+		options.setBounds(35, 385, 105, 15);
+		contentPane.add(options);
+		
+		panelCofExpTeaOptions = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		panelCofExpTeaOptions.setBackground(Color.DARK_GRAY);
+		panelCofExpTeaOptions.setBounds(35, 405, 225, 150);
+		
+		checkboxMilk = new JCheckBox("Nuage de lait (+0.10€)");
+		checkboxMilk.setForeground(Color.WHITE);
+		checkboxMilk.setBackground(Color.DARK_GRAY);
+		panelCofExpTeaOptions.add(checkboxMilk);
+		
+		checkboxMapleSyrup = new JCheckBox("Sirop d'érable (+0.10€)");
+		checkboxMapleSyrup.setForeground(Color.WHITE);
+		checkboxMapleSyrup.setBackground(Color.DARK_GRAY);
+		panelCofExpTeaOptions.add(checkboxMapleSyrup);	
+		
+		checkboxVanilla = new JCheckBox("Glace vanille mixée (+0.40€)");
+		checkboxVanilla.setForeground(Color.WHITE);
+		checkboxVanilla.setBackground(Color.DARK_GRAY);	
+			
+		panelSoupOptions = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		panelSoupOptions.setBackground(Color.DARK_GRAY);
+		panelSoupOptions.setBounds(35, 405, 225, 150);
+		
+		checkboxCrouton = new JCheckBox("Croutons (+0.30€)");
+		checkboxCrouton.setForeground(Color.WHITE);
+		checkboxCrouton.setBackground(Color.DARK_GRAY);
+		panelSoupOptions.add(checkboxCrouton);	
+		
 		// listeners
+		
+		checkboxMilk.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent event) {
+		    	if(checkboxMilk.isSelected()) {
+					theDFM.setMilkOption(true);
+				}else {
+					theDFM.setMilkOption(false);
+				}
+				theDFM.raiseCheckbMilk();
+		    }
+		});
+		
+		
+		checkboxVanilla.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent event) {
+		    	if(checkboxVanilla.isSelected()) {
+					theDFM.setVanillaOption(true);
+				}else {
+					theDFM.setVanillaOption(false);
+				}
+				theDFM.raiseCheckbVanilla();
+		    }
+		});
+		
+		checkboxMapleSyrup.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent event) {
+		    	if(checkboxMapleSyrup.isSelected()) {
+					theDFM.setMapleSyrupOption(true);
+				}else {
+					theDFM.setMapleSyrupOption(false);
+				}
+				theDFM.raiseCheckbMapleSyrup();
+		    }
+		});
+		
+		checkboxCrouton.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent event) {
+		    	if(checkboxCrouton.isSelected()) {
+					theDFM.setCroutonOption(true);
+				}else {
+					theDFM.setCroutonOption(false);
+				}
+				theDFM.raiseCheckbCrouton();
+		    }
+		});
+		
 		addCupButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -686,9 +834,11 @@ public class DrinkFactoryMachine extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e){
 				if (theDFM.getOnWire()) {
+					resetPanelOption();
 					temperatureClassicBeverage();
 					sugarClassicBeverage();
 					classicSizeBeverage();
+					updatePanelCofExpOption();
 					beverageChoice = new Coffee();
 					theDFM.raiseCoffeeButton();
 					}
@@ -699,9 +849,11 @@ public class DrinkFactoryMachine extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e){
 				if (theDFM.getOnWire()) {
+					resetPanelOption();
 					temperatureClassicBeverage();
 					sugarClassicBeverage();
 					classicSizeBeverage();
+					updatePanelCofExpOption();
 					beverageChoice = new Expresso();
 					theDFM.raiseExpressoButton();
 					}
@@ -712,9 +864,11 @@ public class DrinkFactoryMachine extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e){
 				if (theDFM.getOnWire()) {
+					resetPanelOption();
 					temperatureClassicBeverage();
 					sugarClassicBeverage();
 					classicSizeBeverage();
+					updatePanelTeaOption();
 					beverageChoice = new Tea();
 					theDFM.raiseTeaButton();
 					}
@@ -725,9 +879,11 @@ public class DrinkFactoryMachine extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e){
 				if (theDFM.getOnWire()) {
+					resetPanelOption();
 					temperatureClassicBeverage();
 					spicySoupBeverage();
 					classicSizeBeverage();
+					updatePanelSoupOption();
 					beverageChoice = new Soup();
 					theDFM.raiseSoupButton();
 					}
@@ -738,6 +894,7 @@ public class DrinkFactoryMachine extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e){
 				if (theDFM.getOnWire()) {
+					resetPanelOption();
 					icedTeaTemperature();
 					sugarClassicBeverage();
 					icedTeaSizeBeverage();
