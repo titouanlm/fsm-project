@@ -82,6 +82,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		this.dfm.beverageChoice =null;
 		this.dfm.beveragePriceAfterDiscount= 0.;
 		this.dfm.resetPanelOption();
+		this.dfm.textField.setText("");
 		onResetSlidersRaised();
 	}
 	
@@ -93,6 +94,26 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		this.dfm.theDFM.setSizeSelected(this.dfm.sizeSlider.getValue()+1);
 		this.dfm.theDFM.setOnWire(false); 
 		this.dfm.progressBarStart();
+		if (this.dfm.theDFM.getPaymentCard()) {
+			if (this.dfm.textField.getText() != "") {
+			this.dfm.addHashInfoCard(this.dfm.textField.getText(), this.dfm.beveragePriceAfterDiscount);
+			}
+		}
+	}
+	
+	@Override
+	public void onValidatePaymentRaised() { // note pour moi : le setpaymentdonetrue se fait trop vite même si ca pose pas de problème
+		if (this.dfm.textField.getText() != "" && this.dfm.verifyCustomerDiscount(this.dfm.textField.getText())) {
+			this.dfm.messagesToUser.setText("<html> Vous avez droit à une remise !"
+					+ "<br> Votre boisson vous coutera : " + this.dfm.beveragePriceAfterDiscount + "€.<br> cadeau de la maison :)");
+		}
+		else {
+			this.dfm.messagesToUser.setText(this.dfm.messagesToUser.getText()+"<html> <br> Paiement autorisé.");
+			if(!this.dfm.theDFM.getPaymentCard()) {
+				this.dfm.theDFM.setSolde(this.dfm.roundValue(this.dfm.theDFM.getSolde()-this.dfm.beveragePriceAfterDiscount));
+			}
+			this.dfm.theDFM.setPaymentDone(true);
+		}
 	}
 
 	@Override
@@ -123,15 +144,6 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		this.dfm.temperatureSlider.setValue(2);
 		this.dfm.sizeSlider.setValue(1);
 		this.dfm.progressBar.setValue(0);
-	}
-
-	@Override
-	public void onValidatePaymentRaised() {
-		this.dfm.messagesToUser.setText(this.dfm.messagesToUser.getText()+"<html> <br> Paiement autorisé.");
-		if(!this.dfm.theDFM.getPaymentCard()) {
-			this.dfm.theDFM.setSolde(this.dfm.roundValue(this.dfm.theDFM.getSolde()-this.dfm.beveragePriceAfterDiscount));
-		}
-		this.dfm.theDFM.setPaymentDone(true);
 	}
 
 	@Override

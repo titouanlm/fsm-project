@@ -11,8 +11,16 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
+
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -24,6 +32,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
@@ -61,6 +70,8 @@ public class DrinkFactoryMachine extends JFrame {
 	protected JCheckBox checkboxCrouton;
 	protected double beveragePriceAfterDiscount = 0.;
 	protected boolean delayBlueCardPayment = false;
+	protected JTextField textField;
+	protected JLabel label1;
 	private Thread t;
 	private Thread t1;
 	private Thread t2;
@@ -78,6 +89,134 @@ public class DrinkFactoryMachine extends JFrame {
 				}
 			}
 		});
+	}
+	
+	public void addHashMapToFile(HashMap<String, List<Double>> hmap) {
+		try
+        {
+           FileOutputStream fos = new FileOutputStream("CustomerDiscountInformation.txt");
+           ObjectOutputStream oos = new ObjectOutputStream(fos);
+           oos.writeObject(hmap);
+           oos.close();
+           fos.close();
+        }
+        catch(IOException ioe)
+         {
+               ioe.printStackTrace();
+         }
+	}
+	
+	public void createFile(String name, double finalBeveragePrice) {
+		HashMap<String, List<Double>> hmap = new HashMap<String, List<Double>>();
+        List<Double> newListInfoCard = new ArrayList<>();
+        newListInfoCard.add(finalBeveragePrice);
+		hmap.put(name, newListInfoCard);
+		addHashMapToFile(hmap);
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public HashMap<String, List<Double>> retrieveHashInfoCard() {
+		HashMap<String, List<Double>> hmap = new HashMap<String, List<Double>>();
+		try {
+			FileInputStream fis = new FileInputStream("CustomerDiscountInformation.txt");
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			hmap = (HashMap<String, List<Double>>) ois.readObject();
+	        ois.close();
+	        fis.close();
+		} 
+		catch(IOException ioe)
+	      {
+	         ioe.printStackTrace();
+	      }
+	      catch(ClassNotFoundException c)
+	      {
+	         c.printStackTrace();
+	      }
+		return hmap;
+	}
+	
+	public void addHashInfoCard(String name, double finalBeveragePrice) {
+		File newFile = new File("CustomerDiscountInformation.txt");
+		if (newFile.length() == 0) {
+			createFile(name, finalBeveragePrice);
+			return;
+		}
+		HashMap<String, List<Double>> hmap = retrieveHashInfoCard();
+		if (hmap == null) {
+			messagesToUser.setText("<html> Machine défectueuse sur les réductions <br> merci de contacter le personnel");
+			return;
+		}
+		List<Double> newListHashInfo;
+		if (hmap.get(name) == null) {
+			newListHashInfo = new ArrayList<>(); 
+			newListHashInfo.add(finalBeveragePrice);
+			hmap.put(name,newListHashInfo);
+		}
+		else {
+			newListHashInfo = hmap.get(name);
+			newListHashInfo.add(finalBeveragePrice);
+			hmap.put(name,newListHashInfo);
+		}
+		
+		addHashMapToFile(hmap);
+   }
+	
+	@SuppressWarnings("unchecked")
+	public boolean verifyCustomerDiscount(String name) { 
+		HashMap<String, List<Double>> hmap = null;
+	      try
+	      {
+	         FileInputStream fis = new FileInputStream("CustomerDiscountInformation.txt");
+	         ObjectInputStream ois = new ObjectInputStream(fis);
+	         hmap = (HashMap<String, List<Double>>) ois.readObject();
+	         ois.close();
+	         fis.close();
+	      }
+	      catch(IOException ioe)
+	      {
+	         ioe.printStackTrace();
+	         return false;
+	      }
+	      catch(ClassNotFoundException c)
+	      {
+	         c.printStackTrace();
+	         return false;
+	      }
+	      
+	      if (hmap.get(name) != null && hmap.get(name).size() == 11) { 
+	    	  List<Double> newList = hmap.get(name);
+	    	  double discountPrice = doubleListAverageValueWithoutLastValue(newList);
+	    	  if (discountPrice >= beveragePriceAfterDiscount) {
+	    		  beveragePriceAfterDiscount = 0.0;
+	    	  }
+	    	  else {
+	    		  beveragePriceAfterDiscount -= discountPrice;
+	    		  roundValue(beveragePriceAfterDiscount);
+	    	  }
+	    	  for (int i = 0 ; i < 11 ; i++) {
+	    		  newList.remove(0);
+	    	  }
+	    	  hmap.remove(name);
+	    	  hmap.put(name, newList);
+	    	  addHashMapToFile(hmap);
+	
+	    	  return true; 
+	      }
+	    
+		return false;
+
+	}
+	
+	public double doubleListAverageValueWithoutLastValue(List<Double> list){
+		double moyenne = 0.0;
+		if (list != null) {
+			for (int i=0;i<list.size()-1;i++) {
+				moyenne+=list.get(i);
+			}
+			return (moyenne/(list.size()-1));
+		}
+		else return 0.0;
 	}
 	
 	public void enoughMoneyClassicBeverage() {
@@ -481,6 +620,11 @@ public class DrinkFactoryMachine extends JFrame {
 		messagesToUser3.setBounds(126, 145, 165, 175);
 		contentPane.add(messagesToUser3);
 		
+		textField = new JTextField();
+	    textField.setDocument(new JTextFieldLimit(16));
+	    setVisible(true);
+	    textField.setBounds(510, 190, 120, 20);
+	    contentPane.add(textField);
 		
 		JLabel lblCoins = new JLabel("Coins");
 		lblCoins.setForeground(Color.WHITE);
@@ -927,9 +1071,9 @@ public class DrinkFactoryMachine extends JFrame {
 	protected void finalize() throws Throwable {
 		// TODO Auto-generated method stub
 		super.finalize();
-		t.destroy();
+		/*t.destroy();
 		t1.destroy();
-		t2.destroy();
+		t2.destroy();*/
 	}
 	
 }
