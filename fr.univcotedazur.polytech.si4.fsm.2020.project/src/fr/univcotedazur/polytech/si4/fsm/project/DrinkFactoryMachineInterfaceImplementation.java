@@ -90,7 +90,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	public void onBeveragePreparationRaised() {
 		this.dfm.messagesToUser.setText("<html> Votre " + this.dfm.beverageChoice.getName() + " est en cours de préparation ... ");
 		this.dfm.theDFM.setBeverageSelected(this.dfm.beverageChoice.getName());
-		this.dfm.theDFM.setTemperatureSelected(this.dfm.getTemperatureSelected());
+		this.dfm.theDFM.setTemperatureSelected(this.dfm.getTemperatureHotBeverageSelected());
 		this.dfm.theDFM.setSizeSelected(this.dfm.sizeSlider.getValue()+1);
 		this.dfm.theDFM.setOnWire(false); 
 		this.dfm.progressBarStart();
@@ -397,6 +397,42 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	@Override
 	public void onCroutonOKRaised() {
 		this.dfm.messagesToUser3.setText("<html> Ajout des croutons... ✓") ; 	
+	}
+
+	@Override
+	public void onClosingDoorRaised() {
+		this.dfm.messagesToUser2.setText("<html> Verouillage de la porte...");
+		
+	}
+
+	@Override
+	public void onClosingDoorOKRaised() {
+		this.dfm.messagesToUser2.setText("<html> Verouillage de la porte... ✓");
+		
+	}
+
+	@Override
+	public void onLiquidNitrogenInjectionRaised() {
+		this.dfm.messagesToUser3.setText("<html> Injection d'azote liquide...");
+		
+	}
+
+	@Override
+	public void onLiquidNitrogenInjectionOKRaised() {
+		this.dfm.messagesToUser3.setText("<html> Injection d'azote liquide... ✓");
+		
+	}
+
+	@Override
+	public void onOpeningDoorRaised() {
+		this.dfm.messagesToUser2.setText("<html> Déverouillage de la porte...");
+		
+	}
+
+	@Override
+	public void onOpeningDoorOKRaised() {
+		this.dfm.messagesToUser2.setText("<html> Déverouillage de la porte... ✓");
+		
 	}
 
 }

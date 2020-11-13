@@ -249,7 +249,7 @@ public class DrinkFactoryMachine extends JFrame {
 		return valueCorrection2;
 	}
 	
-	public int getTemperatureSelected() {
+	public int getTemperatureHotBeverageSelected() {
 		int temperatureSelected = 0;
 		switch(temperatureSlider.getValue()) {
 		case 0:
@@ -267,45 +267,300 @@ public class DrinkFactoryMachine extends JFrame {
 		return temperatureSelected;
 	}
 	
-	public double chooseRightOrLeft() {
-		double timeLeft = (getTemperatureSelected() * 0.1);
-		if(timeLeft > 3.0 || this.theDFM.getOwnCup()) {
-			return  timeLeft;
-		}else {
-			return 3.0;
+	public int getTemperatureColdBeverageSelected() {
+		int temperatureSelected = 0;
+		switch(temperatureSlider.getValue()) {
+		case 0:
+			temperatureSelected = 1;
+			break;
+		case 1:
+			temperatureSelected = 4;
+			break;
+		case 2:
+			temperatureSelected = 7;
+			break;
+		default:
+			temperatureSelected = 10;
+		}
+		return temperatureSelected;
+	}
+	
+	public double chooseLeftOrRightPathsOverAllCoffeeSteps() {
+		double timePreparation = 0.0 ;
+		timePreparation += chooseLeftOrRightPathOfFirstStepCoffeePreparation();
+		timePreparation += chooseLeftOrRightPathOfSecondStepCoffeePreparation();
+		timePreparation += chooseLeftOrRightPathOfThirdStepCoffeePreparation();
+		timePreparation += addOptions();
+		return timePreparation;
+	}
+	
+	public double chooseLeftOrRightPathOfFirstStepCoffeePreparation() {
+		double timePreparationLeft = 1.5 ;
+		double timePreparationRight = 2.5;
+		if (timePreparationLeft > timePreparationRight) {
+			return timePreparationLeft;
+		}
+		else {
+			return timePreparationRight;
 		}
 	}
 	
-	public double chooseRightOrLeftExpresso() {
-		double timeLeft = (getTemperatureSelected() * 0.1);
-		double timeRight = 3.0 + ((sizeSlider.getValue()+1)*1.5);
-		if(timeLeft > timeRight) {
-			return  timeLeft;
-		}else {
-			return timeRight ;
+	public double chooseLeftOrRightPathOfSecondStepCoffeePreparation() {
+		double timePreparationLeft = getTemperatureHotBeverageSelected() * 0.15 ;
+		double timePreparationRight = 0.0 ;
+		if (!this.theDFM.getOwnCup()) {
+			timePreparationRight+=3.0;
+		}
+		if (timePreparationLeft > timePreparationRight) {
+			return timePreparationLeft;
+		}
+		else {
+			return timePreparationRight;
 		}
 	}
 	
-	public double chooseRightOrLeftSoup() {
-		double result =-0.2;
+	public double chooseLeftOrRightPathOfThirdStepCoffeePreparation() {
+		double timePreparationLeft = (sizeSlider.getValue()+1)*1.5 ;
+		double timePreparationRight = 3.0;
+		if (timePreparationLeft > timePreparationRight) {
+			return timePreparationLeft;
+		}
+		else {
+			return timePreparationRight;
+		}
+	}
+	
+	public double chooseLeftOrRightPathsOverAllExpressoSteps() {
+		double timePreparation = 0.0 ;
+		timePreparation += chooseLeftOrRightPathOfFirstStepExpressoPreparation();
+		timePreparation += chooseLeftOrRightPathOfSecondStepExpressoPreparation();
+		timePreparation += chooseLeftOrRightPathOfThirdStepExpressoPreparation();
+		timePreparation += addOptions();
+		return timePreparation;
+	}
+	
+	public double chooseLeftOrRightPathOfFirstStepExpressoPreparation() {
+		double timePreparationLeft = 1.5 ;
+		double timePreparationRight = 4.0;
+		if (timePreparationLeft > timePreparationRight) {
+			return timePreparationLeft;
+		}
+		else {
+			return timePreparationRight;
+		}
+	}
+	
+	public double chooseLeftOrRightPathOfSecondStepExpressoPreparation() {
+		double timePreparationLeft = getTemperatureHotBeverageSelected() * 0.15 ;
+		double timePreparationRight = 0.0 ;
+		if (!this.theDFM.getOwnCup()) {
+			timePreparationRight+=3.0;
+		}
+		timePreparationRight += (sizeSlider.getValue()+1)*2;
+		if (timePreparationLeft > timePreparationRight) {
+			return timePreparationLeft;
+		}
+		else {
+			return timePreparationRight;
+		}
+	}
+	
+	public double chooseLeftOrRightPathOfThirdStepExpressoPreparation() {
+		double timePreparationLeft = (sizeSlider.getValue()+1)*1.5 ;
+		double timePreparationRight = 3.0;
+		if (timePreparationLeft > timePreparationRight) {
+			return timePreparationLeft;
+		}
+		else {
+			return timePreparationRight;
+		}
+	}
+	
+	public double chooseLeftOrRightPathsOverAllTeaSteps() {
+		double timePreparation = 0.0 ;
+		timePreparation += chooseLeftOrRightPathOfFirstStepTeaPreparation();
+		timePreparation += chooseLeftOrRightPathOfSecondStepTeaPreparation();
+		timePreparation += chooseLeftOrRightPathOfThirdStepTeaPreparation();
+		timePreparation += timeOfFourthStepTeaPreparation();
+		timePreparation += addOptions();
+		return timePreparation;
+	}
+	
+	public double chooseLeftOrRightPathOfFirstStepTeaPreparation() {
+		double timePreparationLeft = 1.5 ;
+		double timePreparationRight = 2.5;
+		if (timePreparationLeft > timePreparationRight) {
+			return timePreparationLeft;
+		}
+		else {
+			return timePreparationRight;
+		}
+	}
+	
+	public double chooseLeftOrRightPathOfSecondStepTeaPreparation() {
+		double timePreparationLeft = getTemperatureHotBeverageSelected() * 0.15 ;
+		double timePreparationRight = 0.0 ;
+		if (!this.theDFM.getOwnCup()) {
+			timePreparationRight+=3.0;
+		}
+		if (timePreparationLeft > timePreparationRight) {
+			return timePreparationLeft;
+		}
+		else {
+			return timePreparationRight;
+		}
+	}
+	
+	public double chooseLeftOrRightPathOfThirdStepTeaPreparation() {
+		double timePreparationLeft = (sizeSlider.getValue()+1)*1.5 ;
+		double timePreparationRight = 3.0;
+		if (timePreparationLeft > timePreparationRight) {
+			return timePreparationLeft;
+		}
+		else {
+			return timePreparationRight;
+		}
+	}
+	
+	public double timeOfFourthStepTeaPreparation() {
+		return 5.0;			
+	}
+	
+	public double chooseLeftOrRightPathsOverAllSoupSteps() {
+		double timePreparation = 0.0 ;
+		timePreparation += chooseLeftOrRightPathOfFirstStepSoupPreparation();
+		timePreparation += chooseLeftOrRightPathOfSecondStepSoupPreparation();
+		timePreparation += chooseLeftOrRightPathOfThirdStepSoupPreparation();
+		timePreparation += addOptions();
+		return timePreparation;
+	}
+	
+	public double chooseLeftOrRightPathOfFirstStepSoupPreparation() {
+		double timePreparationLeft = 1.5;
+		double timePreparationRight = 0.0;
+		if (!this.theDFM.getOwnCup()) {
+			timePreparationRight+=3.0;
+		}
+		if (timePreparationLeft > timePreparationRight) {
+			return timePreparationLeft;
+		}
+		else {
+			return timePreparationRight;
+		}
+	}
+
+	public double chooseLeftOrRightPathOfSecondStepSoupPreparation() {
+		double timePreparationLeft = getTemperatureHotBeverageSelected() * 0.15 ;
+		double timePreparationRight = 2.5 ;
+		if (timePreparationLeft > timePreparationRight) {
+			return timePreparationLeft;
+		}
+		else {
+			return timePreparationRight;
+		}
+	}
+	
+	public double chooseLeftOrRightPathOfThirdStepSoupPreparation() {
+		double timePreparationLeft = (sizeSlider.getValue()+1)*1.5 ;
+		double timePreparationRight = 0.0;
+		if (timePreparationLeft > timePreparationRight) {
+			return timePreparationLeft;
+		}
+		else {
+			return timePreparationRight;
+		}
+	}
+	
+	public double chooseLeftOrRightPathsOverAllIcedTeaSteps() {
+		double timePreparation = 0.0;
+		timePreparation += chooseLeftOrRightPathOfFirstStepIcedTeaPreparation();
+		timePreparation += chooseLeftOrRightPathOfSecondStepIcedTeaPreparation();
+		timePreparation += chooseLeftOrRightPathOfThirdStepIcedTeaPreparation();
+		timePreparation += timeOfFourthStepIcedTeaPreparation();
+		timePreparation += timeOfClosingDoor();
+		timePreparation += timeOfLiquidNitrogenInjection();
+		timePreparation += timeOfOpeningDoor();
+		timePreparation += addOptions();
+		return timePreparation;
+	}
+	
+	public double chooseLeftOrRightPathOfFirstStepIcedTeaPreparation() {
+		double timePreparationLeft = 1.5 ;
+		double timePreparationRight = 2.5;
+		if (timePreparationLeft > timePreparationRight) {
+			return timePreparationLeft;
+		}
+		else {
+			return timePreparationRight;
+		}
+	}
+	
+	public double chooseLeftOrRightPathOfSecondStepIcedTeaPreparation() {
+		double timePreparationLeft = getTemperatureHotBeverageSelected() * 0.15 ;
+		double timePreparationRight = 0.0 ;
+		if (!this.theDFM.getOwnCup()) {
+			timePreparationRight+=3.0;
+		}
+		if (timePreparationLeft > timePreparationRight) {
+			return timePreparationLeft;
+		}
+		else {
+			return timePreparationRight;
+		}
+	}
+	
+	public double chooseLeftOrRightPathOfThirdStepIcedTeaPreparation() {
+		double timePreparationLeft = (sizeSlider.getValue()+1)*1.5 ;
+		double timePreparationRight = 3.0;
+		if (timePreparationLeft > timePreparationRight) {
+			return timePreparationLeft;
+		}
+		else {
+			return timePreparationRight;
+		}
+	}
+	
+	public double timeOfFourthStepIcedTeaPreparation() {
+		return 5.0;			
+	}
+	
+	public double timeOfClosingDoor() {
+		return 4.0;
+	}
+	
+	public double timeOfLiquidNitrogenInjection() {
+		return ((-1/3)*getTemperatureColdBeverageSelected())+20;
+	}
+	
+	public double timeOfOpeningDoor() {
+		return 4.0;
+	}
+	
+	public double timePreparation(Beverage beverage) { // le temps se calcul en fonction de la machine à état
+		double timePreparation = 0; 
 		
-		if(this.theDFM.getOwnCup()) {
-			result+= 1.5;
-		}else {
-			result+= 3.0;
+		switch(beverage.getName()) {
+		case "café":
+			timePreparation += chooseLeftOrRightPathsOverAllCoffeeSteps();
+			break;
+		case "expresso":
+			timePreparation += chooseLeftOrRightPathsOverAllExpressoSteps();
+			break;
+		case "thé":
+			timePreparation += chooseLeftOrRightPathsOverAllTeaSteps();
+			break;
+		case "soupe":
+			timePreparation += chooseLeftOrRightPathsOverAllSoupSteps();
+			break;
+		case "thé glacé":
+			timePreparation += chooseLeftOrRightPathsOverAllIcedTeaSteps();
 		}
 		
-		double timeLeft = (getTemperatureSelected() * 0.1);
-		if(timeLeft > 4.5) {
-			result+=  timeLeft;
-		}else {
-			result+= 4.5;
-		}
-		return result;
+		return timePreparation;
 	}
 	
 	private double addOptions() {
-		double result =0;
+		double result = 0.0;
 		if(checkboxMilk.isSelected()) {
 			result+= 2;	
 		}
@@ -320,51 +575,31 @@ public class DrinkFactoryMachine extends JFrame {
 		return result;
 	}
 	
-	public double timePreparation(Beverage beverage) { // le temps se calcul en fonction de la machine à état
-		double timePreparation = 0; 
-		
-		switch(beverage.getName()) {
-		case "café":
-			timePreparation += 2.3 + chooseRightOrLeft();
-			break;
-		case "thé":
-			timePreparation += 7.3 + chooseRightOrLeft(); 
-			break;
-		case "expresso":
-			timePreparation += 3.8 + chooseRightOrLeftExpresso(); 
-			break;
-		case "soupe":
-			timePreparation += chooseRightOrLeftSoup(); 
-			break;
-		}
-		
-		timePreparation += (sizeSlider.getValue()+1)*3;
-		timePreparation += addOptions();
-		
-		return timePreparation;
-	}
-	
 	
 
-	public void progressBarStart() {
+	public void progressBarStart() { // Les threads.sleep sont très mauvais, comportement chaotique de la barre de progression
 		
-		long temps = (long)(timePreparation(beverageChoice)*1000);		
+		long temps = (long)(timePreparation(beverageChoice)*10);
 		Runnable r = new Runnable() {
 			
 			@Override
 			public void run() {
+				long start = System.currentTimeMillis();
 				while(true) {
 					try {
-						Thread.sleep(temps/100);
+						Thread.sleep(temps); 
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 					if (progressBar.getValue() != 100) {
 						progressBar.setValue(progressBar.getValue()+1);
 					}
-					else break;
+					else {
+						break;
+					}
 				}
-				
+				/*messagesToUser.setText("<html> temps passé : " + (System.currentTimeMillis()-start) + 
+						"<br> temps normal : " + temps);*/
 			}
 		};
 		t1 = new Thread(r);
@@ -391,9 +626,9 @@ public class DrinkFactoryMachine extends JFrame {
 		contentPane.remove(temperatureSlider);
 		Hashtable<Integer, JLabel> temperatureTable = new Hashtable<Integer, JLabel>();
 		temperatureTable.put(0, new JLabel("1°C"));
-		temperatureTable.put(1, new JLabel("3°C"));
-		temperatureTable.put(2, new JLabel("6°C"));
-		temperatureTable.put(3, new JLabel("9°C"));
+		temperatureTable.put(1, new JLabel("4°C"));
+		temperatureTable.put(2, new JLabel("7°C"));
+		temperatureTable.put(3, new JLabel("10°C"));
 		for (JLabel l : temperatureTable.values()) {
 			l.setForeground(Color.WHITE);
 		}
