@@ -183,7 +183,6 @@ public class DrinkFactoryMachine extends JFrame {
 	         c.printStackTrace();
 	         return false;
 	      }
-	      
 	      if (hmap.get(name) != null && hmap.get(name).size() == 11) { 
 	    	  List<Double> newList = hmap.get(name);
 	    	  double discountPrice = doubleListAverageValueWithoutLastValue(newList);

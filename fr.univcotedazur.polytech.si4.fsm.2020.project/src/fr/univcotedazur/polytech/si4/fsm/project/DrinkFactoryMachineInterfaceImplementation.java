@@ -95,7 +95,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		this.dfm.theDFM.setOnWire(false); 
 		this.dfm.progressBarStart();
 		if (this.dfm.theDFM.getPaymentCard()) {
-			if (this.dfm.textField.getText() != "") {
+			if (!this.dfm.textField.getText().equals("")) {
 			this.dfm.addHashInfoCard(this.dfm.textField.getText(), this.dfm.beveragePriceAfterDiscount);
 			}
 		}
@@ -103,7 +103,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	
 	@Override
 	public void onValidatePaymentRaised() { // note pour moi : le setpaymentdonetrue se fait trop vite même si ca pose pas de problème
-		if (this.dfm.textField.getText() != "" && this.dfm.verifyCustomerDiscount(this.dfm.textField.getText())) {
+		if (!this.dfm.textField.getText().equals("") && this.dfm.verifyCustomerDiscount(this.dfm.textField.getText())) {
 			this.dfm.messagesToUser.setText("<html> Vous avez droit à une remise !"
 					+ "<br> Votre boisson vous coutera : " + this.dfm.beveragePriceAfterDiscount + "€.<br> cadeau de la maison :)");
 		}
