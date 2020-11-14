@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 
 import fr.univcotedazur.polytech.si4.fsm.project.defaultsm.IDefaultSMStatemachine.SCInterfaceListener;
 
@@ -49,11 +50,8 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	
 	@Override
 	public void onTakeChangeRaised() {
-		try {
-			this.dfm.labelForPictures.setIcon(new ImageIcon(ImageIO.read(new File("./picts/vide2.jpg"))));
-		} catch (IOException ee) {
-			ee.printStackTrace();
-		}
+		this.dfm.updatePicture();
+		
 		this.dfm.progressBar.setValue(0);
 		if (this.dfm.theDFM.getSolde() > 0.0) {
 			if (!this.dfm.theDFM.getPaymentCard()) {
@@ -82,6 +80,8 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		this.dfm.beverageChoice =null;
 		this.dfm.beveragePriceAfterDiscount= 0.;
 		this.dfm.resetPanelOption();
+		this.dfm.updateStock();
+		this.dfm.updatePicture();
 		onResetSlidersRaised();
 	}
 	
@@ -225,7 +225,8 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 
 	@Override
 	public void onGrindGrainsRaised() {
-		this.dfm.messagesToUser3.setText("<html> Broyage des grains...");		
+		this.dfm.messagesToUser3.setText("<html> Broyage des grains...");	
+		this.dfm.supply.consumeGrain(this.dfm.sizeSlider.getValue()+1);
 	}
 
 	@Override
@@ -264,11 +265,12 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	@Override
 	public void onSugarOKRaised() {
 		this.dfm.messagesToUser3.setText("<html> Ajout du sucre (" +  this.dfm.sugarOrSpicySlider.getValue() +" doses)... ✓");
+		this.dfm.supply.consumeSugarDoses(this.dfm.sugarOrSpicySlider.getValue());
 	}
 
 	@Override
 	public void onGrainPackingOKRaised() {
-		this.dfm.messagesToUser3.setText("<html> Tassage des grains... ✓");	
+		this.dfm.messagesToUser3.setText("<html> Tassage des grains... ✓");
 	}
 
 	@Override
@@ -283,12 +285,14 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 
 	@Override
 	public void onTeaBagOKRaised() {
-		this.dfm.messagesToUser3.setText("<html> Récupération et positionnement d’un sachet... ✓");	
+		this.dfm.messagesToUser3.setText("<html> Récupération et positionnement d’un sachet... ✓");
+		this.dfm.supply.consumeTeaBag();
 	}
 
 	@Override
 	public void onPodOKRaised() {
 		this.dfm.messagesToUser3.setText("<html> Récupération et positionnement d’une dosette... ✓");
+		this.dfm.supply.consumeCoffeeDose();
 	}
 
 	@Override
@@ -298,7 +302,8 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 
 	@Override
 	public void onCupOKRaised() {
-		this.dfm.messagesToUser3.setText("<html> Positionnement du gobelet... ✓");	
+		this.dfm.messagesToUser3.setText("<html> Positionnement du gobelet... ✓");
+		this.dfm.supply.consumeGoblet();
 	}
 
 	@Override
@@ -318,13 +323,13 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 
 	@Override
 	public void onTakeSoupPodRaised() {
-		this.dfm.messagesToUser3.setText("<html> Récupération et versement d’une dose de soupe... ");	
+		this.dfm.messagesToUser3.setText("<html> Récupération et versement d’une dose de soupe... ");
 	}
 
 	@Override
 	public void onSoupPodOKRaised() {
 		this.dfm.messagesToUser3.setText("<html> Récupération et versement d’une dose de soupe... ✓");
-	
+		this.dfm.supply.consumeSoupDose();
 	}
 
 	@Override
@@ -334,7 +339,8 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 
 	@Override
 	public void onSpicesOKRaised() {
-		this.dfm.messagesToUser3.setText("<html> Ajout des épices (" +  this.dfm.sugarOrSpicySlider.getValue() +" doses)... ✓");		
+		this.dfm.messagesToUser3.setText("<html> Ajout des épices (" +  this.dfm.sugarOrSpicySlider.getValue() +" doses)... ✓");
+		this.dfm.supply.consumeSpicyDose(this.dfm.sugarOrSpicySlider.getValue());
 	}
 
 	@Override
@@ -344,7 +350,8 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 
 	@Override
 	public void onPoorMilkOKRaised() {
-		this.dfm.messagesToUser3.setText("<html> Ajout d'un nuage de lait...✓");				
+		this.dfm.messagesToUser3.setText("<html> Ajout d'un nuage de lait...✓");
+		this.dfm.supply.consumeMilkDose();
 	}
 
 	@Override
@@ -355,6 +362,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	@Override
 	public void onVanillaOKRaised() {
 		this.dfm.messagesToUser3.setText("<html> Ajout d'une dose de glace vanille...✓");
+		this.dfm.supply.consumeVanillaDose();
 	}
 
 	@Override
@@ -375,6 +383,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	@Override
 	public void onMapleSyrupOKRaised() {
 		this.dfm.messagesToUser3.setText("<html> Ajout du sirop d'érable... ✓");
+		this.dfm.supply.consumeMapleSyrupDose();
 	}
 
 	@Override
@@ -385,6 +394,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	@Override
 	public void onCroutonOKRaised() {
 		this.dfm.messagesToUser3.setText("<html> Ajout des croutons... ✓") ; 	
+		this.dfm.supply.consumeCroutonDose();
 	}
 
 }

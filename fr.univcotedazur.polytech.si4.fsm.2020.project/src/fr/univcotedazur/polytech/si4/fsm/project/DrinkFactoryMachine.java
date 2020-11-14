@@ -45,10 +45,11 @@ public class DrinkFactoryMachine extends JFrame {
 	protected JLabel messagesToUser;
 	protected JLabel messagesToUser2;
 	protected JLabel messagesToUser3;
-	protected JLabel options;
+	protected JLabel messagesToUserOption1;
+	protected JLabel messagesToUserOption2;
+	protected JLabel messagesToUserOption3;
+	protected JLabel messagesToProviderStock;
 	protected JLabel labelForPictures;
-	protected JPanel panelCofExpTeaOptions;
-	protected JPanel panelSoupOptions;
 	protected JSlider sugarOrSpicySlider;
 	protected JSlider sizeSlider;
 	protected JSlider temperatureSlider;
@@ -61,6 +62,7 @@ public class DrinkFactoryMachine extends JFrame {
 	protected JCheckBox checkboxCrouton;
 	protected double beveragePriceAfterDiscount = 0.;
 	protected boolean delayBlueCardPayment = false;
+	protected Supply supply;
 	private Thread t;
 	private Thread t1;
 	private Thread t2;
@@ -139,7 +141,12 @@ public class DrinkFactoryMachine extends JFrame {
 	
 	public double chooseRightOrLeftExpresso() {
 		double timeLeft = (getTemperatureSelected() * 0.1);
-		double timeRight = 3.0 + ((sizeSlider.getValue()+1)*1.5);
+		double timeRight; 
+		if(this.theDFM.getOwnCup()) {
+			timeRight =((sizeSlider.getValue()+1)*1.5);
+		}else {
+			timeRight = 3.0 + ((sizeSlider.getValue()+1)*1.5);
+		}
 		if(timeLeft > timeRight) {
 			return  timeLeft;
 		}else {
@@ -327,35 +334,90 @@ public class DrinkFactoryMachine extends JFrame {
 	}
 	
 	public void updatePanelCofExpOption() {
-		panelCofExpTeaOptions.add(checkboxVanilla);
-		contentPane.add(panelCofExpTeaOptions);	
+		if(supply.enoughMilkDose()) {
+			contentPane.add(checkboxMilk);
+		}else {
+			messagesToUserOption1.setText("Nuage de lait indisponible.");
+		}
+		
+		if(supply.enoughMapleSyrupDose()) {
+			contentPane.add(checkboxMapleSyrup);
+		}else {
+			messagesToUserOption2.setText("Sirop d'érable indisponible.");
+		}
+		
+		if(supply.enoughVanillaDose()) {
+			contentPane.add(checkboxVanilla);
+		}else {
+			messagesToUserOption3.setText("Glace vanille indisponible.");
+		}
+		
+		
 	}
 	
-	public void updatePanelTeaOption() {
-		panelCofExpTeaOptions.remove(checkboxVanilla);
-		contentPane.add(panelCofExpTeaOptions);	
+	public void updatePanelTeaOption() {		
+		if(supply.enoughMilkDose()) {
+			contentPane.add(checkboxMilk);
+		}else {
+			messagesToUserOption1.setText("Nuage de lait indisponible.");
+		}
+		
+		if(supply.enoughMapleSyrupDose()) {
+			contentPane.add(checkboxMapleSyrup);
+		}else {
+			messagesToUserOption2.setText("Sirop d'érable indisponible.");
+		}
+		
 	}
 	
-
 	public void updatePanelSoupOption() {
-		contentPane.add(panelSoupOptions);
+		if(supply.enoughCroutonDose()) {
+			contentPane.add(checkboxCrouton);
+		}else {
+			messagesToUserOption1.setText("Croutons indisponible.");
+		}
 	}
 
 	public void resetPanelOption() {
-		
-		contentPane.remove(panelCofExpTeaOptions);
-		contentPane.remove(panelSoupOptions);
+		contentPane.remove(checkboxMilk);
+		contentPane.remove(checkboxMapleSyrup);
+		contentPane.remove(checkboxVanilla);
+		contentPane.remove(checkboxCrouton);
+
 		checkboxMilk.setSelected(false);
 		theDFM.setMilkOption(false);
+		
 		checkboxVanilla.setSelected(false);
 		theDFM.setVanillaOption(false);
+		
 		checkboxMapleSyrup.setSelected(false);
 		theDFM.setMapleSyrupOption(false);
+		
 		checkboxCrouton.setSelected(false);
 		theDFM.setCroutonOption(false);
 		
+		messagesToUserOption1.setText("");
+		messagesToUserOption2.setText("");
+		messagesToUserOption3.setText("");
+		
 		contentPane.revalidate();
 		contentPane.repaint();
+	}
+	
+	
+	public void updateStock() {
+		messagesToProviderStock.setText(supply.toString());
+	}
+	
+	
+	public void updatePicture() {
+		BufferedImage myPicture = null;
+		try {
+			myPicture = ImageIO.read(new File("./picts/vide2.jpg"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		this.labelForPictures.setIcon(new ImageIcon(myPicture));
 	}
 	
 	/**
@@ -419,6 +481,7 @@ public class DrinkFactoryMachine extends JFrame {
 		theDFM.enter();
 		theDFM.getSCInterface().getListeners().add(new DrinkFactoryMachineInterfaceImplementation(this));		
 		
+		this.supply = new Supply();
 		
 		Runnable r = new Runnable() {
 			
@@ -446,7 +509,7 @@ public class DrinkFactoryMachine extends JFrame {
 		setBackground(Color.DARK_GRAY);
 		setTitle("Drinking Factory Machine");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 650, 650);
+		setBounds(100, 100, 840, 650);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.DARK_GRAY);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -480,6 +543,40 @@ public class DrinkFactoryMachine extends JFrame {
 		messagesToUser3.setBackground(Color.WHITE);
 		messagesToUser3.setBounds(126, 145, 165, 175);
 		contentPane.add(messagesToUser3);
+		
+		
+		
+		messagesToUserOption1 = new JLabel("");
+		messagesToUserOption1.setForeground(Color.RED);
+		messagesToUserOption1.setHorizontalAlignment(SwingConstants.LEFT);
+		messagesToUserOption1.setVerticalAlignment(SwingConstants.TOP);
+		messagesToUserOption1.setBackground(Color.WHITE);
+		messagesToUserOption1.setBounds(42, 361, 225, 150);
+		contentPane.add(messagesToUserOption1);
+		
+		messagesToUserOption2 = new JLabel("");
+		messagesToUserOption2.setForeground(Color.RED);
+		messagesToUserOption2.setHorizontalAlignment(SwingConstants.LEFT);
+		messagesToUserOption2.setVerticalAlignment(SwingConstants.TOP);
+		messagesToUserOption2.setBounds(42, 386, 225, 150);
+		contentPane.add(messagesToUserOption2);
+		
+		messagesToUserOption3 = new JLabel("");
+		messagesToUserOption3.setForeground(Color.RED);
+		messagesToUserOption3.setHorizontalAlignment(SwingConstants.LEFT);
+		messagesToUserOption3.setVerticalAlignment(SwingConstants.TOP);
+		messagesToUserOption3.setBounds(42, 411, 225, 150);
+		contentPane.add(messagesToUserOption3);
+		
+		
+		
+		messagesToProviderStock = new JLabel(supply.toString());
+		messagesToProviderStock.setForeground(Color.WHITE);
+		messagesToProviderStock.setHorizontalAlignment(SwingConstants.LEFT);
+		messagesToProviderStock.setVerticalAlignment(SwingConstants.TOP);
+		messagesToProviderStock.setBackground(Color.WHITE);
+		messagesToProviderStock.setBounds(675, 12, 225, 600);
+		contentPane.add(messagesToProviderStock);
 		
 		
 		JLabel lblCoins = new JLabel("Coins");
@@ -655,13 +752,18 @@ public class DrinkFactoryMachine extends JFrame {
 		contentPane.add(lblNfc);
 
 		JSeparator separator = new JSeparator();
-		separator.setBounds(12, 292, 622, 15);
+		separator.setBounds(12, 292, 645, 15);
 		contentPane.add(separator);
+		
+		JSeparator separator2 = new JSeparator();
+		separator2.setBounds(650, 12, 15, 600);
+		separator2.setOrientation(JSeparator.VERTICAL);
+		contentPane.add(separator2);
 
 		JButton addCupButton = new JButton("Add cup");
 		addCupButton.setForeground(Color.BLACK);
 		addCupButton.setBackground(Color.DARK_GRAY);
-		addCupButton.setBounds(45, 336, 96, 25);
+		addCupButton.setBounds(538, 336, 96, 25);
 		contentPane.add(addCupButton);
 
 		BufferedImage myPicture = null;
@@ -670,10 +772,11 @@ public class DrinkFactoryMachine extends JFrame {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		labelForPictures = new JLabel(new ImageIcon(myPicture));
-		labelForPictures.setBounds(255, 319, 286, 260);
-		contentPane.add(labelForPictures);
-
+		this.labelForPictures = new JLabel(new ImageIcon(myPicture));
+		this.labelForPictures.setBounds(255, 336, 286, 260);
+		
+		contentPane.add(this.labelForPictures);	
+		
 		JPanel panel_2 = new JPanel();
 		panel_2.setBackground(Color.DARK_GRAY);
 		panel_2.setBounds(538, 217, 96, 33);
@@ -687,41 +790,33 @@ public class DrinkFactoryMachine extends JFrame {
 		
 		//OPTIONS
 	
-		options = new JLabel("Options :");
+		JLabel options = new JLabel("Options");
 		options.setForeground(Color.WHITE);
 		options.setHorizontalAlignment(SwingConstants.LEFT);
 		options.setVerticalAlignment(SwingConstants.TOP);
-		options.setToolTipText("message to the user 3");
 		options.setBackground(Color.WHITE);
-		options.setBounds(35, 385, 105, 15);
+		options.setBounds(35, 336, 105, 15);
 		contentPane.add(options);
-		
-		panelCofExpTeaOptions = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		panelCofExpTeaOptions.setBackground(Color.DARK_GRAY);
-		panelCofExpTeaOptions.setBounds(35, 405, 225, 150);
 		
 		checkboxMilk = new JCheckBox("Nuage de lait (+0.10€)");
 		checkboxMilk.setForeground(Color.WHITE);
 		checkboxMilk.setBackground(Color.DARK_GRAY);
-		panelCofExpTeaOptions.add(checkboxMilk);
-		
+		checkboxMilk.setBounds(35, 361, 200, 20);
+				
 		checkboxMapleSyrup = new JCheckBox("Sirop d'érable (+0.10€)");
 		checkboxMapleSyrup.setForeground(Color.WHITE);
 		checkboxMapleSyrup.setBackground(Color.DARK_GRAY);
-		panelCofExpTeaOptions.add(checkboxMapleSyrup);	
+		checkboxMapleSyrup.setBounds(35, 386, 200, 20);
 		
 		checkboxVanilla = new JCheckBox("Glace vanille mixée (+0.40€)");
 		checkboxVanilla.setForeground(Color.WHITE);
 		checkboxVanilla.setBackground(Color.DARK_GRAY);	
-			
-		panelSoupOptions = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		panelSoupOptions.setBackground(Color.DARK_GRAY);
-		panelSoupOptions.setBounds(35, 405, 225, 150);
+		checkboxVanilla.setBounds(35, 411, 200, 20);
 		
 		checkboxCrouton = new JCheckBox("Croutons (+0.30€)");
 		checkboxCrouton.setForeground(Color.WHITE);
 		checkboxCrouton.setBackground(Color.DARK_GRAY);
-		panelSoupOptions.add(checkboxCrouton);	
+		checkboxCrouton.setBounds(35, 361, 200, 20);
 		
 		// listeners
 		
@@ -847,63 +942,80 @@ public class DrinkFactoryMachine extends JFrame {
 		coffeeButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e){
-				if (theDFM.getOnWire()) {
+				if(theDFM.getOnWire()) {
 					resetPanelOption();
-					temperatureClassicBeverage();
-					sugarClassicBeverage();
-					classicSizeBeverage();
-					updatePanelCofExpOption();
-					beverageChoice = new Coffee();
-					theDFM.raiseCoffeeButton();
+					if (supply.enoughCoffeeDose() &&  supply.enoughSugarDose() && (supply.enoughGoblet() || theDFM.getOwnCup())) {
+						temperatureClassicBeverage();
+						sugarClassicBeverage();
+						classicSizeBeverage();
+						updatePanelCofExpOption();
+						beverageChoice = new Coffee();
+						theDFM.raiseCoffeeButton();
+					}else {
+						messagesToUser.setText("<html> Désolé le café est indisponible pour le moment." );
 					}
 				}
+			}
 		});
 		
 		expressoButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e){
-				if (theDFM.getOnWire()) {
+				if(theDFM.getOnWire()) {
 					resetPanelOption();
-					temperatureClassicBeverage();
-					sugarClassicBeverage();
-					classicSizeBeverage();
-					updatePanelCofExpOption();
-					beverageChoice = new Expresso();
-					theDFM.raiseExpressoButton();
+					if (supply.enoughGrain() &&  supply.enoughSugarDose() && (supply.enoughGoblet() || theDFM.getOwnCup())) {
+						resetPanelOption();
+						temperatureClassicBeverage();
+						sugarClassicBeverage();
+						classicSizeBeverage();
+						updatePanelCofExpOption();
+						beverageChoice = new Expresso();
+						theDFM.raiseExpressoButton();
+					}else {
+						messagesToUser.setText("<html> Désolé l'expresso est indisponible pour le moment." );
 					}
 				}
+			}
 		});
 		
 		teaButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e){
-				if (theDFM.getOnWire()) {
+				if(theDFM.getOnWire()) {
 					resetPanelOption();
-					temperatureClassicBeverage();
-					sugarClassicBeverage();
-					classicSizeBeverage();
-					updatePanelTeaOption();
-					beverageChoice = new Tea();
-					theDFM.raiseTeaButton();
+					if (supply.enoughTeaBag() &&  supply.enoughSugarDose() && (supply.enoughGoblet() || theDFM.getOwnCup())) {
+						temperatureClassicBeverage();
+						sugarClassicBeverage();
+						classicSizeBeverage();
+						updatePanelTeaOption();
+						beverageChoice = new Tea();
+						theDFM.raiseTeaButton();
+					}else{
+						messagesToUser.setText("<html> Désolé le thé est indisponible pour le moment." );
 					}
 				}
+			}
 		});
 		
 		soupButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e){
-				if (theDFM.getOnWire()) {
-					if (theDFM.getPaymentCard() == true) {
-						delayBlueCardPayment = true;
-						theDFM.setPaymentCard(false);
-						}
+				if(theDFM.getOnWire()) {
 					resetPanelOption();
-					temperatureClassicBeverage();
-					spicySoupBeverage();
-					classicSizeBeverage();
-					updatePanelSoupOption();
-					beverageChoice = new Soup();
-					theDFM.raiseSoupButton();
+					if (supply.enoughSoupDose() &&  supply.enoughSpicyDose() && (supply.enoughGoblet() || theDFM.getOwnCup())) {
+						if (theDFM.getPaymentCard() == true) {
+							delayBlueCardPayment = true;
+							theDFM.setPaymentCard(false);
+							}
+						temperatureClassicBeverage();
+						spicySoupBeverage();
+						classicSizeBeverage();
+						updatePanelSoupOption();
+						beverageChoice = new Soup();
+						theDFM.raiseSoupButton();
+					}else{
+						messagesToUser.setText("<html> Désolé la soupe est indisponible pour le moment." );
+					}
 				}
 			}
 		});
@@ -923,6 +1035,7 @@ public class DrinkFactoryMachine extends JFrame {
 		});
 	}
 	
+
 	@Override
 	protected void finalize() throws Throwable {
 		// TODO Auto-generated method stub
