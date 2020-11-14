@@ -132,6 +132,18 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		
 		public boolean isRaisedCroutonOK();
 		
+		public boolean isRaisedClosingDoor();
+		
+		public boolean isRaisedClosingDoorOK();
+		
+		public boolean isRaisedLiquidNitrogenInjection();
+		
+		public boolean isRaisedLiquidNitrogenInjectionOK();
+		
+		public boolean isRaisedOpeningDoor();
+		
+		public boolean isRaisedOpeningDoorOK();
+		
 		public double getSolde();
 		
 		public void setSolde(double value);
@@ -236,6 +248,12 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		public void onMapleSyrupOKRaised();
 		public void onAddCroutonRaised();
 		public void onCroutonOKRaised();
+		public void onClosingDoorRaised();
+		public void onClosingDoorOKRaised();
+		public void onLiquidNitrogenInjectionRaised();
+		public void onLiquidNitrogenInjectionOKRaised();
+		public void onOpeningDoorRaised();
+		public void onOpeningDoorOKRaised();
 		}
 	
 	public SCInterface getSCInterface();

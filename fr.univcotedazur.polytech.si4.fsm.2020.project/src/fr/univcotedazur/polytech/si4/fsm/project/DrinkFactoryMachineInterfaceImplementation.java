@@ -82,6 +82,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		this.dfm.resetPanelOption();
 		this.dfm.updateStock();
 		this.dfm.updatePicture();
+		this.dfm.textField.setText("");
 		onResetSlidersRaised();
 	}
 	
@@ -89,10 +90,30 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	public void onBeveragePreparationRaised() {
 		this.dfm.messagesToUser.setText("<html> Votre " + this.dfm.beverageChoice.getName() + " est en cours de préparation ... ");
 		this.dfm.theDFM.setBeverageSelected(this.dfm.beverageChoice.getName());
-		this.dfm.theDFM.setTemperatureSelected(this.dfm.getTemperatureSelected());
+		this.dfm.theDFM.setTemperatureSelected(this.dfm.getTemperatureHotBeverageSelected());
 		this.dfm.theDFM.setSizeSelected(this.dfm.sizeSlider.getValue()+1);
 		this.dfm.theDFM.setOnWire(false); 
 		this.dfm.progressBarStart();
+		if (this.dfm.theDFM.getPaymentCard()) {
+			if (!this.dfm.textField.getText().equals("")) {
+			this.dfm.addHashInfoCard(this.dfm.textField.getText(), this.dfm.beveragePriceAfterDiscount);
+			}
+		}
+	}
+	
+	@Override
+	public void onValidatePaymentRaised() { // note pour moi : le setpaymentdonetrue se fait trop vite même si ca pose pas de problème
+		if (!this.dfm.textField.getText().equals("") && this.dfm.verifyCustomerDiscount(this.dfm.textField.getText())) {
+			this.dfm.messagesToUser.setText("<html> Vous avez droit à une remise !"
+					+ "<br> Votre boisson vous coutera : " + this.dfm.beveragePriceAfterDiscount + "€.<br> cadeau de la maison :)");
+		}
+		else {
+			this.dfm.messagesToUser.setText(this.dfm.messagesToUser.getText()+"<html> <br> Paiement autorisé.");
+			if(!this.dfm.theDFM.getPaymentCard()) {
+				this.dfm.theDFM.setSolde(this.dfm.roundValue(this.dfm.theDFM.getSolde()-this.dfm.beveragePriceAfterDiscount));
+			}
+			this.dfm.theDFM.setPaymentDone(true);
+		}
 	}
 
 	@Override
@@ -123,15 +144,6 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		this.dfm.temperatureSlider.setValue(2);
 		this.dfm.sizeSlider.setValue(1);
 		this.dfm.progressBar.setValue(0);
-	}
-
-	@Override
-	public void onValidatePaymentRaised() {
-		this.dfm.messagesToUser.setText(this.dfm.messagesToUser.getText()+"<html> <br> Paiement autorisé.");
-		if(!this.dfm.theDFM.getPaymentCard()) {
-			this.dfm.theDFM.setSolde(this.dfm.roundValue(this.dfm.theDFM.getSolde()-this.dfm.beveragePriceAfterDiscount));
-		}
-		this.dfm.theDFM.setPaymentDone(true);
 	}
 
 	@Override
@@ -395,6 +407,42 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	public void onCroutonOKRaised() {
 		this.dfm.messagesToUser3.setText("<html> Ajout des croutons... ✓") ; 	
 		this.dfm.supply.consumeCroutonDose();
+	}
+
+	@Override
+	public void onClosingDoorRaised() {
+		this.dfm.messagesToUser2.setText("<html> Verouillage de la porte...");
+		
+	}
+
+	@Override
+	public void onClosingDoorOKRaised() {
+		this.dfm.messagesToUser2.setText("<html> Verouillage de la porte... ✓");
+		
+	}
+
+	@Override
+	public void onLiquidNitrogenInjectionRaised() {
+		this.dfm.messagesToUser3.setText("<html> Injection d'azote liquide...");
+		
+	}
+
+	@Override
+	public void onLiquidNitrogenInjectionOKRaised() {
+		this.dfm.messagesToUser3.setText("<html> Injection d'azote liquide... ✓");
+		this.dfm.supply.consumeNitrogenDose();
+	}
+
+	@Override
+	public void onOpeningDoorRaised() {
+		this.dfm.messagesToUser2.setText("<html> Déverouillage de la porte...");
+		
+	}
+
+	@Override
+	public void onOpeningDoorOKRaised() {
+		this.dfm.messagesToUser2.setText("<html> Déverouillage de la porte... ✓");
+		
 	}
 
 }

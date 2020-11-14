@@ -12,13 +12,14 @@ public class Supply {
 	private int vanillaDose;
 	private int milkDose;
 	private int mapleSyrupDose;
+	private int nitrogenDose;
 	private int goblet;
 	
 
 	public Supply() {
 		this.coffeeDose = 1;
 		this.kgOfGrain = 0.24;
-		this.teaBag = 1;
+		this.teaBag = 2;
 		this.soupDose = 1;
 		this.sugarDose = 9;
 		this.spicyDose = 50;
@@ -26,6 +27,7 @@ public class Supply {
 		this.vanillaDose = 0;
 		this.milkDose = 5;
 		this.mapleSyrupDose = 5;
+		this.nitrogenDose = 1;
 		this.goblet = 3;
 	}
 
@@ -157,14 +159,25 @@ public class Supply {
 			this.spicyDose -= spicyDose;
 		}
 	}
+	
+	
+	public boolean enoughNitrogenDose() {
+		return this.nitrogenDose > 0;	
+	}
 
+
+	public void consumeNitrogenDose() {
+		if(this.nitrogenDose >= 0) {
+			this.nitrogenDose -= 1;
+		}
+	}
 
 	@Override
 	public String toString() {
 		return "<html>Stock <br><br> Coffee Dose = " + coffeeDose + "<br> KG Of Grain = " + kgOfGrain + "<br> Tea Bag = " + teaBag + "<br> Sugar Dose = "
 				+ sugarDose + "<br> Soup Dose = " + soupDose + "<br> Spicy Dose = " + spicyDose + "<br> Crouton Dose = " + croutonDose
 				+ "<br> Vanilla Dose = " + vanillaDose + "<br> Milk Dose = " + milkDose + "<br> Maple Syrup Dose = " + mapleSyrupDose
-				+ "<br> Number of Goblet = " + goblet;
+				+ "<br> Nitrogen Dose = " + nitrogenDose + "<br> Number of Goblet = " + goblet;
 	}
 	
 	
