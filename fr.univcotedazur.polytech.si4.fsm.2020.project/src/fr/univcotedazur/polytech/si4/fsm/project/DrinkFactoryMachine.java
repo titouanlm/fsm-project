@@ -74,6 +74,7 @@ public class DrinkFactoryMachine extends JFrame {
 	protected Supply supply;
 	protected JTextField textField;
 	protected JLabel label1;
+	protected boolean onListening;
 	private Thread t;
 	private Thread t1;
 	private Thread t2;
@@ -1140,7 +1141,7 @@ public class DrinkFactoryMachine extends JFrame {
 		contentPane.add(separator);
 		
 		JSeparator separator2 = new JSeparator();
-		separator2.setBounds(650, 12, 15, 600);
+		separator2.setBounds(655, 12, 15, 600);
 		separator2.setOrientation(JSeparator.VERTICAL);
 		contentPane.add(separator2);
 
@@ -1158,6 +1159,13 @@ public class DrinkFactoryMachine extends JFrame {
 		}
 		this.labelForPictures = new JLabel(new ImageIcon(myPicture));
 		this.labelForPictures.setBounds(255, 336, 286, 260);
+		this.labelForPictures.addMouseListener(new MouseAdapter() {
+		      public void mouseClicked(MouseEvent me) {
+		    	  if(onListening) {
+		    		  theDFM.setIsBeverageTaken(true);
+		    	  }
+			  }
+		});
 		
 		contentPane.add(this.labelForPictures);	
 		

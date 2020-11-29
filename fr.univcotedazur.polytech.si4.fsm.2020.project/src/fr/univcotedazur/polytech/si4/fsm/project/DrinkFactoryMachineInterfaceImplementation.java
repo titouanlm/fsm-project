@@ -44,6 +44,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 			}
 			this.dfm.labelForPictures.setIcon(new ImageIcon(myPicture));
 		}
+		this.dfm.onListening=true;
 		this.dfm.messagesToUser2.setText("");
 		this.dfm.messagesToUser3.setText("");
 	}
@@ -51,8 +52,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	@Override
 	public void onTakeChangeRaised() {
 		this.dfm.updatePicture();
-		
-		this.dfm.progressBar.setValue(0);
+	
 		if (this.dfm.theDFM.getSolde() > 0.0) {
 			if (!this.dfm.theDFM.getPaymentCard()) {
 				this.dfm.messagesToUser.setText("<html>Argent à récuperer : <br>" + this.dfm.theDFM.getSolde() + " €");
@@ -80,6 +80,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		this.dfm.beverageChoice =null;
 		this.dfm.beveragePriceAfterDiscount= 0.;
 		this.dfm.resetPanelOption();
+		this.dfm.onListening = false;
 		this.dfm.updateStock();
 		this.dfm.updatePicture();
 		this.dfm.textField.setText("");
