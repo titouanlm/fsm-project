@@ -1,6 +1,7 @@
 package fr.univcotedazur.polytech.si4.fsm.project;
 
 public abstract class Beverage {
+	
 	protected double price;
 	protected String name;
 	public double getPrice() {

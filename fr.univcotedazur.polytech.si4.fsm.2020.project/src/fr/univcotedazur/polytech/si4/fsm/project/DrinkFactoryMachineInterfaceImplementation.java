@@ -77,6 +77,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		this.dfm.theDFM.setPaymentCard(false);
 		this.dfm.delayBlueCardPayment = false;
 		this.dfm.theDFM.setOwnCup(false);
+		this.dfm.theDFM.setIsBeverageTaken(false);
 		this.dfm.beverageChoice =null;
 		this.dfm.beveragePriceAfterDiscount= 0.;
 		this.dfm.resetPanelOption();
@@ -91,13 +92,13 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	public void onBeveragePreparationRaised() {
 		this.dfm.messagesToUser.setText("<html> Votre " + this.dfm.beverageChoice.getName() + " est en cours de préparation ... ");
 		this.dfm.theDFM.setBeverageSelected(this.dfm.beverageChoice.getName());
-		this.dfm.theDFM.setTemperatureSelected(this.dfm.getTemperatureHotBeverageSelected());
+		this.dfm.theDFM.setTemperatureSelected(math.getTemperatureHotBeverageSelected(this.dfm.temperatureSlider));
 		this.dfm.theDFM.setSizeSelected(this.dfm.sizeSlider.getValue()+1);
 		this.dfm.theDFM.setOnWire(false); 
 		this.dfm.progressBarStart();
 		if (this.dfm.theDFM.getPaymentCard()) {
 			if (!this.dfm.textField.getText().equals("")) {
-			this.dfm.addHashInfoCard(this.dfm.textField.getText(), this.dfm.beveragePriceAfterDiscount);
+			WriteAndDecodeFile.addHashInfoCard(this.dfm.textField.getText(), this.dfm.beveragePriceAfterDiscount);
 			}
 		}
 	}
@@ -111,7 +112,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		else {
 			this.dfm.messagesToUser.setText(this.dfm.messagesToUser.getText()+"<html> <br> Paiement autorisé.");
 			if(!this.dfm.theDFM.getPaymentCard()) {
-				this.dfm.theDFM.setSolde(this.dfm.roundValue(this.dfm.theDFM.getSolde()-this.dfm.beveragePriceAfterDiscount));
+				this.dfm.theDFM.setSolde(math.roundValue(this.dfm.theDFM.getSolde()-this.dfm.beveragePriceAfterDiscount));
 			}
 			this.dfm.theDFM.setPaymentDone(true);
 		}
@@ -150,26 +151,26 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	@Override
 	public void onBeverageChoiceRaised() {
 		if(this.dfm.theDFM.getOwnCup()) {
-			this.dfm.beveragePriceAfterDiscount = this.dfm.roundValue(this.dfm.beverageChoice.getPrice()-0.1);
+			this.dfm.beveragePriceAfterDiscount =math.roundValue(this.dfm.beverageChoice.getPrice()-0.1);
 		}else {
-			this.dfm.beveragePriceAfterDiscount = this.dfm.roundValue(this.dfm.beverageChoice.getPrice());
+			this.dfm.beveragePriceAfterDiscount = math.roundValue(this.dfm.beverageChoice.getPrice());
 		}
 		
 		//OPTIONS
 		if(this.dfm.theDFM.getMilkOption()) {
-			this.dfm.beveragePriceAfterDiscount = this.dfm.roundValue(this.dfm.beveragePriceAfterDiscount+0.1);
+			this.dfm.beveragePriceAfterDiscount = math.roundValue(this.dfm.beveragePriceAfterDiscount+0.1);
 		}
 		
 		if(this.dfm.theDFM.getVanillaOption()) {
-			this.dfm.beveragePriceAfterDiscount = this.dfm.roundValue(this.dfm.beveragePriceAfterDiscount+0.4);
+			this.dfm.beveragePriceAfterDiscount = math.roundValue(this.dfm.beveragePriceAfterDiscount+0.4);
 		}
 		
 		if(this.dfm.theDFM.getMapleSyrupOption()) {
-			this.dfm.beveragePriceAfterDiscount = this.dfm.roundValue(this.dfm.beveragePriceAfterDiscount+0.1);
+			this.dfm.beveragePriceAfterDiscount = math.roundValue(this.dfm.beveragePriceAfterDiscount+0.1);
 		}
 		
 		if(this.dfm.theDFM.getCroutonOption()) {
-			this.dfm.beveragePriceAfterDiscount = this.dfm.roundValue(this.dfm.beveragePriceAfterDiscount+0.3);
+			this.dfm.beveragePriceAfterDiscount = math.roundValue(this.dfm.beveragePriceAfterDiscount+0.3);
 		}
 		
 		
