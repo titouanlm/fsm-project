@@ -144,6 +144,10 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		
 		public boolean isRaisedOpeningDoorOK();
 		
+		public boolean getIsBeverageTaken();
+		
+		public void setIsBeverageTaken(boolean value);
+		
 		public double getSolde();
 		
 		public void setSolde(double value);

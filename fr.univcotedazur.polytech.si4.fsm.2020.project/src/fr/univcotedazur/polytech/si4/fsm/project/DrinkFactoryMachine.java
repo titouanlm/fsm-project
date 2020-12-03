@@ -40,16 +40,13 @@ import javax.swing.border.EmptyBorder;
 import fr.univcotedazur.polytech.si4.fsm.project.defaultsm.DefaultSMStatemachine;
 
 public class DrinkFactoryMachine extends JFrame {
+	
 	/**
-	 * 
+	 * Declaring variables
 	 */
+	
 	private static final long serialVersionUID = 2030629304432075314L;
 	private JPanel contentPane;
-	/**
-	 * @wbp.nonvisual location=311,475
-	 */
-	// private final ImageIcon imageIcon = new ImageIcon();
-
 	protected DefaultSMStatemachine theDFM;
 	protected JLabel messagesToUser;
 	protected JLabel messagesToUser2;
@@ -74,12 +71,15 @@ public class DrinkFactoryMachine extends JFrame {
 	protected Supply supply;
 	protected JTextField textField;
 	protected JLabel label1;
+	protected boolean onListening;
 	private Thread t;
 	private Thread t1;
 	private Thread t2;
+	
 	/**
 	 * Launch the application.
 	 */
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -93,76 +93,46 @@ public class DrinkFactoryMachine extends JFrame {
 		});
 	}
 	
-	public void addHashMapToFile(HashMap<String, List<Double>> hmap) {
-		try
-        {
-           FileOutputStream fos = new FileOutputStream("CustomerDiscountInformation.txt");
-           ObjectOutputStream oos = new ObjectOutputStream(fos);
-           oos.writeObject(hmap);
-           oos.close();
-           fos.close();
-        }
-        catch(IOException ioe)
-         {
-               ioe.printStackTrace();
-         }
-	}
-	
-	public void createFile(String name, double finalBeveragePrice) {
-		HashMap<String, List<Double>> hmap = new HashMap<String, List<Double>>();
-        List<Double> newListInfoCard = new ArrayList<>();
-        newListInfoCard.add(finalBeveragePrice);
-		hmap.put(name, newListInfoCard);
-		addHashMapToFile(hmap);
+	/**
+	 * Create the frame.
+	 */
+	public DrinkFactoryMachine() {
+		theDFM = new DefaultSMStatemachine();
+		TimerService timer = new TimerService();
+		theDFM.setTimer(timer);
+		theDFM.init();
+		theDFM.enter();
+		theDFM.getSCInterface().getListeners().add(new DrinkFactoryMachineInterfaceImplementation(this));		
 		
-	}
-	
-	@SuppressWarnings("unchecked")
-	public HashMap<String, List<Double>> retrieveHashInfoCard() {
-		HashMap<String, List<Double>> hmap = new HashMap<String, List<Double>>();
-		try {
-			FileInputStream fis = new FileInputStream("CustomerDiscountInformation.txt");
-			ObjectInputStream ois = new ObjectInputStream(fis);
-			hmap = (HashMap<String, List<Double>>) ois.readObject();
-	        ois.close();
-	        fis.close();
-		} 
-		catch(IOException ioe)
-	      {
-	         ioe.printStackTrace();
-	      }
-	      catch(ClassNotFoundException c)
-	      {
-	         c.printStackTrace();
-	      }
-		return hmap;
-	}
-	
-	public void addHashInfoCard(String name, double finalBeveragePrice) {
-		File newFile = new File("CustomerDiscountInformation.txt");
-		if (newFile.length() == 0) {
-			createFile(name, finalBeveragePrice);
-			return;
-		}
-		HashMap<String, List<Double>> hmap = retrieveHashInfoCard();
-		if (hmap == null) {
-			messagesToUser.setText("<html> Machine défectueuse sur les réductions <br> merci de contacter le personnel");
-			return;
-		}
-		List<Double> newListHashInfo;
-		if (hmap.get(name) == null) {
-			newListHashInfo = new ArrayList<>(); 
-			newListHashInfo.add(finalBeveragePrice);
-			hmap.put(name,newListHashInfo);
-		}
-		else {
-			newListHashInfo = hmap.get(name);
-			newListHashInfo.add(finalBeveragePrice);
-			hmap.put(name,newListHashInfo);
-		}
+		Runnable r = new Runnable() {
+			
+			@Override
+			public void run() {
+				while(true) {
+					theDFM.runCycle();
+					enoughMoneyIcedTeaBeverage();
+					try {
+						Thread.sleep(20);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				
+			}
+		};
+		t = new Thread(r);
+		t.start();
 		
-		addHashMapToFile(hmap);
-   }
+		initializingInterfaceValues();
+
+		createMessageLabels();
+		
+		createSliders();
+		
+		createProgressBar();
+		
+		fillDrinkFactoryMachine();
+	}
 	
 	@SuppressWarnings("unchecked")
 	public boolean verifyCustomerDiscount(String name) { 
@@ -187,37 +157,26 @@ public class DrinkFactoryMachine extends JFrame {
 	      }
 	      if (hmap.get(name) != null && hmap.get(name).size() == 11) { 
 	    	  List<Double> newList = hmap.get(name);
-	    	  double discountPrice = doubleListAverageValueWithoutLastValue(newList);
+	    	  double discountPrice = math.doubleListAverageValueWithoutLastValue(newList);
 	    	  if (discountPrice >= beveragePriceAfterDiscount) {
 	    		  beveragePriceAfterDiscount = 0.0;
 	    	  }
 	    	  else {
 	    		  beveragePriceAfterDiscount -= discountPrice;
-	    		  roundValue(beveragePriceAfterDiscount);
+	    		  math.roundValue(beveragePriceAfterDiscount);
 	    	  }
 	    	  for (int i = 0 ; i < 11 ; i++) {
 	    		  newList.remove(0);
 	    	  }
 	    	  hmap.remove(name);
 	    	  hmap.put(name, newList);
-	    	  addHashMapToFile(hmap);
+	    	  WriteAndDecodeFile.addHashMapToFile(hmap);
 	
 	    	  return true; 
 	      }
 	    
 		return false;
 
-	}
-	
-	public double doubleListAverageValueWithoutLastValue(List<Double> list){
-		double moyenne = 0.0;
-		if (list != null) {
-			for (int i=0;i<list.size()-1;i++) {
-				moyenne+=list.get(i);
-			}
-			return (moyenne/(list.size()-1));
-		}
-		else return 0.0;
 	}
 	
 	public void enoughMoneyClassicBeverage() {
@@ -244,349 +203,14 @@ public class DrinkFactoryMachine extends JFrame {
 		}
 	}
 	
-	public double roundValue(double initialValue) {
-		double valueCorrection1 = Math.round((initialValue)*100);
-		double valueCorrection2 = valueCorrection1/100;
-		return valueCorrection2;
-	}
-	
-	public int getTemperatureHotBeverageSelected() {
-		int temperatureSelected = 0;
-		switch(temperatureSlider.getValue()) {
-		case 0:
-			temperatureSelected = 20;
-			break;
-		case 1:
-			temperatureSelected = 35;
-			break;
-		case 2:
-			temperatureSelected = 60;
-			break;
-		default:
-			temperatureSelected = 85;
-		}
-		return temperatureSelected;
-	}
-	
-	public int getTemperatureColdBeverageSelected() {
-		int temperatureSelected = 0;
-		switch(temperatureSlider.getValue()) {
-		case 0:
-			temperatureSelected = 1;
-			break;
-		case 1:
-			temperatureSelected = 4;
-			break;
-		case 2:
-			temperatureSelected = 7;
-			break;
-		default:
-			temperatureSelected = 10;
-		}
-		return temperatureSelected;
-	}
-	
-	public double chooseLeftOrRightPathsOverAllCoffeeSteps() {
-		double timePreparation = 0.0 ;
-		timePreparation += chooseLeftOrRightPathOfFirstStepCoffeePreparation();
-		timePreparation += chooseLeftOrRightPathOfSecondStepCoffeePreparation();
-		timePreparation += chooseLeftOrRightPathOfThirdStepCoffeePreparation();
-		timePreparation += addOptions();
-		return timePreparation;
-	}
-	
-	public double chooseLeftOrRightPathOfFirstStepCoffeePreparation() {
-		double timePreparationLeft = 1.5 ;
-		double timePreparationRight = 2.5;
-		if (timePreparationLeft > timePreparationRight) {
-			return timePreparationLeft;
-		}
-		else {
-			return timePreparationRight;
-		}
-	}
-	
 
-	public double chooseLeftOrRightPathOfSecondStepCoffeePreparation() {
-		double timePreparationLeft = getTemperatureHotBeverageSelected() * 0.15 ;
-		double timePreparationRight = 0.0 ;
-		if (!this.theDFM.getOwnCup()) {
-			timePreparationRight+=3.0;
-		}
-		if (timePreparationLeft > timePreparationRight) {
-			return timePreparationLeft;
-		}
-		else {
-			return timePreparationRight;
-		}
-	}
-	
-	public double chooseLeftOrRightPathOfThirdStepCoffeePreparation() {
-		double timePreparationLeft = (sizeSlider.getValue()+1)*1.5 ;
-		double timePreparationRight = 3.0;
-		if (timePreparationLeft > timePreparationRight) {
-			return timePreparationLeft;
-		}
-		else {
-			return timePreparationRight;
-		}
-	}
-	
-	public double chooseLeftOrRightPathsOverAllExpressoSteps() {
-		double timePreparation = 0.0 ;
-		timePreparation += chooseLeftOrRightPathOfFirstStepExpressoPreparation();
-		timePreparation += chooseLeftOrRightPathOfSecondStepExpressoPreparation();
-		timePreparation += chooseLeftOrRightPathOfThirdStepExpressoPreparation();
-		timePreparation += addOptions();
-		return timePreparation;
-	}
-	
-	public double chooseLeftOrRightPathOfFirstStepExpressoPreparation() {
-		double timePreparationLeft = 1.5 ;
-		double timePreparationRight = 4.0;
-		if (timePreparationLeft > timePreparationRight) {
-			return timePreparationLeft;
-		}
-		else {
-			return timePreparationRight;
-		}
-	}
-	
-	public double chooseLeftOrRightPathOfSecondStepExpressoPreparation() {
-		double timePreparationLeft = getTemperatureHotBeverageSelected() * 0.15 ;
-		double timePreparationRight = 0.0 ;
-		if (!this.theDFM.getOwnCup()) {
-			timePreparationRight+=3.0;
-		}
-		timePreparationRight += (sizeSlider.getValue()+1)*2;
-		if (timePreparationLeft > timePreparationRight) {
-			return timePreparationLeft;
-		}
-		else {
-			return timePreparationRight;
-		}
-	}
-	
-	public double chooseLeftOrRightPathOfThirdStepExpressoPreparation() {
-		double timePreparationLeft = (sizeSlider.getValue()+1)*1.5 ;
-		double timePreparationRight = 3.0;
-		if (timePreparationLeft > timePreparationRight) {
-			return timePreparationLeft;
-		}
-		else {
-			return timePreparationRight;
-		}
-	}
-	
-	public double chooseLeftOrRightPathsOverAllTeaSteps() {
-		double timePreparation = 0.0 ;
-		timePreparation += chooseLeftOrRightPathOfFirstStepTeaPreparation();
-		timePreparation += chooseLeftOrRightPathOfSecondStepTeaPreparation();
-		timePreparation += chooseLeftOrRightPathOfThirdStepTeaPreparation();
-		timePreparation += timeOfFourthStepTeaPreparation();
-		timePreparation += addOptions();
-		return timePreparation;
-	}
-	
-	public double chooseLeftOrRightPathOfFirstStepTeaPreparation() {
-		double timePreparationLeft = 1.5 ;
-		double timePreparationRight = 2.5;
-		if (timePreparationLeft > timePreparationRight) {
-			return timePreparationLeft;
-		}
-		else {
-			return timePreparationRight;
-		}
-	}
-	
-	public double chooseLeftOrRightPathOfSecondStepTeaPreparation() {
-		double timePreparationLeft = getTemperatureHotBeverageSelected() * 0.15 ;
-		double timePreparationRight = 0.0 ;
-		if (!this.theDFM.getOwnCup()) {
-			timePreparationRight+=3.0;
-		}
-		if (timePreparationLeft > timePreparationRight) {
-			return timePreparationLeft;
-		}
-		else {
-			return timePreparationRight;
-		}
-	}
-	
-	public double chooseLeftOrRightPathOfThirdStepTeaPreparation() {
-		double timePreparationLeft = (sizeSlider.getValue()+1)*1.5 ;
-		double timePreparationRight = 3.0;
-		if (timePreparationLeft > timePreparationRight) {
-			return timePreparationLeft;
-		}
-		else {
-			return timePreparationRight;
-		}
-	}
-	
-	public double timeOfFourthStepTeaPreparation() {
-		return 5.0;			
-	}
-	
-	public double chooseLeftOrRightPathsOverAllSoupSteps() {
-		double timePreparation = 0.0 ;
-		timePreparation += chooseLeftOrRightPathOfFirstStepSoupPreparation();
-		timePreparation += chooseLeftOrRightPathOfSecondStepSoupPreparation();
-		timePreparation += chooseLeftOrRightPathOfThirdStepSoupPreparation();
-		timePreparation += addOptions();
-		return timePreparation;
-	}
-	
-	public double chooseLeftOrRightPathOfFirstStepSoupPreparation() {
-		double timePreparationLeft = 1.5;
-		double timePreparationRight = 0.0;
-		if (!this.theDFM.getOwnCup()) {
-			timePreparationRight+=3.0;
-		}
-		if (timePreparationLeft > timePreparationRight) {
-			return timePreparationLeft;
-		}
-		else {
-			return timePreparationRight;
-		}
-	}
-
-	public double chooseLeftOrRightPathOfSecondStepSoupPreparation() {
-		double timePreparationLeft = getTemperatureHotBeverageSelected() * 0.15 ;
-		double timePreparationRight = 2.5 ;
-		if (timePreparationLeft > timePreparationRight) {
-			return timePreparationLeft;
-		}
-		else {
-			return timePreparationRight;
-		}
-	}
-	
-	public double chooseLeftOrRightPathOfThirdStepSoupPreparation() {
-		double timePreparationLeft = (sizeSlider.getValue()+1)*1.5 ;
-		double timePreparationRight = 0.0;
-		if (timePreparationLeft > timePreparationRight) {
-			return timePreparationLeft;
-		}
-		else {
-			return timePreparationRight;
-		}
-	}
-	
-	public double chooseLeftOrRightPathsOverAllIcedTeaSteps() {
-		double timePreparation = 0.0;
-		timePreparation += chooseLeftOrRightPathOfFirstStepIcedTeaPreparation();
-		timePreparation += chooseLeftOrRightPathOfSecondStepIcedTeaPreparation();
-		timePreparation += chooseLeftOrRightPathOfThirdStepIcedTeaPreparation();
-		timePreparation += timeOfFourthStepIcedTeaPreparation();
-		timePreparation += timeOfClosingDoor();
-		timePreparation += timeOfLiquidNitrogenInjection();
-		timePreparation += timeOfOpeningDoor();
-		timePreparation += addOptions();
-		return timePreparation;
-	}
-	
-	public double chooseLeftOrRightPathOfFirstStepIcedTeaPreparation() {
-		double timePreparationLeft = 1.5 ;
-		double timePreparationRight = 2.5;
-		if (timePreparationLeft > timePreparationRight) {
-			return timePreparationLeft;
-		}
-		else {
-			return timePreparationRight;
-		}
-	}
-	
-	public double chooseLeftOrRightPathOfSecondStepIcedTeaPreparation() {
-		double timePreparationLeft = getTemperatureHotBeverageSelected() * 0.15 ;
-		double timePreparationRight = 0.0 ;
-		if (!this.theDFM.getOwnCup()) {
-			timePreparationRight+=3.0;
-		}
-		if (timePreparationLeft > timePreparationRight) {
-			return timePreparationLeft;
-		}
-		else {
-			return timePreparationRight;
-		}
-	}
-	
-	public double chooseLeftOrRightPathOfThirdStepIcedTeaPreparation() {
-		double timePreparationLeft = (sizeSlider.getValue()+1)*1.5 ;
-		double timePreparationRight = 3.0;
-		if (timePreparationLeft > timePreparationRight) {
-			return timePreparationLeft;
-		}
-		else {
-			return timePreparationRight;
-		}
-	}
-	
-	public double timeOfFourthStepIcedTeaPreparation() {
-		return 5.0;			
-	}
-	
-	public double timeOfClosingDoor() {
-		return 4.0;
-	}
-	
-	public double timeOfLiquidNitrogenInjection() {
-		return ((-1/3)*getTemperatureColdBeverageSelected())+20;
-	}
-	
-	public double timeOfOpeningDoor() {
-		return 4.0;
-	}
-	
-	public double timePreparation(Beverage beverage) { // le temps se calcul en fonction de la machine à état
-		double timePreparation = 0; 
+	public void progressBarStart() { 
 		
-		switch(beverage.getName()) {
-		case "café":
-			timePreparation += chooseLeftOrRightPathsOverAllCoffeeSteps();
-			break;
-		case "expresso":
-			timePreparation += chooseLeftOrRightPathsOverAllExpressoSteps();
-			break;
-		case "thé":
-			timePreparation += chooseLeftOrRightPathsOverAllTeaSteps();
-			break;
-		case "soupe":
-			timePreparation += chooseLeftOrRightPathsOverAllSoupSteps();
-			break;
-		case "thé glacé":
-			timePreparation += chooseLeftOrRightPathsOverAllIcedTeaSteps();
-		}
-		
-		return timePreparation;
-	}
-	
-	private double addOptions() {
-		double result = 0.0;
-		if(checkboxMilk.isSelected()) {
-			result+= 2;	
-		}
-		
-		if(checkboxVanilla.isSelected()) {
-			result += 5;
-		}
-		
-		if(checkboxCrouton.isSelected() && sizeSlider.getValue() == 0) {
-			result += 2;
-		}
-		return result;
-	}
-	
-	
-
-	public void progressBarStart() { // Les threads.sleep sont très mauvais, comportement chaotique de la barre de progression
-		
-		long temps = (long)(timePreparation(beverageChoice)*10);
+		long temps = (long)(math.timePreparation(this)*10);
 		Runnable r = new Runnable() {
 			
 			@Override
 			public void run() {
-				long start = System.currentTimeMillis();
 				while(true) {
 					try {
 						Thread.sleep(temps); 
@@ -600,14 +224,75 @@ public class DrinkFactoryMachine extends JFrame {
 						break;
 					}
 				}
-				/*messagesToUser.setText("<html> temps passé : " + (System.currentTimeMillis()-start) + 
-						"<br> temps normal : " + temps);*/
 			}
 		};
 		t1 = new Thread(r);
 		t1.start();
-		
 	}
+	
+	/**
+	 * Fonctionnement de la méthode ci-dessous : 
+	 * 
+	 * 		Lorsqu'une soupe est sélectionnée, le paiement ne s'effectue pas tant que l'utilisateur n'a pas fait d'action 
+	 * 		par rapport au slider.
+	 * 
+	 * 		Cela répond à l'exigence du client. Une action est ici, poser PUIS retirer le curseur de sa souris du slider.
+	 * 		Une fois que le curseur de la souris quitte la zone du slider, la préparation de la soupe se lance.
+	 * 		
+	 * 		Nous pouvons imaginer la même chose dans la vie courante avec un slider qui permet de choisir l'intensité du choix 
+	 * 		d'épice. Et tant que le client ne touche pas le slider, rien ne se passe.
+	 * 
+	 */
+	public void onWaitingChangingSpicySlider() {
+		
+		Runnable r = new Runnable() {
+			
+			@Override
+			public void run() {
+				while(true) {
+					if (beverageChoice.getName() == "soupe" && sugarOrSpicySlider.getMousePosition()!= null) {
+						while(true) {		
+							if (sugarOrSpicySlider.getMousePosition()== null && !delayBlueCardPayment) {
+								enoughMoneyClassicBeverage();
+								break;
+							}
+							else if (sugarOrSpicySlider.getMousePosition()== null && delayBlueCardPayment){
+								theDFM.setPaymentCard(true);
+								break;
+							}
+						}
+					}
+					if (beverageChoice.getName() != "soupe") break;
+					if (theDFM.getPaymentDone() == true) break;
+					try {
+						Thread.sleep(200);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			
+		};
+		
+		t2 = new Thread(r);
+		t2.start();
+				
+	}
+	
+	// ---------------------------------------------------------------------------------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------------------------------------------------------------------------------
+	// ------------------------BELOW THIS LINE, THERE ARE ONLY FUNCTIONS TO INITIALIZE THE COFFEE MACHINE INTERFACE --------------------------------------
+	// ---------------------------------------------------------------------------------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------------------------------------------------------------------------------
+	
 	
 	public void temperatureClassicBeverage() {
 		contentPane.remove(temperatureSlider);
@@ -799,88 +484,10 @@ public class DrinkFactoryMachine extends JFrame {
 		this.labelForPictures.setIcon(new ImageIcon(myPicture));
 	}
 	
-	/**
-	 * Fonctionnement de la méthode ci-dessous : 
-	 * 
-	 * 		Lorsqu'une soupe est sélectionnée, le paiement ne s'effectue pas tant que l'utilisateur n'a pas fait d'action 
-	 * 		par rapport au slider.
-	 * 
-	 * 		Cela répond à l'exigence du client. Une action est ici, poser PUIS retirer le curseur de sa souris du slider.
-	 * 		Une fois que le curseur de la souris quitte la zone du slider, la préparation de la soupe se lance.
-	 * 		
-	 * 		Nous pouvons imaginer la même chose dans la vie courante avec un slider qui permet de choisir l'intensité du choix 
-	 * 		d'épice. Et tant que le client ne touche pas le slider, rien ne se passe.
-	 * 
-	 */
-	public void onWaitingChangingSpicySlider() {
-		
-		Runnable r = new Runnable() {
-			
-			@Override
-			public void run() {
-				while(true) {
-					
-					if (beverageChoice.getName() == "soupe" && sugarOrSpicySlider.getMousePosition()!= null) {
-						while(true) {		
-							if (sugarOrSpicySlider.getMousePosition()== null && !delayBlueCardPayment) {
-								enoughMoneyClassicBeverage();
-								break;
-							}
-							else if (sugarOrSpicySlider.getMousePosition()== null && delayBlueCardPayment){
-								theDFM.setPaymentCard(true);
-								break;
-							}
-						}
-					}
-					if (beverageChoice.getName() != "soupe") break;
-					if (theDFM.getPaymentDone() == true) break;
-					try {
-						Thread.sleep(200);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-				
-			}
-		};
-		t2 = new Thread(r);
-		t2.start();
-		
-		
-	}
-
-	/**
-	 * Create the frame.
-	 */
-	public DrinkFactoryMachine() {
-		theDFM = new DefaultSMStatemachine();
-		TimerService timer = new TimerService();
-		theDFM.setTimer(timer);
-		theDFM.init();
-		theDFM.enter();
-		theDFM.getSCInterface().getListeners().add(new DrinkFactoryMachineInterfaceImplementation(this));		
-		
+	public void initializingInterfaceValues() {
 		this.supply = new Supply();
-		
-		Runnable r = new Runnable() {
-			
-			@Override
-			public void run() {
-				while(true) {
-					theDFM.runCycle();
-					enoughMoneyIcedTeaBeverage();
-					try {
-						Thread.sleep(20);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-				
-			}
-		};
-		t = new Thread(r);
-		t.start();
-		
+		theDFM.setOnWire(true);
+		theDFM.setOwnCup(false);
 		theDFM.setOnWire(true);
 		theDFM.setOwnCup(false);
 		setForeground(Color.WHITE);
@@ -894,7 +501,9 @@ public class DrinkFactoryMachine extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-
+	}
+	
+	public void createMessageLabels() {
 		messagesToUser = new JLabel("<html> Veuillez insérer de l'argent <br> Solde : " + this.theDFM.getSolde() + "€");
 		messagesToUser.setForeground(Color.WHITE);
 		messagesToUser.setHorizontalAlignment(SwingConstants.LEFT);
@@ -921,14 +530,7 @@ public class DrinkFactoryMachine extends JFrame {
 		messagesToUser3.setToolTipText("message to the user 3");
 		messagesToUser3.setBackground(Color.WHITE);
 		messagesToUser3.setBounds(126, 145, 165, 175);
-		contentPane.add(messagesToUser3);
-		
-		textField = new JTextField();
-	    textField.setDocument(new JTextFieldLimit(16));
-	    setVisible(true);
-	    textField.setBounds(510, 190, 120, 20);
-	    contentPane.add(textField);
-		
+		contentPane.add(messagesToUser3);		
 		
 		messagesToUserOption1 = new JLabel("");
 		messagesToUserOption1.setForeground(Color.RED);
@@ -950,10 +552,8 @@ public class DrinkFactoryMachine extends JFrame {
 		messagesToUserOption3.setHorizontalAlignment(SwingConstants.LEFT);
 		messagesToUserOption3.setVerticalAlignment(SwingConstants.TOP);
 		messagesToUserOption3.setBounds(42, 411, 225, 150);
-		contentPane.add(messagesToUserOption3);
-		
-		
-		
+		contentPane.add(messagesToUserOption3);		
+				
 		messagesToProviderStock = new JLabel(supply.toString());
 		messagesToProviderStock.setForeground(Color.WHITE);
 		messagesToProviderStock.setHorizontalAlignment(SwingConstants.LEFT);
@@ -961,6 +561,63 @@ public class DrinkFactoryMachine extends JFrame {
 		messagesToProviderStock.setBackground(Color.WHITE);
 		messagesToProviderStock.setBounds(675, 12, 225, 600);
 		contentPane.add(messagesToProviderStock);
+	}
+	
+	public void createSliders() {
+		sugarOrSpicySlider = new JSlider();
+		sugarOrSpicySlider.setValue(1);
+		sugarOrSpicySlider.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		sugarOrSpicySlider.setBackground(Color.DARK_GRAY);
+		sugarOrSpicySlider.setForeground(Color.BLACK);
+		sugarOrSpicySlider.setPaintTicks(true);
+		sugarOrSpicySlider.setPaintLabels(true);
+		sugarOrSpicySlider.setMinorTickSpacing(1);
+		sugarOrSpicySlider.setMajorTickSpacing(1);
+		sugarOrSpicySlider.setMaximum(5);
+		sugarOrSpicySlider.setBounds(301, 41, 200, 46);
+		contentPane.add(sugarOrSpicySlider);
+
+		sizeSlider = new JSlider();
+		sizeSlider.setPaintLabels(true);
+		sizeSlider.setValue(1);
+		sizeSlider.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		sizeSlider.setBackground(Color.DARK_GRAY);
+		sizeSlider.setForeground(Color.BLACK);
+		sizeSlider.setPaintTicks(true);
+		sizeSlider.setMinorTickSpacing(1);
+		sizeSlider.setMaximum(2);
+		sizeSlider.setMajorTickSpacing(1);
+		sizeSlider.setBounds(301, 115, 200, 46);
+		
+		temperatureSlider = new JSlider();
+		temperatureSlider.setPaintLabels(true);
+		temperatureSlider.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		temperatureSlider.setValue(2);
+		temperatureSlider.setBackground(Color.DARK_GRAY);
+		temperatureSlider.setForeground(Color.BLACK);
+		temperatureSlider.setPaintTicks(true);
+		temperatureSlider.setMajorTickSpacing(1);
+		temperatureSlider.setMaximum(3);
+		temperatureSlider.setBounds(301, 188, 200, 54);
+		
+	}
+	
+	public void createProgressBar() {
+		progressBar = new JProgressBar();
+		progressBar.setStringPainted(true);
+		progressBar.setValue(0);
+		progressBar.setForeground(Color.LIGHT_GRAY);
+		progressBar.setBackground(Color.DARK_GRAY);
+		progressBar.setBounds(12, 254, 622, 26);
+		contentPane.add(progressBar);
+	}
+	
+	public void fillDrinkFactoryMachine() {
+		textField = new JTextField();
+	    textField.setDocument(new JTextFieldLimit(16));
+	    setVisible(true);
+	    textField.setBounds(510, 190, 120, 20);
+	    contentPane.add(textField);
 		
 		
 		JLabel lblCoins = new JLabel("Coins");
@@ -992,27 +649,6 @@ public class DrinkFactoryMachine extends JFrame {
 		soupButton.setBackground(Color.DARK_GRAY);
 		soupButton.setBounds(12, 145, 96, 25);
 		contentPane.add(soupButton);
-
-		progressBar = new JProgressBar();
-		progressBar.setStringPainted(true);
-		progressBar.setValue(0);
-		progressBar.setForeground(Color.LIGHT_GRAY);
-		progressBar.setBackground(Color.DARK_GRAY);
-		progressBar.setBounds(12, 254, 622, 26);
-		contentPane.add(progressBar);
-
-		sugarOrSpicySlider = new JSlider();
-		sugarOrSpicySlider.setValue(1);
-		sugarOrSpicySlider.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		sugarOrSpicySlider.setBackground(Color.DARK_GRAY);
-		sugarOrSpicySlider.setForeground(Color.BLACK);
-		sugarOrSpicySlider.setPaintTicks(true);
-		sugarOrSpicySlider.setPaintLabels(true);
-		sugarOrSpicySlider.setMinorTickSpacing(1);
-		sugarOrSpicySlider.setMajorTickSpacing(1);
-		sugarOrSpicySlider.setMaximum(5);
-		sugarOrSpicySlider.setBounds(301, 41, 200, 46);
-		contentPane.add(sugarOrSpicySlider);
 		
 		Hashtable<Integer, JLabel> doseTable = new Hashtable<Integer, JLabel>();
 		doseTable.put(0, new JLabel("0"));
@@ -1025,18 +661,6 @@ public class DrinkFactoryMachine extends JFrame {
 			l.setForeground(Color.WHITE);
 		}
 		sugarOrSpicySlider.setLabelTable(doseTable);
-
-		sizeSlider = new JSlider();
-		sizeSlider.setPaintLabels(true);
-		sizeSlider.setValue(1);
-		sizeSlider.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		sizeSlider.setBackground(Color.DARK_GRAY);
-		sizeSlider.setForeground(Color.BLACK);
-		sizeSlider.setPaintTicks(true);
-		sizeSlider.setMinorTickSpacing(1);
-		sizeSlider.setMaximum(2);
-		sizeSlider.setMajorTickSpacing(1);
-		sizeSlider.setBounds(301, 115, 200, 46);
 				
 		Hashtable<Integer, JLabel> sizeTable = new Hashtable<Integer, JLabel>();
 		sizeTable.put(0, new JLabel("Short"));
@@ -1047,17 +671,6 @@ public class DrinkFactoryMachine extends JFrame {
 		}
 		sizeSlider.setLabelTable(sizeTable);
 		contentPane.add(sizeSlider);
-
-		temperatureSlider = new JSlider();
-		temperatureSlider.setPaintLabels(true);
-		temperatureSlider.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		temperatureSlider.setValue(2);
-		temperatureSlider.setBackground(Color.DARK_GRAY);
-		temperatureSlider.setForeground(Color.BLACK);
-		temperatureSlider.setPaintTicks(true);
-		temperatureSlider.setMajorTickSpacing(1);
-		temperatureSlider.setMaximum(3);
-		temperatureSlider.setBounds(301, 188, 200, 54);
 
 		Hashtable<Integer, JLabel> temperatureTable = new Hashtable<Integer, JLabel>();
 		temperatureTable.put(0, new JLabel("20°C"));
@@ -1140,7 +753,7 @@ public class DrinkFactoryMachine extends JFrame {
 		contentPane.add(separator);
 		
 		JSeparator separator2 = new JSeparator();
-		separator2.setBounds(650, 12, 15, 600);
+		separator2.setBounds(655, 12, 15, 600);
 		separator2.setOrientation(JSeparator.VERTICAL);
 		contentPane.add(separator2);
 
@@ -1158,6 +771,13 @@ public class DrinkFactoryMachine extends JFrame {
 		}
 		this.labelForPictures = new JLabel(new ImageIcon(myPicture));
 		this.labelForPictures.setBounds(255, 336, 286, 260);
+		this.labelForPictures.addMouseListener(new MouseAdapter() {
+		      public void mouseClicked(MouseEvent me) {
+		    	  if(onListening) {
+		    		  theDFM.setIsBeverageTaken(true);
+		    	  }
+			  }
+		});
 		
 		contentPane.add(this.labelForPictures);	
 		
@@ -1207,12 +827,14 @@ public class DrinkFactoryMachine extends JFrame {
 		checkboxMilk.addActionListener(new ActionListener() {
 		    @Override
 		    public void actionPerformed(ActionEvent event) {
-		    	if(checkboxMilk.isSelected()) {
-					theDFM.setMilkOption(true);
-				}else {
-					theDFM.setMilkOption(false);
-				}
-				theDFM.raiseCheckbMilk();
+		    	if (theDFM.getOnWire()) {
+			    	if(checkboxMilk.isSelected()) {
+						theDFM.setMilkOption(true);
+					}else {
+						theDFM.setMilkOption(false);
+					}
+					theDFM.raiseCheckbMilk();
+		    	}
 		    }
 		});
 		
@@ -1220,36 +842,42 @@ public class DrinkFactoryMachine extends JFrame {
 		checkboxVanilla.addActionListener(new ActionListener() {
 		    @Override
 		    public void actionPerformed(ActionEvent event) {
-		    	if(checkboxVanilla.isSelected()) {
-					theDFM.setVanillaOption(true);
-				}else {
-					theDFM.setVanillaOption(false);
-				}
-				theDFM.raiseCheckbVanilla();
+		    	if (theDFM.getOnWire()) {
+			    	if(checkboxVanilla.isSelected()) {
+						theDFM.setVanillaOption(true);
+					}else {
+						theDFM.setVanillaOption(false);
+					}
+					theDFM.raiseCheckbVanilla();
+			    }
 		    }
 		});
 		
 		checkboxMapleSyrup.addActionListener(new ActionListener() {
 		    @Override
 		    public void actionPerformed(ActionEvent event) {
-		    	if(checkboxMapleSyrup.isSelected()) {
-					theDFM.setMapleSyrupOption(true);
-				}else {
-					theDFM.setMapleSyrupOption(false);
-				}
-				theDFM.raiseCheckbMapleSyrup();
+		    	if (theDFM.getOnWire()) {
+			    	if(checkboxMapleSyrup.isSelected()) {
+						theDFM.setMapleSyrupOption(true);
+					}else {
+						theDFM.setMapleSyrupOption(false);
+					}
+					theDFM.raiseCheckbMapleSyrup();
+			    }
 		    }
 		});
 		
 		checkboxCrouton.addActionListener(new ActionListener() {
 		    @Override
 		    public void actionPerformed(ActionEvent event) {
-		    	if(checkboxCrouton.isSelected()) {
-					theDFM.setCroutonOption(true);
-				}else {
-					theDFM.setCroutonOption(false);
-				}
-				theDFM.raiseCheckbCrouton();
+		    	if (theDFM.getOnWire()) {
+			    	if(checkboxCrouton.isSelected()) {
+						theDFM.setCroutonOption(true);
+					}else {
+						theDFM.setCroutonOption(false);
+					}
+					theDFM.raiseCheckbCrouton();
+			    }
 		    }
 		});
 		
@@ -1297,7 +925,7 @@ public class DrinkFactoryMachine extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (theDFM.getOnWire()) {
-					theDFM.setSolde(roundValue(theDFM.getSolde()+0.5));
+					theDFM.setSolde(math.roundValue(theDFM.getSolde()+0.5));
 					theDFM.raiseMoney50centsButton();
 				}
 			}
@@ -1307,7 +935,7 @@ public class DrinkFactoryMachine extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (theDFM.getOnWire()) {
-					theDFM.setSolde(roundValue(theDFM.getSolde()+0.20));
+					theDFM.setSolde(math.roundValue(theDFM.getSolde()+0.20));
 					theDFM.raiseMoney20centsButton();
 				}
 			}
@@ -1317,7 +945,7 @@ public class DrinkFactoryMachine extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (theDFM.getOnWire()) {
-					theDFM.setSolde(roundValue(theDFM.getSolde()+0.1));
+					theDFM.setSolde(math.roundValue(theDFM.getSolde()+0.1));
 					theDFM.raiseMoney10centsButton();
 				}
 			}
@@ -1422,16 +1050,11 @@ public class DrinkFactoryMachine extends JFrame {
 				}
 			}
 		});
-	}
-	
+	}	
 
 	@Override
 	protected void finalize() throws Throwable {
-		// TODO Auto-generated method stub
 		super.finalize();
-		/*t.destroy();
-		t1.destroy();
-		t2.destroy();*/
 	}
 	
 }
