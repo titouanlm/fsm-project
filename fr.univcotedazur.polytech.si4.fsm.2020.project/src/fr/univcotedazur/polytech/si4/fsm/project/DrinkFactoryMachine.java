@@ -961,7 +961,7 @@ public class DrinkFactoryMachine extends JFrame {
 						sugarClassicBeverage();
 						classicSizeBeverage();
 						updatePanelCofExpOption();
-						beverageChoice = new Coffee();
+						beverageChoice = Beverage.COFFEE;
 						theDFM.raiseCoffeeButton();
 					}else {
 						messagesToUser.setText("<html> Désolé le café est indisponible pour le moment." );
@@ -981,7 +981,7 @@ public class DrinkFactoryMachine extends JFrame {
 						sugarClassicBeverage();
 						classicSizeBeverage();
 						updatePanelCofExpOption();
-						beverageChoice = new Expresso();
+						beverageChoice = Beverage.EXPRESSO;
 						theDFM.raiseExpressoButton();
 					}else {
 						messagesToUser.setText("<html> Désolé l'expresso est indisponible pour le moment." );
@@ -1000,7 +1000,7 @@ public class DrinkFactoryMachine extends JFrame {
 						sugarClassicBeverage();
 						classicSizeBeverage();
 						updatePanelTeaOption();
-						beverageChoice = new Tea();
+						beverageChoice = Beverage.TEA;
 						theDFM.raiseTeaButton();
 					}else{
 						messagesToUser.setText("<html> Désolé le thé est indisponible pour le moment." );
@@ -1023,7 +1023,7 @@ public class DrinkFactoryMachine extends JFrame {
 						spicySoupBeverage();
 						classicSizeBeverage();
 						updatePanelSoupOption();
-						beverageChoice = new Soup();
+						beverageChoice = Beverage.SOUP;
 						theDFM.raiseSoupButton();
 					}else{
 						messagesToUser.setText("<html> Désolé la soupe est indisponible pour le moment." );
@@ -1042,7 +1042,7 @@ public class DrinkFactoryMachine extends JFrame {
 						sugarClassicBeverage();
 						icedTeaSizeBeverage();
 						updatePanelIcedTeaOption();
-						beverageChoice = new IcedTea();
+						beverageChoice = Beverage.ICED_TEA;
 						theDFM.raiseTeaButton();
 					}else {
 						messagesToUser.setText("<html> Désolé l'iced tea est indisponible pour le moment." );
