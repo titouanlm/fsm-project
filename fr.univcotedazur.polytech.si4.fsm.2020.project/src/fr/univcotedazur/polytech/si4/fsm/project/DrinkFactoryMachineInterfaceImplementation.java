@@ -90,7 +90,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	
 	@Override
 	public void onBeveragePreparationRaised() {
-		//this.dfm.messagesToUser.setText("<html> Votre " + this.dfm.beverageChoice.getName() + " est en cours de préparation ... ");
+		this.dfm.messagesToUser.setText("<html> Votre " + this.dfm.beverageChoice.getName() + " est en cours de préparation ... ");
 		this.dfm.progressBarStart();
 		if (this.dfm.theDFM.getPaymentCard()) {
 			if (!this.dfm.textField.getText().equals("") && !this.dfm.discountApplied) {
