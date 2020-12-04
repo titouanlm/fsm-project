@@ -44,6 +44,8 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		
 		public void raiseCheckbCrouton();
 		
+		public boolean isRaisedCancelChoice();
+		
 		public boolean isRaisedUpdateSolde();
 		
 		public boolean isRaisedTakeBeverage();
@@ -211,6 +213,7 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 	
 	public interface SCInterfaceListener {
 	
+		public void onCancelChoiceRaised();
 		public void onUpdateSoldeRaised();
 		public void onTakeBeverageRaised();
 		public void onCleaningMachineRaised();

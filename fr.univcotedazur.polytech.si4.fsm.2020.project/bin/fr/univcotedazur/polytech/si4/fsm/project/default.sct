@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0">
-  <sgraph:Statechart xmi:id="_xFODUAn_EeuGxr3Rn5k_Tw" specification="@CycleBased(20)&#xA;// Use the event driven execution model.&#xA;// Runs a run-to-completion step&#xA;// each time an event is raised.&#xA;// Switch to cycle based behavior&#xA;// by specifying '@CycleBased(200)'&#xA;// instead.&#xA;&#xA;@ChildFirstExecution&#xA;// In composite states, execute&#xA;// child states first.&#xA;// @ParentFirstExecution does the opposite.&#xA;&#xA;interface:&#xA;// Define events&#xA;// and variables here. &#xA;// Use CTRL + Space for content assist.&#xA;var isBeverageTaken : boolean&#xA;var solde : real&#xA;var onWire : boolean&#xA;var milkOption: boolean&#xA;var vanillaOption: boolean&#xA;var mapleSyrupOption: boolean&#xA;var croutonOption: boolean&#xA;var ownCup : boolean&#xA;var paymentCard : boolean&#xA;var paymentDone : boolean&#xA;var enoughMoney : boolean&#xA;var beverageSelected : string&#xA;var temperatureSelected : integer&#xA;var sizeSelected : integer&#xA;in event money50centsButton&#xA;in event money20centsButton&#xA;in event money10centsButton&#xA;in event sugarOrSpicySlider&#xA;in event temperatureSlider&#xA;in event sizeSlider&#xA;in event coffeeButton&#xA;in event teaButton&#xA;in event expressoButton&#xA;in event soupButton&#xA;in event bipButton&#xA;in event cancelButton&#xA;in event icedTeaButton&#xA;in event addCupButton&#xA;in event checkbMilk&#xA;in event checkbVanilla&#xA;in event checkbMapleSyrup&#xA;in event checkbCrouton&#xA;out event updateSolde&#xA;out event takeBeverage&#xA;out event cleaningMachine&#xA;out event machineReady&#xA;out event beveragePreparation&#xA;out event beverageChoice&#xA;out event cancelPreparation&#xA;out event payByNFC&#xA;out event cancelTransaction&#xA;out event resetSliders&#xA;out event validatePayment&#xA;out event turnOnWaterHeating&#xA;out event placePod&#xA;out event placeTeaBag&#xA;out event grindGrains&#xA;out event placeCup&#xA;out event packGrains&#xA;out event waitTemperature&#xA;out event flowWater&#xA;out event addSugar&#xA;out event waitingInfusion&#xA;out event takeChange&#xA;out event removeTeaBag&#xA;out event flowWaterOK&#xA;out event sugarOK&#xA;out event grainPackingOK&#xA;out event waterTempOK&#xA;out event teaBagOK&#xA;out event podOK&#xA;out event grainCrushingOK&#xA;out event waterHeatingOK&#xA;out event cupOK&#xA;out event ownCupOK&#xA;out event takeSoupPod&#xA;out event soupPodOK&#xA;out event addSpices&#xA;out event spicesOK&#xA;out event poorMilk&#xA;out event poorMilkOK&#xA;out event addVanilla&#xA;out event vanillaOK&#xA;out event mixBeverage&#xA;out event mixOK&#xA;out event addMapleSyrup&#xA;out event mapleSyrupOK&#xA;out event addCrouton&#xA;out event croutonOK&#xA;out event closingDoor&#xA;out event closingDoorOK&#xA;out event liquidNitrogenInjection&#xA;out event liquidNitrogenInjectionOK&#xA;out event openingDoor&#xA;out event openingDoorOK" name="default">
+  <sgraph:Statechart xmi:id="_xFODUAn_EeuGxr3Rn5k_Tw" specification="@CycleBased(20)&#xA;// Use the event driven execution model.&#xA;// Runs a run-to-completion step&#xA;// each time an event is raised.&#xA;// Switch to cycle based behavior&#xA;// by specifying '@CycleBased(200)'&#xA;// instead.&#xA;&#xA;@ChildFirstExecution&#xA;// In composite states, execute&#xA;// child states first.&#xA;// @ParentFirstExecution does the opposite.&#xA;&#xA;interface:&#xA;// Define events&#xA;// and variables here. &#xA;// Use CTRL + Space for content assist.&#xA;var isBeverageTaken : boolean&#xA;var solde : real&#xA;var onWire : boolean&#xA;var milkOption: boolean&#xA;var vanillaOption: boolean&#xA;var mapleSyrupOption: boolean&#xA;var croutonOption: boolean&#xA;var ownCup : boolean&#xA;var paymentCard : boolean&#xA;var paymentDone : boolean&#xA;var enoughMoney : boolean&#xA;var beverageSelected : string&#xA;var temperatureSelected : integer&#xA;var sizeSelected : integer&#xA;in event money50centsButton&#xA;in event money20centsButton&#xA;in event money10centsButton&#xA;in event sugarOrSpicySlider&#xA;in event temperatureSlider&#xA;in event sizeSlider&#xA;in event coffeeButton&#xA;in event teaButton&#xA;in event expressoButton&#xA;in event soupButton&#xA;in event bipButton&#xA;in event cancelButton&#xA;in event icedTeaButton&#xA;in event addCupButton&#xA;in event checkbMilk&#xA;in event checkbVanilla&#xA;in event checkbMapleSyrup&#xA;in event checkbCrouton&#xA;out event cancelChoice&#xA;out event updateSolde&#xA;out event takeBeverage&#xA;out event cleaningMachine&#xA;out event machineReady&#xA;out event beveragePreparation&#xA;out event beverageChoice&#xA;out event cancelPreparation&#xA;out event payByNFC&#xA;out event cancelTransaction&#xA;out event resetSliders&#xA;out event validatePayment&#xA;out event turnOnWaterHeating&#xA;out event placePod&#xA;out event placeTeaBag&#xA;out event grindGrains&#xA;out event placeCup&#xA;out event packGrains&#xA;out event waitTemperature&#xA;out event flowWater&#xA;out event addSugar&#xA;out event waitingInfusion&#xA;out event takeChange&#xA;out event removeTeaBag&#xA;out event flowWaterOK&#xA;out event sugarOK&#xA;out event grainPackingOK&#xA;out event waterTempOK&#xA;out event teaBagOK&#xA;out event podOK&#xA;out event grainCrushingOK&#xA;out event waterHeatingOK&#xA;out event cupOK&#xA;out event ownCupOK&#xA;out event takeSoupPod&#xA;out event soupPodOK&#xA;out event addSpices&#xA;out event spicesOK&#xA;out event poorMilk&#xA;out event poorMilkOK&#xA;out event addVanilla&#xA;out event vanillaOK&#xA;out event mixBeverage&#xA;out event mixOK&#xA;out event addMapleSyrup&#xA;out event mapleSyrupOK&#xA;out event addCrouton&#xA;out event croutonOK&#xA;out event closingDoor&#xA;out event closingDoorOK&#xA;out event liquidNitrogenInjection&#xA;out event liquidNitrogenInjectionOK&#xA;out event openingDoor&#xA;out event openingDoorOK" name="default">
     <regions xmi:id="_xF3jkAn_EeuGxr3Rn5k_Tw" name="oncycle">
       <vertices xsi:type="sgraph:Entry" xmi:id="_xGl8UAn_EeuGxr3Rn5k_Tw">
         <outgoingTransitions xmi:id="_xGw7cAn_EeuGxr3Rn5k_Tw" target="_xGo_oAn_EeuGxr3Rn5k_Tw"/>
@@ -304,7 +304,7 @@
         <outgoingTransitions xmi:id="_UyqkUDZMEeu2CoPrjA9qBw" specification="coffeeButton, expressoButton, teaButton, &#xA;soupButton, icedTeaButton&#xA;/ raise beverageChoice" target="_6Bvpug-REeu6Z-Qhi16VhA"/>
         <outgoingTransitions xmi:id="_hxDGUDZMEeu2CoPrjA9qBw" specification="sugarOrSpicySlider,&#xA;temperatureSlider, &#xA;sizeSlider,&#xA;money50centsButton, &#xA;money20centsButton,&#xA;money10centsButton, &#xA;addCupButton" target="_AisrEDZMEeu2CoPrjA9qBw"/>
       </vertices>
-      <vertices xsi:type="sgraph:State" xmi:id="_som3ADZSEeu2CoPrjA9qBw" specification="" name="End Choice" incomingTransitions="_-hfLMA-REeu6Z-Qhi16VhA _9lZWYA-REeu6Z-Qhi16VhA _FkABwDZMEeu2CoPrjA9qBw">
+      <vertices xsi:type="sgraph:State" xmi:id="_som3ADZSEeu2CoPrjA9qBw" specification="entry / raise cancelChoice" name="End Choice" incomingTransitions="_-hfLMA-REeu6Z-Qhi16VhA _9lZWYA-REeu6Z-Qhi16VhA _FkABwDZMEeu2CoPrjA9qBw">
         <outgoingTransitions xmi:id="_6e_YADZSEeu2CoPrjA9qBw" specification="after 5s" target="_xGo_oAn_EeuGxr3Rn5k_Tw"/>
       </vertices>
     </regions>
@@ -1707,7 +1707,7 @@
           <styles xsi:type="notation:ShapeStyle" xmi:id="_solo6DZSEeu2CoPrjA9qBw" fontName="Verdana" fillColor="15981773" lineColor="12632256"/>
           <styles xsi:type="notation:FontStyle" xmi:id="_solo6TZSEeu2CoPrjA9qBw"/>
           <styles xsi:type="notation:BooleanValueStyle" xmi:id="_solo6jZSEeu2CoPrjA9qBw" name="isHorizontal" booleanValue="true"/>
-          <layoutConstraint xsi:type="notation:Bounds" xmi:id="_solo6zZSEeu2CoPrjA9qBw" x="413" y="62" width="98" height="53"/>
+          <layoutConstraint xsi:type="notation:Bounds" xmi:id="_solo6zZSEeu2CoPrjA9qBw" x="413" y="62" width="197" height="72"/>
         </children>
         <layoutConstraint xsi:type="notation:Bounds" xmi:id="_xGjgEAn_EeuGxr3Rn5k_Tw"/>
       </children>
@@ -1982,11 +1982,11 @@
     <edges xmi:id="_UJm-0A1QEeuGxr3Rn5k_Tw" type="Transition" element="_UJlwsA1QEeuGxr3Rn5k_Tw" source="_H1mPjw1QEeuGxr3Rn5k_Tw" target="_O3Q7cA1QEeuGxr3Rn5k_Tw">
       <children xsi:type="notation:DecorationNode" xmi:id="_UJm-1A1QEeuGxr3Rn5k_Tw" type="TransitionExpression">
         <styles xsi:type="notation:ShapeStyle" xmi:id="_UJm-1Q1QEeuGxr3Rn5k_Tw"/>
-        <layoutConstraint xsi:type="notation:Location" xmi:id="_UJm-1g1QEeuGxr3Rn5k_Tw" x="-5" y="-79"/>
+        <layoutConstraint xsi:type="notation:Location" xmi:id="_UJm-1g1QEeuGxr3Rn5k_Tw" x="-8" y="-108"/>
       </children>
       <styles xsi:type="notation:ConnectorStyle" xmi:id="_UJm-0Q1QEeuGxr3Rn5k_Tw" routing="Rectilinear" lineColor="4210752"/>
       <styles xsi:type="notation:FontStyle" xmi:id="_UJm-0w1QEeuGxr3Rn5k_Tw" fontName="Verdana"/>
-      <bendpoints xsi:type="notation:RelativeBendpoints" xmi:id="_UJm-0g1QEeuGxr3Rn5k_Tw" points="[40, 9, 32, -218]$[40, 192, 32, -35]"/>
+      <bendpoints xsi:type="notation:RelativeBendpoints" xmi:id="_UJm-0g1QEeuGxr3Rn5k_Tw" points="[47, 9, 44, -218]$[47, 192, 44, -35]"/>
       <sourceAnchor xsi:type="notation:IdentityAnchor" xmi:id="_UJoM8A1QEeuGxr3Rn5k_Tw" id="(0.28205128205128205,0.8301886792452832)"/>
       <targetAnchor xsi:type="notation:IdentityAnchor" xmi:id="_Y6OOIA1QEeuGxr3Rn5k_Tw" id="(0.3449612403100775,0.44871794871794873)"/>
     </edges>
@@ -2120,7 +2120,7 @@
       <styles xsi:type="notation:FontStyle" xmi:id="_9lZWZA-REeu6Z-Qhi16VhA" fontName="Verdana"/>
       <bendpoints xsi:type="notation:RelativeBendpoints" xmi:id="_9lZWYw-REeu6Z-Qhi16VhA" points="[31, -2, -2, 189]$[31, -176, -2, 15]"/>
       <sourceAnchor xsi:type="notation:IdentityAnchor" xmi:id="_9lZWaA-REeu6Z-Qhi16VhA" id="(0.06321839080459771,0.027522935779816515)"/>
-      <targetAnchor xsi:type="notation:IdentityAnchor" xmi:id="_9lZWaQ-REeu6Z-Qhi16VhA" id="(0.1471027529659452,0.6936662390410367)"/>
+      <targetAnchor xsi:type="notation:IdentityAnchor" xmi:id="_9lZWaQ-REeu6Z-Qhi16VhA" id="(0.0712528959678797,0.4969549175219368)"/>
     </edges>
     <edges xmi:id="_-hfLMQ-REeu6Z-Qhi16VhA" type="Transition" element="_-hfLMA-REeu6Z-Qhi16VhA" source="_6BvppQ-REeu6Z-Qhi16VhA" target="_solo4DZSEeu2CoPrjA9qBw">
       <children xsi:type="notation:DecorationNode" xmi:id="_-hfLNQ-REeu6Z-Qhi16VhA" type="TransitionExpression">
@@ -2131,7 +2131,7 @@
       <styles xsi:type="notation:FontStyle" xmi:id="_-hfLNA-REeu6Z-Qhi16VhA" fontName="Verdana"/>
       <bendpoints xsi:type="notation:RelativeBendpoints" xmi:id="_-hfLMw-REeu6Z-Qhi16VhA" points="[46, -1, 62, 180]$[46, -175, 62, 6]"/>
       <sourceAnchor xsi:type="notation:IdentityAnchor" xmi:id="_-hhncA-REeu6Z-Qhi16VhA" id="(0.29310344827586204,0.01834862385321101)"/>
-      <targetAnchor xsi:type="notation:IdentityAnchor" xmi:id="_-hhncQ-REeu6Z-Qhi16VhA" id="(0.0367756882414863,0.8762099861570994)"/>
+      <targetAnchor xsi:type="notation:IdentityAnchor" xmi:id="_-hhncQ-REeu6Z-Qhi16VhA" id="(0.017813223991969926,0.627732527396131)"/>
     </edges>
     <edges xmi:id="_PQ1QQBttEeutg-IAzjWDIQ" type="Transition" element="_PQ13UBttEeutg-IAzjWDIQ" source="_6BvppQ-REeu6Z-Qhi16VhA" target="_6BvppQ-REeu6Z-Qhi16VhA">
       <children xsi:type="notation:DecorationNode" xmi:id="_PQ1QRhttEeutg-IAzjWDIQ" type="TransitionExpression">
@@ -3177,7 +3177,7 @@
       <styles xsi:type="notation:FontStyle" xmi:id="_FkBP4zZMEeu2CoPrjA9qBw" fontName="Verdana"/>
       <bendpoints xsi:type="notation:RelativeBendpoints" xmi:id="_FkBP4jZMEeu2CoPrjA9qBw" points="[-20, -4, -163, 116]$[-20, -127, -163, -7]$[140, -127, -3, -7]"/>
       <sourceAnchor xsi:type="notation:IdentityAnchor" xmi:id="_FkDFEDZMEeu2CoPrjA9qBw" id="(0.5934065934065934,0.09433962264150945)"/>
-      <targetAnchor xsi:type="notation:IdentityAnchor" xmi:id="_FkDFETZMEeu2CoPrjA9qBw" id="(0.03220592816414184,0.8397012367338869)"/>
+      <targetAnchor xsi:type="notation:IdentityAnchor" xmi:id="_FkDFETZMEeu2CoPrjA9qBw" id="(0.015599746454506203,0.601577005421292)"/>
     </edges>
     <edges xmi:id="_UyrycDZMEeu2CoPrjA9qBw" type="Transition" element="_UyqkUDZMEeu2CoPrjA9qBw" source="_AiugQDZMEeu2CoPrjA9qBw" target="_6BvppQ-REeu6Z-Qhi16VhA">
       <children xsi:type="notation:DecorationNode" xmi:id="_UyrydDZMEeu2CoPrjA9qBw" type="TransitionExpression">
@@ -3209,7 +3209,7 @@
       <styles xsi:type="notation:ConnectorStyle" xmi:id="_6e__ETZSEeu2CoPrjA9qBw" routing="Rectilinear" lineColor="4210752"/>
       <styles xsi:type="notation:FontStyle" xmi:id="_6fAmIDZSEeu2CoPrjA9qBw" fontName="Verdana"/>
       <bendpoints xsi:type="notation:RelativeBendpoints" xmi:id="_6e__EjZSEeu2CoPrjA9qBw" points="[-6, -3, 138, 2]$[-141, -17, 3, -12]"/>
-      <sourceAnchor xsi:type="notation:IdentityAnchor" xmi:id="_6fB0QDZSEeu2CoPrjA9qBw" id="(0.11032706472445888,0.45635936779015585)"/>
+      <sourceAnchor xsi:type="notation:IdentityAnchor" xmi:id="_6fB0QDZSEeu2CoPrjA9qBw" id="(0.05343967197590977,0.3269440246854848)"/>
       <targetAnchor xsi:type="notation:IdentityAnchor" xmi:id="_6fCbUDZSEeu2CoPrjA9qBw" id="(0.7733333333333333,0.225)"/>
     </edges>
   </notation:Diagram>

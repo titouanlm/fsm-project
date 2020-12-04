@@ -8,7 +8,7 @@ import javax.swing.JSlider;
 
 public interface Calculator {
 	
-	static double doubleListAverageValueWithoutLastValue(List<Double> list){
+	static double doubleListAverageValue(List<Double> list){
 		double moyenne = 0.0;
 		if (list != null) {
 			for (int i=0;i<list.size()-1;i++) {

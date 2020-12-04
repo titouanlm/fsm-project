@@ -1,0 +1,57 @@
+// Sous-modèle 1
+||FSM = (COFFEE_MACHINE || ARGENT || PAIEMENT_CARTE).
+
+PAIEMENT_CARTE = (paiement_carte -> PAIEMENT_CARTE | cancel -> PAIEMENT_CARTE).
+
+ARGENT = (argent -> ARGENT | cancel -> ARGENT).
+
+COFFEE_MACHINE = WAITING, 
+
+WAITING = (beverage_choice -> PAYMENT_DONE),
+
+PAYMENT_DONE = (validate_payment -> STOP).
+
+assert Prop = [] (beverage_choice -> (<> validate_payment))
+
+// Sous-modèle 2
+||BEVERAGE_PREPARATION = (BEVERAGE_PREPARATION_LEFT || BEVERAGE_PREPARATION_RIGHT ).
+
+BEVERAGE_PREPARATION_LEFT = (first_step_left -> first_wait -> second_step_left -> second_wait -> third_step_left -> last_wait -> STOP ).
+
+BEVERAGE_PREPARATION_RIGHT = (first_step_right -> first_wait ->second_step_right -> second_wait -> third_step_right -> last_wait -> STOP ).
+
+assert Prop2_1 = [] (first_step_left -> (<> last_wait))
+assert Prop2_2= [] (first_step_right -> (<> last_wait))
+
+// Sous-modèle 3
+BEVERAGE_PREPARATION_OPTIONS_FIRST = (ajout_sachet_thé -> BEVERAGE_PREPARATION_OPTIONS_SECOND 
+						| pas_ajout_sachet_thé -> BEVERAGE_PREPARATION_OPTIONS_SECOND ),
+
+BEVERAGE_PREPARATION_OPTIONS_SECOND = ( ajout_options_sucrées -> BEVERAGE_PREPARATION_OPTIONS_THIRD 
+				| pas_ajout_options_sucrées -> BEVERAGE_PREPARATION_OPTIONS_THIRD),
+
+BEVERAGE_PREPARATION_OPTIONS_THIRD = ( fermeture_porte -> injection_azote_liquide -> ouverture_porte -> STOP
+											| ajout_lait_sucré -> STOP | aucun_ajouts -> STOP).
+
+progress P = {beverage_choice, reset}
+progress P2 = {first_step, second_step,third_step}
+
+assert Prop3_1 = [] (ajout_sachet_thé -> (<> aucun_ajouts))
+assert Prop3_2 = [] (pas_ajout_sachet_thé -> (<> aucun_ajouts))
+assert Prop3_3 = [] (ajout_sachet_thé -> (<> ajout_lait_sucré))
+assert Prop3_4 = [] (pas_ajout_sachet_thé -> (<> ajout_lait_sucré))
+assert Prop3_5 = [] (ajout_sachet_thé -> (<> ouverture_porte))
+assert Prop3_6 = [] (pas_ajout_sachet_thé -> (<> ouverture_porte))
+
+// Sous-modèle 4
+END_PREPARATION = ( take_beverage -> cleaning_machine -> STOP).
+
+assert Prop4 = [] (take_beverage -> (<> cleaning_machine))
+
+
+
+
+
+
+
+

@@ -175,6 +175,24 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 			}
 		}
 		
+		private boolean cancelChoice;
+		
+		
+		public boolean isRaisedCancelChoice() {
+			synchronized(DefaultSMStatemachine.this) {
+				return cancelChoice;
+			}
+		}
+		
+		protected void raiseCancelChoice() {
+			synchronized(DefaultSMStatemachine.this) {
+				cancelChoice = true;
+				for (SCInterfaceListener listener : listeners) {
+					listener.onCancelChoiceRaised();
+				}
+			}
+		}
+		
 		private boolean updateSolde;
 		
 		
@@ -1347,6 +1365,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 		}
 		protected void clearOutEvents() {
 		
+		cancelChoice = false;
 		updateSolde = false;
 		takeBeverage = false;
 		cleaningMachine = false;
@@ -2076,6 +2095,10 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	
 	public synchronized void raiseCheckbCrouton() {
 		sCInterface.raiseCheckbCrouton();
+	}
+	
+	public synchronized boolean isRaisedCancelChoice() {
+		return sCInterface.isRaisedCancelChoice();
 	}
 	
 	public synchronized boolean isRaisedUpdateSolde() {
@@ -2868,6 +2891,8 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	/* Entry action for state 'End Choice'. */
 	private void entryAction_oncycle_End_Choice() {
 		timer.setTimer(this, 29, (5 * 1000), false);
+		
+		sCInterface.raiseCancelChoice();
 	}
 	
 	/* Entry action for state 'PaymentByCoins'. */

@@ -146,7 +146,7 @@ public class DrinkFactoryMachine extends JFrame {
 	         fis.close();
 	         if (hmap.get(name) != null && hmap.get(name).size() == 10) { 
 		    	  List<Double> newList = hmap.get(name);
-		    	  double discountPrice = Calculator.doubleListAverageValueWithoutLastValue(newList);
+		    	  double discountPrice = Calculator.doubleListAverageValue(newList);
 		    	  if (discountPrice >= beveragePriceAfterDiscount) {
 		    		  beveragePriceAfterDiscount = 0.0;
 		    	  }

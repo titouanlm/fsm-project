@@ -453,6 +453,14 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		
 	}
 
+	@Override
+	public void onCancelChoiceRaised() {
+		onResetSlidersRaised();
+		if (this.dfm.theDFM.getSolde() == 0.0 && !this.dfm.theDFM.getPaymentCard()) {
+			this.dfm.messagesToUser.setText("Abandon de la préparation");
+		}
+	}
+
 }
 
 
