@@ -157,13 +157,13 @@ public class DrinkFactoryMachine extends JFrame {
 	      }
 	      if (hmap.get(name) != null && hmap.get(name).size() == 11) { 
 	    	  List<Double> newList = hmap.get(name);
-	    	  double discountPrice = math.doubleListAverageValueWithoutLastValue(newList);
+	    	  double discountPrice = Calculator.doubleListAverageValueWithoutLastValue(newList);
 	    	  if (discountPrice >= beveragePriceAfterDiscount) {
 	    		  beveragePriceAfterDiscount = 0.0;
 	    	  }
 	    	  else {
 	    		  beveragePriceAfterDiscount -= discountPrice;
-	    		  math.roundValue(beveragePriceAfterDiscount);
+	    		  Calculator.roundValue(beveragePriceAfterDiscount);
 	    	  }
 	    	  for (int i = 0 ; i < 11 ; i++) {
 	    		  newList.remove(0);
@@ -206,7 +206,7 @@ public class DrinkFactoryMachine extends JFrame {
 
 	public void progressBarStart() { 
 		
-		long temps = (long)(math.timePreparation(this)*10);
+		long temps = (long)(Calculator.timePreparation(this)*10);
 		Runnable r = new Runnable() {
 			
 			@Override
@@ -285,7 +285,7 @@ public class DrinkFactoryMachine extends JFrame {
 	// ---------------------------------------------------------------------------------------------------------------------------------------------------
 	// ---------------------------------------------------------------------------------------------------------------------------------------------------
 	// ---------------------------------------------------------------------------------------------------------------------------------------------------
-	// ------------------------BELOW THIS LINE, THERE ARE ONLY FUNCTIONS TO INITIALIZE THE COFFEE MACHINE INTERFACE --------------------------------------
+	// ------------------------BELOW THIS LINE, THERE ARE ONLY FUNCTIONS TO INITIALIZE THE COFFEE MACHINE AND ITS INTERFACE --------------------------------------
 	// ---------------------------------------------------------------------------------------------------------------------------------------------------
 	// ---------------------------------------------------------------------------------------------------------------------------------------------------
 	// ---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -925,7 +925,7 @@ public class DrinkFactoryMachine extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (theDFM.getOnWire()) {
-					theDFM.setSolde(math.roundValue(theDFM.getSolde()+0.5));
+					theDFM.setSolde(Calculator.roundValue(theDFM.getSolde()+0.5));
 					theDFM.raiseMoney50centsButton();
 				}
 			}
@@ -935,7 +935,7 @@ public class DrinkFactoryMachine extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (theDFM.getOnWire()) {
-					theDFM.setSolde(math.roundValue(theDFM.getSolde()+0.20));
+					theDFM.setSolde(Calculator.roundValue(theDFM.getSolde()+0.20));
 					theDFM.raiseMoney20centsButton();
 				}
 			}
@@ -945,7 +945,7 @@ public class DrinkFactoryMachine extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (theDFM.getOnWire()) {
-					theDFM.setSolde(math.roundValue(theDFM.getSolde()+0.1));
+					theDFM.setSolde(Calculator.roundValue(theDFM.getSolde()+0.1));
 					theDFM.raiseMoney10centsButton();
 				}
 			}

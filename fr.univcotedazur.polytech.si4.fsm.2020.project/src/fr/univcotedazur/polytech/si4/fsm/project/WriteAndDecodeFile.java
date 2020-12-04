@@ -64,7 +64,6 @@ public interface WriteAndDecodeFile {
 		}
 		HashMap<String, List<Double>> hmap = retrieveHashInfoCard();
 		if (hmap == null) {
-			//messagesToUser.setText("<html> Machine défectueuse sur les réductions <br> merci de contacter le personnel");
 			return;
 		}
 		List<Double> newListHashInfo;

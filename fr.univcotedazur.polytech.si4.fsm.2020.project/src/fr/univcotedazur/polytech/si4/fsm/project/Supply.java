@@ -50,7 +50,7 @@ public class Supply {
 
 	public void consumeGrain(int beverageHeight) {
 		if(this.kgOfGrain >= (0.05*beverageHeight)) {
-			this.kgOfGrain = roundValue(this.kgOfGrain - (0.05*beverageHeight));
+			this.kgOfGrain = Calculator.roundValue(this.kgOfGrain - (0.05*beverageHeight));
 		}
 	}
 
@@ -179,13 +179,5 @@ public class Supply {
 				+ "<br> Vanilla Dose = " + vanillaDose + "<br> Milk Dose = " + milkDose + "<br> Maple Syrup Dose = " + mapleSyrupDose
 				+ "<br> Nitrogen Dose = " + nitrogenDose + "<br> Number of Goblet = " + goblet;
 	}
-	
-	
-	public double roundValue(double initialValue) {
-		double valueCorrection1 = Math.round((initialValue)*100);
-		double valueCorrection2 = valueCorrection1/100;
-		return valueCorrection2;
-	}
-	
 	
 }

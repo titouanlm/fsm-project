@@ -1,10 +1,12 @@
 package fr.univcotedazur.polytech.si4.fsm.project;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import javax.swing.JSlider;
 
-public interface math {
+public interface Calculator {
 	
 	static double doubleListAverageValueWithoutLastValue(List<Double> list){
 		double moyenne = 0.0;
@@ -17,11 +19,13 @@ public interface math {
 		else return 0.0;
 	}
 	
-	static double roundValue(double initialValue) {
-		double valueCorrection1 = Math.round((initialValue)*100);
-		double valueCorrection2 = valueCorrection1/100;
-		return valueCorrection2;
-	}
+	static double roundValue(double value) {
+        int places = 2;
+
+        BigDecimal bd = new BigDecimal(Double.toString(value));
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
 	
 	static int getTemperatureHotBeverageSelected(JSlider temperatureSlider) {
 		int temperatureSelected = 0;
@@ -81,9 +85,9 @@ public interface math {
 	
 
 	static double chooseLeftOrRightPathOfSecondStepCoffeePreparation(JSlider temperatureSlider, boolean ownCup) {
-		double timePreparationLeft = math.getTemperatureHotBeverageSelected(temperatureSlider) * 0.15 ;
+		double timePreparationLeft = Calculator.getTemperatureHotBeverageSelected(temperatureSlider) * 0.15 ;
 		double timePreparationRight = 0.0 ;
-		if (/*!this.theDFM.getOwnCup()*/ownCup) {
+		if (ownCup) {
 			timePreparationRight+=3.0;
 		}
 		if (timePreparationLeft > timePreparationRight) {
@@ -142,7 +146,7 @@ public interface math {
 	}
 	
 	static double chooseLeftOrRightPathOfSecondStepExpressoPreparation(JSlider sizeSlider, JSlider temperatureSlider, boolean ownCup) {
-		double timePreparationLeft = math.getTemperatureHotBeverageSelected(temperatureSlider) * 0.15 ;
+		double timePreparationLeft = Calculator.getTemperatureHotBeverageSelected(temperatureSlider) * 0.15 ;
 		double timePreparationRight = 0.0 ;
 		if (ownCup) {
 			timePreparationRight+=3.0;
@@ -189,7 +193,7 @@ public interface math {
 	}
 	
 	static double chooseLeftOrRightPathOfSecondStepTeaPreparation(JSlider temperatureSlider, boolean ownCup) {
-		double timePreparationLeft = math.getTemperatureHotBeverageSelected(temperatureSlider) * 0.15 ;
+		double timePreparationLeft = Calculator.getTemperatureHotBeverageSelected(temperatureSlider) * 0.15 ;
 		double timePreparationRight = 0.0 ;
 		if (ownCup) {
 			timePreparationRight+=3.0;
@@ -241,7 +245,7 @@ public interface math {
 	}
 
 	static double chooseLeftOrRightPathOfSecondStepSoupPreparation(JSlider temperatureSlider) {
-		double timePreparationLeft = math.getTemperatureHotBeverageSelected(temperatureSlider) * 0.15 ;
+		double timePreparationLeft = Calculator.getTemperatureHotBeverageSelected(temperatureSlider) * 0.15 ;
 		double timePreparationRight = 2.5 ;
 		if (timePreparationLeft > timePreparationRight) {
 			return timePreparationLeft;
@@ -287,7 +291,7 @@ public interface math {
 	}
 	
 	static double chooseLeftOrRightPathOfSecondStepIcedTeaPreparation(JSlider temperatureSlider, boolean ownCup) {
-		double timePreparationLeft = math.getTemperatureHotBeverageSelected(temperatureSlider) * 0.15 ;
+		double timePreparationLeft = Calculator.getTemperatureHotBeverageSelected(temperatureSlider) * 0.15 ;
 		double timePreparationRight = 0.0 ;
 		if (ownCup) {
 			timePreparationRight+=3.0;
@@ -320,7 +324,7 @@ public interface math {
 	}
 	
 	static double timeOfLiquidNitrogenInjection(JSlider temperatureSlider) {
-		return ((-1/3)*math.getTemperatureColdBeverageSelected(temperatureSlider))+20;
+		return ((-1/3)*Calculator.getTemperatureColdBeverageSelected(temperatureSlider))+20;
 	}
 	
 	static double timeOfOpeningDoor() {
