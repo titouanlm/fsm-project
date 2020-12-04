@@ -1,13 +1,11 @@
 package fr.univcotedazur.polytech.si4.fsm.project;
 
 import java.awt.image.BufferedImage;
-//import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 
 import fr.univcotedazur.polytech.si4.fsm.project.defaultsm.IDefaultSMStatemachine.SCInterfaceListener;
 
@@ -98,6 +96,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 			WriteAndDecodeFile.addHashInfoCard(this.dfm.textField.getText(), this.dfm.beveragePriceAfterDiscount);
 			}
 		}
+		this.dfm.textField.setText("");
 	}
 	
 	@Override

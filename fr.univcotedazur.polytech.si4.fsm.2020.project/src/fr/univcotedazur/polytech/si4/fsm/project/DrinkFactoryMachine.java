@@ -3,7 +3,6 @@ package fr.univcotedazur.polytech.si4.fsm.project;
 import java.awt.Color;
 
 import java.awt.EventQueue;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,11 +11,8 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
@@ -932,8 +928,9 @@ public class DrinkFactoryMachine extends JFrame {
 		nfcBiiiipButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (theDFM.getOnWire()) {
-					if (beverageChoice != null && beverageChoice.getName() == "soupe" && sugarOrSpicySlider.getValue() !=0) {
+				if (theDFM.getOnWire() && !textField.getText().isEmpty()) {
+					if (beverageChoice != null && beverageChoice.getName() == "soupe" 
+							&& sugarOrSpicySlider.getValue() !=0) {
 						theDFM.setPaymentCard(true);
 					}
 					else if (beverageChoice != null && beverageChoice.getName() == "soupe") {
