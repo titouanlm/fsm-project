@@ -449,15 +449,19 @@ public class DrinkFactoryMachine extends JFrame {
 		contentPane.remove(checkboxCrouton);
 
 		checkboxMilk.setSelected(false);
+		checkboxMilk.setEnabled(true);
 		theDFM.setMilkOption(false);
 		
 		checkboxVanilla.setSelected(false);
+		checkboxVanilla.setEnabled(true);
 		theDFM.setVanillaOption(false);
 		
 		checkboxMapleSyrup.setSelected(false);
+		checkboxMapleSyrup.setEnabled(true);
 		theDFM.setMapleSyrupOption(false);
 		
 		checkboxCrouton.setSelected(false);
+		checkboxCrouton.setEnabled(true);
 		theDFM.setCroutonOption(false);
 		
 		messagesToUserOption1.setText("");
@@ -471,6 +475,19 @@ public class DrinkFactoryMachine extends JFrame {
 	
 	public void updateStock() {
 		messagesToProviderStock.setText(supply.toString());
+	}
+	
+	public void disabledOptionsCheckBox() {
+		if(this.beverageChoice == Beverage.COFFEE || this.beverageChoice == Beverage.EXPRESSO || this.beverageChoice == Beverage.TEA) {
+			checkboxMapleSyrup.setEnabled(false);
+			checkboxMilk.setEnabled(false);
+		}else if(this.beverageChoice == Beverage.COFFEE || this.beverageChoice == Beverage.EXPRESSO) {
+			checkboxVanilla.setEnabled(false);
+		}else if(this.beverageChoice == Beverage.SOUP) {
+			checkboxCrouton.setEnabled(false);
+		}else {
+			checkboxMapleSyrup.setEnabled(false);
+		}
 	}
 	
 	

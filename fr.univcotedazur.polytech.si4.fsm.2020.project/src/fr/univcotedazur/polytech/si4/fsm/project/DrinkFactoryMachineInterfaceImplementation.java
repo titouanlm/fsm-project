@@ -94,7 +94,8 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		this.dfm.theDFM.setBeverageSelected(this.dfm.beverageChoice.getName());
 		this.dfm.theDFM.setTemperatureSelected(Calculator.getTemperatureHotBeverageSelected(this.dfm.temperatureSlider));
 		this.dfm.theDFM.setSizeSelected(this.dfm.sizeSlider.getValue()+1);
-		this.dfm.theDFM.setOnWire(false); 
+		this.dfm.theDFM.setOnWire(false);
+		this.dfm.disabledOptionsCheckBox();
 		this.dfm.progressBarStart();
 		if (this.dfm.theDFM.getPaymentCard()) {
 			if (!this.dfm.textField.getText().equals("")) {
