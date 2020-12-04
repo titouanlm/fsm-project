@@ -146,6 +146,8 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	@Override
 	public void onResetSlidersRaised() {
 		this.dfm.sugarClassicBeverage();
+		this.dfm.temperatureClassicBeverage();
+		this.dfm.classicSizeBeverage();
 		this.dfm.temperatureSlider.setValue(2);
 		this.dfm.sizeSlider.setValue(1);
 		this.dfm.progressBar.setValue(0);
@@ -165,7 +167,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		}
 		
 		if(this.dfm.theDFM.getVanillaOption()) {
-			this.dfm.beveragePriceAfterDiscount = Calculator.roundValue(this.dfm.beveragePriceAfterDiscount+0.4);
+			this.dfm.beveragePriceAfterDiscount = Calculator.roundValue(this.dfm.beveragePriceAfterDiscount+0.6);
 		}
 		
 		if(this.dfm.theDFM.getMapleSyrupOption()) {

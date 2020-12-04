@@ -2,6 +2,7 @@ package fr.univcotedazur.polytech.si4.fsm.project;
 
 import java.awt.Color;
 
+
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -36,6 +37,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import fr.univcotedazur.polytech.si4.fsm.project.defaultsm.DefaultSMStatemachine;
 
@@ -481,7 +484,9 @@ public class DrinkFactoryMachine extends JFrame {
 		if(this.beverageChoice == Beverage.COFFEE || this.beverageChoice == Beverage.EXPRESSO || this.beverageChoice == Beverage.TEA) {
 			checkboxMapleSyrup.setEnabled(false);
 			checkboxMilk.setEnabled(false);
-		}else if(this.beverageChoice == Beverage.COFFEE || this.beverageChoice == Beverage.EXPRESSO) {
+		}
+		
+		if(this.beverageChoice == Beverage.COFFEE || this.beverageChoice == Beverage.EXPRESSO) {
 			checkboxVanilla.setEnabled(false);
 		}else if(this.beverageChoice == Beverage.SOUP) {
 			checkboxCrouton.setEnabled(false);
@@ -581,7 +586,7 @@ public class DrinkFactoryMachine extends JFrame {
 		messagesToUserOption3.setForeground(Color.RED);
 		messagesToUserOption3.setHorizontalAlignment(SwingConstants.LEFT);
 		messagesToUserOption3.setVerticalAlignment(SwingConstants.TOP);
-		messagesToUserOption3.setBounds(42, 411, 225, 150);
+		messagesToUserOption3.setBounds(42, 411, 265, 160);
 		contentPane.add(messagesToUserOption3);		
 				
 		messagesToProviderStock = new JLabel(supply.toString());
@@ -603,7 +608,7 @@ public class DrinkFactoryMachine extends JFrame {
 		sugarOrSpicySlider.setPaintLabels(true);
 		sugarOrSpicySlider.setMinorTickSpacing(1);
 		sugarOrSpicySlider.setMajorTickSpacing(1);
-		sugarOrSpicySlider.setMaximum(5);
+		sugarOrSpicySlider.setMaximum(4);
 		sugarOrSpicySlider.setBounds(301, 41, 200, 46);
 		contentPane.add(sugarOrSpicySlider);
 
@@ -686,7 +691,6 @@ public class DrinkFactoryMachine extends JFrame {
 		doseTable.put(2, new JLabel("2"));
 		doseTable.put(3, new JLabel("3"));
 		doseTable.put(4, new JLabel("4"));
-		doseTable.put(5, new JLabel("5"));
 		for (JLabel l : doseTable.values()) {
 			l.setForeground(Color.WHITE);
 		}
@@ -842,10 +846,10 @@ public class DrinkFactoryMachine extends JFrame {
 		checkboxMapleSyrup.setBackground(Color.DARK_GRAY);
 		checkboxMapleSyrup.setBounds(35, 386, 200, 20);
 		
-		checkboxVanilla = new JCheckBox("Glace vanille mixée (+0.40€)");
+		checkboxVanilla = new JCheckBox("Glace vanille mixée (+0.60€)");
 		checkboxVanilla.setForeground(Color.WHITE);
 		checkboxVanilla.setBackground(Color.DARK_GRAY);	
-		checkboxVanilla.setBounds(35, 411, 200, 20);
+		checkboxVanilla.setBounds(35, 411, 250, 20);
 		
 		checkboxCrouton = new JCheckBox("Croutons (+0.30€)");
 		checkboxCrouton.setForeground(Color.WHITE);
@@ -987,9 +991,13 @@ public class DrinkFactoryMachine extends JFrame {
 				if(theDFM.getOnWire()) {
 					resetPanelOption();
 					if (supply.enoughCoffeeDose() &&  supply.enoughSugarDose() && (supply.enoughGoblet() || theDFM.getOwnCup())) {
-						temperatureClassicBeverage();
-						sugarClassicBeverage();
-						classicSizeBeverage();
+						if(beverageChoice == Beverage.ICED_TEA) {
+							temperatureClassicBeverage();
+							classicSizeBeverage();
+						}
+						if(beverageChoice == Beverage.SOUP) {
+							sugarClassicBeverage();
+						}
 						updatePanelCofExpOption();
 						beverageChoice = Beverage.COFFEE;
 						theDFM.raiseCoffeeButton();
@@ -1007,9 +1015,13 @@ public class DrinkFactoryMachine extends JFrame {
 					resetPanelOption();
 					if (supply.enoughGrain() &&  supply.enoughSugarDose() && (supply.enoughGoblet() || theDFM.getOwnCup())) {
 						resetPanelOption();
-						temperatureClassicBeverage();
-						sugarClassicBeverage();
-						classicSizeBeverage();
+						if(beverageChoice == Beverage.ICED_TEA) {
+							temperatureClassicBeverage();
+							classicSizeBeverage();
+						}
+						if(beverageChoice == Beverage.SOUP) {
+							sugarClassicBeverage();
+						}
 						updatePanelCofExpOption();
 						beverageChoice = Beverage.EXPRESSO;
 						theDFM.raiseExpressoButton();
@@ -1026,9 +1038,13 @@ public class DrinkFactoryMachine extends JFrame {
 				if(theDFM.getOnWire()) {
 					resetPanelOption();
 					if (supply.enoughTeaBag() &&  supply.enoughSugarDose() && (supply.enoughGoblet() || theDFM.getOwnCup())) {
-						temperatureClassicBeverage();
-						sugarClassicBeverage();
-						classicSizeBeverage();
+						if(beverageChoice == Beverage.ICED_TEA) {
+							temperatureClassicBeverage();
+							classicSizeBeverage();
+						}
+						if(beverageChoice == Beverage.SOUP) {
+							sugarClassicBeverage();
+						}
 						updatePanelTeaOption();
 						beverageChoice = Beverage.TEA;
 						theDFM.raiseTeaButton();
@@ -1049,9 +1065,11 @@ public class DrinkFactoryMachine extends JFrame {
 							delayBlueCardPayment = true;
 							theDFM.setPaymentCard(false);
 							}
-						temperatureClassicBeverage();
+						if(beverageChoice == Beverage.ICED_TEA) {
+							temperatureClassicBeverage();
+							classicSizeBeverage();
+						}
 						spicySoupBeverage();
-						classicSizeBeverage();
 						updatePanelSoupOption();
 						beverageChoice = Beverage.SOUP;
 						theDFM.raiseSoupButton();
@@ -1069,8 +1087,10 @@ public class DrinkFactoryMachine extends JFrame {
 					resetPanelOption();
 					if (supply.enoughTeaBag() &&  supply.enoughSugarDose() && supply.enoughNitrogenDose() && (supply.enoughGoblet() || theDFM.getOwnCup())) {
 						icedTeaTemperature();
-						sugarClassicBeverage();
 						icedTeaSizeBeverage();
+						if(beverageChoice == Beverage.SOUP) {
+							sugarClassicBeverage();
+						}
 						updatePanelIcedTeaOption();
 						beverageChoice = Beverage.ICED_TEA;
 						theDFM.raiseTeaButton();
@@ -1080,6 +1100,33 @@ public class DrinkFactoryMachine extends JFrame {
 				}
 			}
 		});
+		
+		sugarOrSpicySlider.addChangeListener(new ChangeListener() {
+		      public void stateChanged(ChangeEvent event) {
+		    	  if (theDFM.getOnWire()) {
+		    		  theDFM.raiseSugarOrSpicySlider();
+		    	  }
+		      }
+		});
+		
+		temperatureSlider.addChangeListener(new ChangeListener() {
+		      public void stateChanged(ChangeEvent event) {
+		    	  if (theDFM.getOnWire()) {
+		    		  theDFM.raiseTemperatureSlider();
+		    	  }
+		      }
+		});
+		
+		sizeSlider.addChangeListener(new ChangeListener() {
+		      public void stateChanged(ChangeEvent event) {
+		    	  if (theDFM.getOnWire()) {
+		    		  theDFM.raiseSizeSlider();
+		    	  }
+		      }
+		});
+		
+		
+		
 	}	
 
 	@Override

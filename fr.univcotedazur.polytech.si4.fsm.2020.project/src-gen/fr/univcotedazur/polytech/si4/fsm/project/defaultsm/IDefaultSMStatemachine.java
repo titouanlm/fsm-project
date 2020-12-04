@@ -14,6 +14,12 @@ public interface IDefaultSMStatemachine extends ITimerCallback,IStatemachine {
 		
 		public void raiseMoney10centsButton();
 		
+		public void raiseSugarOrSpicySlider();
+		
+		public void raiseTemperatureSlider();
+		
+		public void raiseSizeSlider();
+		
 		public void raiseCoffeeButton();
 		
 		public void raiseTeaButton();

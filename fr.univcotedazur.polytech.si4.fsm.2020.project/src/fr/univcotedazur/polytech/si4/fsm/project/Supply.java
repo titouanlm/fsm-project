@@ -24,7 +24,7 @@ public class Supply {
 		this.sugarDose = 50;
 		this.spicyDose = 50;
 		this.croutonDose = 5;
-		this.vanillaDose = 0;
+		this.vanillaDose = 1;
 		this.milkDose = 5;
 		this.mapleSyrupDose = 5;
 		this.nitrogenDose = 1;
