@@ -112,15 +112,15 @@ public interface Calculator {
 	static double addOptions(JSlider sizeSlider, boolean isCheckboxMilkSelected, boolean isCheckboxVanillaSelected, boolean isCheckboxCroutonSelected) {
 		double result = 0.0;
 		if(isCheckboxMilkSelected) {
-			result+= 2;	
+			result+= 2.0;	
 		}
 		
 		if(isCheckboxVanillaSelected) {
-			result += 5;
+			result += 5.0;
 		}
 		
-		if(isCheckboxCroutonSelected && sizeSlider.getValue() == 0) {
-			result += 2;
+		if(isCheckboxCroutonSelected) {
+			result += 2.0;
 		}
 		return result;
 	}
@@ -233,7 +233,7 @@ public interface Calculator {
 	static double chooseLeftOrRightPathOfFirstStepSoupPreparation(boolean ownCup) {
 		double timePreparationLeft = 1.5;
 		double timePreparationRight = 0.0;
-		if (ownCup) {
+		if (!ownCup) {
 			timePreparationRight+=3.0;
 		}
 		if (timePreparationLeft > timePreparationRight) {
@@ -246,7 +246,7 @@ public interface Calculator {
 
 	static double chooseLeftOrRightPathOfSecondStepSoupPreparation(JSlider temperatureSlider) {
 		double timePreparationLeft = Calculator.getTemperatureHotBeverageSelected(temperatureSlider) * 0.15 ;
-		double timePreparationRight = 2.5 ;
+		double timePreparationRight = 2.5 + 2 ;
 		if (timePreparationLeft > timePreparationRight) {
 			return timePreparationLeft;
 		}
