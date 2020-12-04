@@ -87,7 +87,7 @@ public interface Calculator {
 	static double chooseLeftOrRightPathOfSecondStepCoffeePreparation(JSlider temperatureSlider, boolean ownCup) {
 		double timePreparationLeft = Calculator.getTemperatureHotBeverageSelected(temperatureSlider) * 0.15 ;
 		double timePreparationRight = 0.0 ;
-		if (ownCup) {
+		if (!ownCup) {
 			timePreparationRight+=3.0;
 		}
 		if (timePreparationLeft > timePreparationRight) {
@@ -148,7 +148,7 @@ public interface Calculator {
 	static double chooseLeftOrRightPathOfSecondStepExpressoPreparation(JSlider sizeSlider, JSlider temperatureSlider, boolean ownCup) {
 		double timePreparationLeft = Calculator.getTemperatureHotBeverageSelected(temperatureSlider) * 0.15 ;
 		double timePreparationRight = 0.0 ;
-		if (ownCup) {
+		if (!ownCup) {
 			timePreparationRight+=3.0;
 		}
 		timePreparationRight += (sizeSlider.getValue()+1)*2;
@@ -195,7 +195,7 @@ public interface Calculator {
 	static double chooseLeftOrRightPathOfSecondStepTeaPreparation(JSlider temperatureSlider, boolean ownCup) {
 		double timePreparationLeft = Calculator.getTemperatureHotBeverageSelected(temperatureSlider) * 0.15 ;
 		double timePreparationRight = 0.0 ;
-		if (ownCup) {
+		if (!ownCup) {
 			timePreparationRight+=3.0;
 		}
 		if (timePreparationLeft > timePreparationRight) {
@@ -293,7 +293,7 @@ public interface Calculator {
 	static double chooseLeftOrRightPathOfSecondStepIcedTeaPreparation(JSlider temperatureSlider, boolean ownCup) {
 		double timePreparationLeft = Calculator.getTemperatureHotBeverageSelected(temperatureSlider) * 0.15 ;
 		double timePreparationRight = 0.0 ;
-		if (ownCup) {
+		if (!ownCup) {
 			timePreparationRight+=3.0;
 		}
 		if (timePreparationLeft > timePreparationRight) {
