@@ -17,7 +17,7 @@ public class Supply {
 	
 
 	public Supply() {
-		this.coffeeDose = 5;
+		this.coffeeDose = 15;
 		this.kgOfGrain = 0.74;
 		this.teaBag = 5;
 		this.soupDose = 2;
@@ -28,7 +28,7 @@ public class Supply {
 		this.milkDose = 5;
 		this.mapleSyrupDose = 5;
 		this.nitrogenDose = 1;
-		this.goblet =10;
+		this.goblet =15;
 	}
 
 

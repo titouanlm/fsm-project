@@ -324,7 +324,7 @@ public interface Calculator {
 	}
 	
 	static double timeOfLiquidNitrogenInjection(JSlider temperatureSlider) {
-		return ((-1/3)*Calculator.getTemperatureColdBeverageSelected(temperatureSlider))+20;
+		return ((-1/3)*Calculator.getTemperatureColdBeverageSelected(temperatureSlider))+10;
 	}
 	
 	static double timeOfOpeningDoor() {

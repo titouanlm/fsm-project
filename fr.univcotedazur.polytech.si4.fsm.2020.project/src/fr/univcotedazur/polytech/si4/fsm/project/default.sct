@@ -279,7 +279,7 @@
             <outgoingTransitions xmi:id="_6dPsUCXPEeu6dM9WqQ0OmA" specification="" target="_zXLokCXPEeu6dM9WqQ0OmA"/>
           </vertices>
           <vertices xsi:type="sgraph:State" xmi:id="_zXLokCXPEeu6dM9WqQ0OmA" specification="entry / raise liquidNitrogenInjection" name="Liquid Nitrogen Injection" incomingTransitions="_6dPsUCXPEeu6dM9WqQ0OmA">
-            <outgoingTransitions xmi:id="_GWEUcCXQEeu6dM9WqQ0OmA" specification="after ((temperatureSelected*(-1/3))+20)*1000 ms" target="_99GeYCXPEeu6dM9WqQ0OmA"/>
+            <outgoingTransitions xmi:id="_GWEUcCXQEeu6dM9WqQ0OmA" specification="after ((temperatureSelected*(-1/3))+10&#xA;)*1000 ms" target="_99GeYCXPEeu6dM9WqQ0OmA"/>
           </vertices>
           <vertices xsi:type="sgraph:State" xmi:id="_99GeYCXPEeu6dM9WqQ0OmA" specification="entry / raise liquidNitrogenInjectionOK" name="Liquid Nitrogen Injection OK" incomingTransitions="_GWEUcCXQEeu6dM9WqQ0OmA">
             <outgoingTransitions xmi:id="_oI908CXVEeu6dM9WqQ0OmA" specification="oncycle" target="_jnopsCXTEeu6dM9WqQ0OmA"/>
@@ -3105,7 +3105,7 @@
     <edges xmi:id="_GWEUcSXQEeu6dM9WqQ0OmA" type="Transition" element="_GWEUcCXQEeu6dM9WqQ0OmA" source="_zXMPoSXPEeu6dM9WqQ0OmA" target="_99GeYyXPEeu6dM9WqQ0OmA">
       <children xsi:type="notation:DecorationNode" xmi:id="_GWEUdSXQEeu6dM9WqQ0OmA" type="TransitionExpression">
         <styles xsi:type="notation:ShapeStyle" xmi:id="_GWEUdiXQEeu6dM9WqQ0OmA"/>
-        <layoutConstraint xsi:type="notation:Location" xmi:id="_GWEUdyXQEeu6dM9WqQ0OmA" x="-112" y="83"/>
+        <layoutConstraint xsi:type="notation:Location" xmi:id="_GWEUdyXQEeu6dM9WqQ0OmA" x="-42" y="13"/>
       </children>
       <styles xsi:type="notation:ConnectorStyle" xmi:id="_GWEUciXQEeu6dM9WqQ0OmA" routing="Rectilinear" lineColor="4210752"/>
       <styles xsi:type="notation:FontStyle" xmi:id="_GWEUdCXQEeu6dM9WqQ0OmA" fontName="Verdana"/>

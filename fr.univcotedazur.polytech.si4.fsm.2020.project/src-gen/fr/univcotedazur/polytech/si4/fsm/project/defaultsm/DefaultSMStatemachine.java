@@ -2838,7 +2838,7 @@ public class DefaultSMStatemachine implements IDefaultSMStatemachine {
 	
 	/* Entry action for state 'Liquid Nitrogen Injection'. */
 	private void entryAction_oncycle_Beverage_Preparation_Fifth_Step___Liquid_Nitrogen_Injection() {
-		timer.setTimer(this, 26, (((((sCInterface.getTemperatureSelected() * ((-1 / 3)))) + 20)) * 1000), false);
+		timer.setTimer(this, 26, (((((sCInterface.getTemperatureSelected() * ((-1 / 3)))) + 10)) * 1000), false);
 		
 		sCInterface.raiseLiquidNitrogenInjection();
 	}
