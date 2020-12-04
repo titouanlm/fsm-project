@@ -71,6 +71,7 @@ public class DrinkFactoryMachine extends JFrame {
 	protected JTextField textField;
 	protected JLabel label1;
 	protected boolean onListening;
+	protected boolean discountApplied;
 	private Thread t;
 	private Thread t1;
 	private Thread t2;
@@ -143,6 +144,25 @@ public class DrinkFactoryMachine extends JFrame {
 	         hmap = (HashMap<String, List<Double>>) ois.readObject();
 	         ois.close();
 	         fis.close();
+	         if (hmap.get(name) != null && hmap.get(name).size() == 10) { 
+		    	  List<Double> newList = hmap.get(name);
+		    	  double discountPrice = Calculator.doubleListAverageValueWithoutLastValue(newList);
+		    	  if (discountPrice >= beveragePriceAfterDiscount) {
+		    		  beveragePriceAfterDiscount = 0.0;
+		    	  }
+		    	  else {
+		    		  beveragePriceAfterDiscount -= discountPrice;
+		    		  Calculator.roundValue(beveragePriceAfterDiscount);
+		    	  }
+		    	  for (int i = 0 ; i < 10 ; i++) {
+		    		  newList.remove(0);
+		    	  }
+		    	  hmap.remove(name);
+		    	  hmap.put(name, newList);
+		    	  WriteAndDecodeFile.addHashMapToFile(hmap);
+		
+		    	  return true; 
+		      }
 	      }
 	      catch(IOException ioe)
 	      {
@@ -153,27 +173,7 @@ public class DrinkFactoryMachine extends JFrame {
 	      {
 	         c.printStackTrace();
 	         return false;
-	      }
-	      if (hmap.get(name) != null && hmap.get(name).size() == 11) { 
-	    	  List<Double> newList = hmap.get(name);
-	    	  double discountPrice = Calculator.doubleListAverageValueWithoutLastValue(newList);
-	    	  if (discountPrice >= beveragePriceAfterDiscount) {
-	    		  beveragePriceAfterDiscount = 0.0;
-	    	  }
-	    	  else {
-	    		  beveragePriceAfterDiscount -= discountPrice;
-	    		  Calculator.roundValue(beveragePriceAfterDiscount);
-	    	  }
-	    	  for (int i = 0 ; i < 11 ; i++) {
-	    		  newList.remove(0);
-	    	  }
-	    	  hmap.remove(name);
-	    	  hmap.put(name, newList);
-	    	  WriteAndDecodeFile.addHashMapToFile(hmap);
-	
-	    	  return true; 
-	      }
-	    
+	      }    
 		return false;
 
 	}

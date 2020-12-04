@@ -84,6 +84,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		this.dfm.updateStock();
 		this.dfm.updatePicture();
 		this.dfm.textField.setText("");
+		this.dfm.discountApplied=false;
 		onResetSlidersRaised();
 	}
 	
@@ -92,7 +93,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		this.dfm.messagesToUser.setText("<html> Votre " + this.dfm.beverageChoice.getName() + " est en cours de préparation ... ");
 		this.dfm.progressBarStart();
 		if (this.dfm.theDFM.getPaymentCard()) {
-			if (!this.dfm.textField.getText().equals("")) {
+			if (!this.dfm.textField.getText().equals("") && !this.dfm.discountApplied) {
 			WriteAndDecodeFile.addHashInfoCard(this.dfm.textField.getText(), this.dfm.beveragePriceAfterDiscount);
 			}
 		}
@@ -100,24 +101,25 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	}
 	
 	@Override
-	public void onValidatePaymentRaised() { // note pour moi : le setpaymentdonetrue se fait trop vite même si ca pose pas de problème
+	public void onValidatePaymentRaised() { 
 		if (!this.dfm.textField.getText().equals("") && this.dfm.verifyCustomerDiscount(this.dfm.textField.getText())) {
+			this.dfm.discountApplied=true;
 			this.dfm.messagesToUser.setText("<html> Vous avez droit à une remise !"
-					+ "<br> Votre boisson vous coutera : " + this.dfm.beveragePriceAfterDiscount + "€.<br> cadeau de la maison :)");
+					+ "<br> Votre boisson vous coutera : " + Calculator.roundValue(this.dfm.beveragePriceAfterDiscount) + "€.<br> cadeau de la maison :)");
 		}
 		else {
 			this.dfm.messagesToUser.setText(this.dfm.messagesToUser.getText()+"<html> <br> Paiement autorisé.");
-			this.dfm.theDFM.setOnWire(false);
-			this.dfm.theDFM.setBeverageSelected(this.dfm.beverageChoice.getName());
-			this.dfm.theDFM.setTemperatureSelected(Calculator.getTemperatureHotBeverageSelected(this.dfm.temperatureSlider));
-			this.dfm.theDFM.setSizeSelected(this.dfm.sizeSlider.getValue()+1);
-			this.dfm.disabledSliders();
-			this.dfm.disabledOptionsCheckBox();
 			if(!this.dfm.theDFM.getPaymentCard()) {
 				this.dfm.theDFM.setSolde(Calculator.roundValue(this.dfm.theDFM.getSolde()-this.dfm.beveragePriceAfterDiscount));
 			}
-			this.dfm.theDFM.setPaymentDone(true);
 		}
+		this.dfm.theDFM.setBeverageSelected(this.dfm.beverageChoice.getName());
+		this.dfm.theDFM.setTemperatureSelected(Calculator.getTemperatureHotBeverageSelected(this.dfm.temperatureSlider));
+		this.dfm.theDFM.setSizeSelected(this.dfm.sizeSlider.getValue()+1);
+		this.dfm.theDFM.setOnWire(false);
+		this.dfm.disabledSliders();
+		this.dfm.disabledOptionsCheckBox();
+		this.dfm.theDFM.setPaymentDone(true);
 	}
 
 	@Override
