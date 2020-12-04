@@ -490,6 +490,19 @@ public class DrinkFactoryMachine extends JFrame {
 		}
 	}
 	
+	public void disabledSliders() {
+		this.sizeSlider.setEnabled(false);
+		this.sugarOrSpicySlider.setEnabled(false);
+		this.temperatureSlider.setEnabled(false);
+
+	}
+	
+	public void abledSliders() {
+		this.sizeSlider.setEnabled(true);
+		this.sugarOrSpicySlider.setEnabled(true);
+		this.temperatureSlider.setEnabled(true);
+
+	}
 	
 	public void updatePicture() {
 		BufferedImage myPicture = null;

@@ -17,18 +17,18 @@ public class Supply {
 	
 
 	public Supply() {
-		this.coffeeDose = 1;
-		this.kgOfGrain = 0.24;
-		this.teaBag = 2;
-		this.soupDose = 1;
-		this.sugarDose = 9;
+		this.coffeeDose = 5;
+		this.kgOfGrain = 0.74;
+		this.teaBag = 5;
+		this.soupDose = 2;
+		this.sugarDose = 50;
 		this.spicyDose = 50;
 		this.croutonDose = 5;
 		this.vanillaDose = 0;
 		this.milkDose = 5;
 		this.mapleSyrupDose = 5;
 		this.nitrogenDose = 1;
-		this.goblet = 3;
+		this.goblet =10;
 	}
 
 

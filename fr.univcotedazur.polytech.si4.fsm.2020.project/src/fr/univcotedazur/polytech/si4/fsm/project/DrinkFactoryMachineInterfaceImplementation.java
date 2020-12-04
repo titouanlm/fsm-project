@@ -78,6 +78,7 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		this.dfm.delayBlueCardPayment = false;
 		this.dfm.theDFM.setOwnCup(false);
 		this.dfm.theDFM.setIsBeverageTaken(false);
+		this.dfm.abledSliders();
 		this.dfm.beverageChoice =null;
 		this.dfm.beveragePriceAfterDiscount= 0.;
 		this.dfm.resetPanelOption();
@@ -91,11 +92,6 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 	@Override
 	public void onBeveragePreparationRaised() {
 		this.dfm.messagesToUser.setText("<html> Votre " + this.dfm.beverageChoice.getName() + " est en cours de préparation ... ");
-		this.dfm.theDFM.setBeverageSelected(this.dfm.beverageChoice.getName());
-		this.dfm.theDFM.setTemperatureSelected(Calculator.getTemperatureHotBeverageSelected(this.dfm.temperatureSlider));
-		this.dfm.theDFM.setSizeSelected(this.dfm.sizeSlider.getValue()+1);
-		this.dfm.theDFM.setOnWire(false);
-		this.dfm.disabledOptionsCheckBox();
 		this.dfm.progressBarStart();
 		if (this.dfm.theDFM.getPaymentCard()) {
 			if (!this.dfm.textField.getText().equals("")) {
@@ -112,6 +108,12 @@ public class DrinkFactoryMachineInterfaceImplementation implements SCInterfaceLi
 		}
 		else {
 			this.dfm.messagesToUser.setText(this.dfm.messagesToUser.getText()+"<html> <br> Paiement autorisé.");
+			this.dfm.theDFM.setOnWire(false);
+			this.dfm.theDFM.setBeverageSelected(this.dfm.beverageChoice.getName());
+			this.dfm.theDFM.setTemperatureSelected(Calculator.getTemperatureHotBeverageSelected(this.dfm.temperatureSlider));
+			this.dfm.theDFM.setSizeSelected(this.dfm.sizeSlider.getValue()+1);
+			this.dfm.disabledSliders();
+			this.dfm.disabledOptionsCheckBox();
 			if(!this.dfm.theDFM.getPaymentCard()) {
 				this.dfm.theDFM.setSolde(Calculator.roundValue(this.dfm.theDFM.getSolde()-this.dfm.beveragePriceAfterDiscount));
 			}
