@@ -144,9 +144,6 @@ public class DrinkFactoryMachine extends JFrame {
 	         hmap = (HashMap<String, List<Double>>) ois.readObject();
 	         ois.close();
 	         fis.close();
-	         if (hmap.get(name) != null) {
-	        	 messagesToUser.setText("<html>a : " + hmap.get(name).size());
-	         }
 	         if (hmap.get(name) != null && hmap.get(name).size() == 10) { 
 		    	  List<Double> newList = hmap.get(name);
 		    	  double discountPrice = Calculator.doubleListAverageValueWithoutLastValue(newList);
